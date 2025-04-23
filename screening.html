@@ -5,469 +5,591 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Functional Shoulder Screening</title>
     <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;700&family=Futura:wght@400;500;700&display=swap">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         /* --- CSS Variables --- */
         :root {
-            --primary-color: #005f73;
-            --secondary-color: #0a9396;
-            --accent-color: #ee9b00;
+            /* App Colors */
+            --app-primary-color: #285484; /* Dark Blue */
+            --app-secondary-color: rgb(112, 188, 252); /* Light Blue */
+            --app-tertiary-color: #121630; /* Very Dark Blue */
+            --app-text-on-primary: #ffffff;
+            --app-text-on-secondary: var(--app-primary-color);
+            /* Button text color back to white */
+            --app-button-text-color: var(--app-text-on-primary);
+            --app-button-icon-color: var(--app-secondary-color); /* Keep icons light blue */
+            --app-button-gradient-start: var(--app-primary-color);
+            --app-button-gradient-end: var(--app-tertiary-color);
+            --app-button-hover-gradient-start: #1e3a5c; /* Darker shade */
+            --app-button-hover-gradient-end: var(--app-primary-color);
+
+
+            /* Status/Utility Colors */
             --light-gray: #f8f9fa;
             --medium-gray: #dee2e6;
             --dark-gray: #495057;
-            --text-color: #212529;
+            --text-color: #212529; /* Black text for top bar */
             --success-color: #16a34a;
             --success-border-color: #15803d;
             --success-shadow-color: rgba(22, 163, 74, 0.3);
-            --warning-color: #facc15; /* Used for patient data button */
-            --danger-color-light: #e85d04;
+            --warning-color: #facc15;
             --danger-color-dark: #dc2626;
-            --injured-input-bg: rgba(255, 224, 224, 0.7); /* Light red background for injured side input */
+            --injured-input-bg: rgba(255, 224, 224, 0.7);
             --white: #ffffff;
-            --border-radius: 8px;
+            --border-radius: 8px; /* Reverted radius */
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --sidebar-border-color: var(--medium-gray);
+            --header-border-color: var(--medium-gray); /* Border for top bar */
+
+            /* Graph Specific Colors (Kept) */
             --left-line-color: #dc2626;
             --right-line-color: #2563eb;
+            --norm-poor-bg: rgba(252, 165, 165, 0.5);
+            --norm-average-bg: rgba(252, 211, 77, 0.5);
+            --norm-good-bg: rgba(167, 243, 208, 0.5);
+            --norm-excellent-bg: rgba(52, 211, 153, 0.5);
+
+            /* Layout Variables */
             --base-font-size: 16px;
             --graph-box-min-height: 380px;
-            /* Normative Zone Colors */
-             --norm-poor-bg: rgba(252, 165, 165, 0.5); /* #fca5a5 with alpha */
-             --norm-average-bg: rgba(252, 211, 77, 0.5); /* #fcd34d with alpha */
-             --norm-good-bg: rgba(167, 243, 208, 0.5); /* #a7f3d0 with alpha */
-             --norm-excellent-bg: rgba(52, 211, 153, 0.5); /* #34d399 with alpha */
-         }
+            --sidebar-width: 240px;
+            /* Font Weights */
+            --normal-font-weight: 400;
+            --semibold-font-weight: 600;
+            --bold-font-weight: 700;
+            --top-bar-height: 50px;
+        }
 
         /* --- General Styling --- */
         body {
             font-family: 'Avenir', sans-serif;
-            background-color: var(--white);
+            background-color: var(--light-gray);
             color: var(--text-color);
             margin: 0;
             padding: 0;
+            padding-top: var(--top-bar-height);
             width: 100%;
             box-sizing: border-box;
             line-height: 1.6;
             font-size: var(--base-font-size);
+            font-weight: var(--normal-font-weight); /* Base weight set to normal (400) */
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 20px auto 80px auto;
-            padding: 40px 140px;
+        /* --- Top Header Bar --- */
+        .top-header-bar {
+            height: var(--top-bar-height);
+            background-color: var(--light-gray); /* Light gray background */
+            color: var(--text-color); /* Black text */
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border-bottom: 1px solid var(--header-border-color);
+            z-index: 20;
+            box-sizing: border-box;
+        }
+        .top-header-bar .brand-info {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .top-header-bar .brand-name {
+            /* Removed */
+        }
+        .top-header-bar .version-text {
+            font-family: sans-serif; /* Standard sans-serif */
+            font-size: 0.9rem; /* Slightly larger */
+            font-weight: var(--normal-font-weight); /* Normal weight */
+            color: var(--text-color); /* Black text */
+        }
+        .top-header-bar .social-links a {
+            color: var(--text-color); /* Black icons */
+            margin-left: 15px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .top-header-bar .social-links a:hover {
+            color: var(--app-primary-color); /* Dark blue hover */
+        }
+
+
+        /* --- App Layout --- */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            min-height: calc(100vh - var(--top-bar-height));
+            margin-top: 0;
+        }
+
+        .app-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            padding: 20px 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            border-right: 1px solid var(--sidebar-border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: var(--top-bar-height);
+            left: 0;
+            height: calc(100vh - var(--top-bar-height));
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .sidebar-logo-placeholder {
+            height: 50px;
+            /* Adjusted margin */
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+             font-size: 1.5rem;
+        }
+         .sidebar-logo-placeholder i {
+             color: var(--app-primary-color);
+         }
+
+
+        .sidebar-buttons {
+             display: flex;
+             flex-direction: column;
+             gap: 12px;
+        }
+
+
+        .app-main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            /* Adjusted padding top */
+            padding: 30px 40px 30px 40px;
             background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            position: relative;
+            overflow-y: auto;
+            height: calc(100vh - var(--top-bar-height));
         }
 
-        h1, h2, h3 {
-            font-family: 'Futura', sans-serif;
-            color: var(--primary-color);
-            margin-bottom: 0.75em;
-            font-weight: 700;
+        /* --- Sidebar Buttons (Gradient, Avenir, Semibold) --- */
+        .app-sidebar button,
+        .app-sidebar a button {
+            font-family: 'Avenir', sans-serif; /* Use Avenir */
+            font-size: 0.9rem; /* Adjusted font size */
+            font-weight: var(--semibold-font-weight); /* Semibold weight (600) */
+            padding: 10px 15px; /* Adjusted padding */
+            color: var(--app-text-on-primary); /* White text */
+            background-image: linear-gradient(to right, var(--app-button-gradient-start), var(--app-button-gradient-end)); /* Gradient background */
+            border: none;
+            border-radius: var(--border-radius); /* Reverted radius */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        h1 { text-align: center; font-size: 2.2rem; margin-top: 0; margin-bottom: 0.5em; }
-        h2 { font-size: 1.6rem; border-bottom: 2px solid var(--secondary-color); padding-bottom: 0.4em; margin-top: 1.5em; color: var(--secondary-color); }
-        h3.position-title { font-size: 1.2rem; color: var(--primary-color); margin-bottom: 1em; }
-        h3.normative-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 0.8em; text-align: center;}
+        .app-sidebar button:hover,
+        .app-sidebar a button:hover {
+            background-image: linear-gradient(to right, var(--app-button-hover-gradient-start), var(--app-button-hover-gradient-end));
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        .app-sidebar button:active,
+        .app-sidebar a button:active {
+            transform: translateY(0px);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(to right, var(--app-button-hover-gradient-start), var(--app-button-hover-gradient-end));
+        }
+        .app-sidebar button i {
+            width: 20px;
+            text-align: center;
+            color: var(--app-button-icon-color); /* Light blue icons */
+        }
+        .app-sidebar a {
+            text-decoration: none;
+            display: block;
+        }
+
+
+        /* --- Main Content Styling --- */
+        .content-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Apply normal weight (400) by default */
+        h1, h2, h3 {
+            font-family: 'Avenir', sans-serif; /* Use Avenir */
+            margin-bottom: 0.75em;
+            font-weight: var(--normal-font-weight); /* Default to normal weight (400) */
+        }
+        h1 { text-align: center; font-size: 2.0rem; margin-top: 0; margin-bottom: 1em; color: var(--app-primary-color); font-weight: var(--bold-font-weight); } /* Bold for main title */
+        /* H2 Titles and Borders */
+        h2 {
+            font-size: 1.5rem;
+            /* border-bottom: 2px solid var(--app-secondary-color); Removed */
+            padding-bottom: 0.4em;
+            margin-top: 1.8em;
+            color: var(--app-secondary-color);
+            font-weight: var(--bold-font-weight); /* Make H2 bold */
+        }
+        /* Graph Box Titles */
+        h3.position-title,
+        h3.normative-title {
+            font-size: 1.15rem;
+            color: var(--app-primary-color);
+            margin-bottom: 1em;
+            font-weight: var(--normal-font-weight); /* Keep graph titles normal */
+        }
+        h3.normative-title { text-align: center;}
 
         #report-content { background-color: var(--white); padding: 15px 0; }
 
-        /* --- Top Controls --- */
-        #top-container { display: flex; justify-content: center; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--medium-gray); flex-wrap: wrap; gap: 15px; }
-        #left-container { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        #controls-box { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        /* --- Top Controls (Injured Side, Bodyweight) --- */
+        #top-controls {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 0; /* Removed padding */
+            /* border-bottom: 1px solid var(--medium-gray); Removed */
+            flex-wrap: wrap;
+            gap: 15px;
+        }
         .control-item { border: 1px solid var(--medium-gray); padding: 8px 12px; border-radius: var(--border-radius); background-color: var(--white); display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s ease; }
-        .control-item:focus-within { box-shadow: 0 2px 8px rgba(0, 95, 115, 0.2); border-color: var(--primary-color); }
-        .control-label { font-family: 'Futura', sans-serif; font-size: 0.9rem; color: var(--dark-gray); font-weight: 500; }
-        #injured-side-radio, #bodyweight-input { font-family: 'Futura', sans-serif; font-size: 0.9rem; padding: 5px 8px; border: 1px solid var(--medium-gray); border-radius: 5px; background-color: var(--white); transition: border-color 0.2s ease, background-color 0.3s ease; }
-        #injured-side-radio:focus, #bodyweight-input:focus { border-color: var(--primary-color); outline: none; }
+        .control-item:focus-within { box-shadow: 0 2px 8px rgba(40, 84, 132, 0.3); border-color: var(--app-primary-color); }
+        .control-label { font-family: 'Avenir', sans-serif; font-size: 0.9rem; color: var(--dark-gray); font-weight: var(--bold-font-weight); } /* Make labels bold */
+        #injured-side-radio, #bodyweight-input { font-family: 'Avenir', sans-serif; font-size: 0.9rem; padding: 5px 8px; border: 1px solid var(--medium-gray); border-radius: 5px; background-color: var(--white); transition: border-color 0.2s ease, background-color 0.3s ease; font-weight: var(--normal-font-weight); } /* Normal weight */
+        #injured-side-radio:focus, #bodyweight-input:focus { border-color: var(--app-primary-color); outline: none; }
         #injured-side-radio { width: 80px; } #bodyweight-input { width: 60px; }
 
         /* --- Patient Data Fields --- */
-        #patient-data-container {
-            display: none; /* Hidden by default */
-            background-color: var(--light-gray);
-            padding: 15px 20px;
+        #patient-data-container { display: none; background-color: var(--light-gray); padding: 15px 20px; border: 1px solid var(--medium-gray); border-radius: var(--border-radius); margin-bottom: 25px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        #patient-data-container.visible { display: block; }
+        #patient-data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .patient-data-item { display: flex; flex-direction: column; gap: 5px; }
+        .patient-data-item label { font-family: 'Avenir', sans-serif; font-size: 0.9rem; color: var(--dark-gray); font-weight: var(--bold-font-weight); } /* Make labels bold */
+        .patient-data-item input,
+        .patient-data-item select { font-family: 'Avenir', sans-serif; font-size: 0.9rem; padding: 6px 10px; border: 1px solid var(--medium-gray); border-radius: 5px; background-color: var(--white); transition: border-color 0.2s ease; width: 100%; box-sizing: border-box; font-weight: var(--normal-font-weight); } /* Normal weight */
+        .patient-data-item input:focus,
+        .patient-data-item select:focus { border-color: var(--app-primary-color); outline: none; }
+
+        /* --- Input Section (New Structure) --- */
+        #input-section-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 20px; /* Space between boxes */
+            margin-bottom: 30px;
+        }
+        .input-position-box {
+            flex: 1; /* Distribute space evenly */
+            min-width: 250px; /* Minimum width before wrapping */
             border: 1px solid var(--medium-gray);
             border-radius: var(--border-radius);
-            margin-bottom: 25px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            padding: 15px;
+            background-color: var(--white);
+            box-shadow: var(--box-shadow);
         }
-        #patient-data-container.visible {
-            display: block; /* Shown when .visible class is added */
+        .input-position-box h4 {
+            font-family: 'Avenir', sans-serif;
+            font-weight: var(--bold-font-weight); /* Bold position header */
+            font-size: 1rem;
+            color: var(--app-primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 8px;
         }
-        #patient-data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .patient-data-item {
+        .input-row {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            justify-content: space-between; /* Space out label and inputs */
+            align-items: center;
+            margin-bottom: 10px;
         }
-        .patient-data-item label {
-            font-family: 'Futura', sans-serif;
-            font-size: 0.9rem;
+        .input-row label {
+            font-family: 'Avenir', sans-serif;
+            font-size: 0.85rem;
             color: var(--dark-gray);
-            font-weight: 500;
+            margin-right: 10px;
+            flex-shrink: 0; /* Prevent label from shrinking */
         }
-        .patient-data-item input,
-        .patient-data-item select {
-            font-family: 'Futura', sans-serif;
-            font-size: 0.9rem;
-            padding: 6px 10px;
+        .input-fields {
+            display: flex;
+            gap: 8px; /* Space between Left/Right inputs */
+        }
+        .input-fields .number-input {
+            font-family: 'Avenir', sans-serif;
+            font-size: 0.875rem;
+            width: 70px; /* Slightly narrower inputs */
+            height: auto;
             border: 1px solid var(--medium-gray);
             border-radius: 5px;
-            background-color: var(--white);
-            transition: border-color 0.2s ease;
-            width: 100%;
+            padding: 6px;
+            text-align: center;
             box-sizing: border-box;
+            transition: border-color 0.2s ease, background-color 0.3s ease;
+            background-color: var(--light-gray); /* Light gray background */
+            font-weight: var(--normal-font-weight);
         }
-         .patient-data-item input:focus,
-         .patient-data-item select:focus {
-             border-color: var(--primary-color);
-             outline: none;
-         }
-
-        /* --- Input Title and Clear Button --- */
-        .input-header-container {
-            display: flex;
-            justify-content: space-between; /* Pushes title and button apart */
-            align-items: center; /* Vertically aligns items */
-            margin-bottom: 0.75em; /* Keep original h2 margin */
+        .input-fields .number-input::placeholder {
+            font-size: 0.75rem;
+            color: #aaa;
         }
-        #input-title {
-             margin-bottom: 0; /* Remove bottom margin from h2 */
-             border-bottom: none; /* Remove border if desired, or adjust padding */
-             padding-bottom: 0;
+        .input-fields .number-input:focus {
+            border-color: var(--app-primary-color);
+            outline: none;
         }
-        #clear-all-inputs-btn {
-            font-family: 'Avenir', sans-serif;
-            font-size: 0.8rem; /* Smaller font */
-            font-weight: 500;
-            padding: 4px 10px; /* Smaller padding */
-            color: var(--dark-gray);
-            background-color: var(--light-gray);
-            border: 1px solid var(--medium-gray);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            margin-left: 15px; /* Space between title and button */
-        }
-        #clear-all-inputs-btn:hover {
-            background-color: var(--medium-gray);
-            border-color: var(--dark-gray);
-            color: var(--text-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-        #clear-all-inputs-btn:active {
-            transform: translateY(1px);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-        }
-        #clear-all-inputs-btn i {
-            margin-right: 4px;
-        }
-
-
-        /* --- Input Table --- */
-        #input-summary-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; margin-bottom: 30px; box-shadow: var(--box-shadow); border-radius: var(--border-radius); overflow: hidden; }
-        #input-summary-table th, #input-summary-table td { border-bottom: 1px solid var(--medium-gray); padding: 10px 14px; text-align: center; font-size: 0.9rem; vertical-align: middle; }
-        #input-summary-table th { background-color: var(--primary-color); color: var(--white); font-family: 'Avenir', sans-serif; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: none; }
-        #input-summary-table td { font-family: 'Futura', sans-serif; color: var(--dark-gray); background-color: var(--white); }
-        #input-summary-table tbody tr:last-child td { border-bottom: none; }
-        #input-summary-table tbody tr:nth-child(even) td { background-color: var(--light-gray); }
-        #input-summary-table .number-input {
-            font-family: 'Futura', sans-serif; font-size: 0.9rem; width: 75px; height: auto;
-            border: 1px solid var(--medium-gray); border-radius: 5px; padding: 6px; text-align: center;
-            box-sizing: border-box; transition: border-color 0.2s ease, background-color 0.3s ease;
-            background-color: var(--white);
-        }
-        #input-summary-table .number-input:focus { border-color: var(--primary-color); outline: none; }
-        /* Styling for injured side input */
-        #input-summary-table .number-input.injured-side-input {
+        .input-fields .number-input.injured-side-input {
             background-color: var(--injured-input-bg);
             border-color: #fca5a5;
         }
 
 
         /* --- Result Layout (Graph Rows) --- */
-        .position-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-bottom: 35px;
-            padding-bottom: 30px;
-            border-bottom: 1px dashed var(--medium-gray);
-            align-items: stretch;
-        }
+        .position-row { display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 35px; padding-bottom: 30px; /* border-bottom: 1px dashed var(--medium-gray); Removed */ align-items: stretch; }
         .position-row:last-child { border-bottom: none; margin-bottom: 0; }
         .asymmetry-graph-container { flex: 6; min-width: 320px; }
         .normative-graph-container { flex: 4; min-width: 260px; }
 
         /* --- Graph Boxes --- */
-        .position-box, .green-box, .normative-box {
-            border: 1px solid var(--medium-gray);
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            background-color: var(--white);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 0;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, border-width 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            min-height: var(--graph-box-min-height);
-        }
-        .green-box {
-            border-color: var(--success-border-color);
-            border-width: 2px;
-            box-shadow: 0 0 15px 5px var(--success-shadow-color);
-        }
-        /* Make graph div grow to fill the box */
-        .js-plotly-plot {
-             flex-grow: 1;
-             min-height: 280px; /* Minimum height for the plot itself */
-         }
+        .position-box, .green-box, .normative-box { border: 1px solid var(--medium-gray); padding: 15px 20px; border-radius: var(--border-radius); background-color: var(--white); box-shadow: var(--box-shadow); margin-bottom: 0; transition: border-color 0.3s ease, box-shadow 0.3s ease, border-width 0.3s ease; display: flex; flex-direction: column; min-height: var(--graph-box-min-height); }
+        .green-box { border-color: var(--success-border-color); border-width: 2px; box-shadow: 0 0 15px 5px var(--success-shadow-color); }
+        .js-plotly-plot { flex-grow: 1; min-height: 280px; }
 
         /* Placeholder for normative data */
         #normative-placeholder { text-align: center; color: var(--dark-gray); font-style: italic; padding: 20px; background-color: var(--light-gray); border-radius: var(--border-radius); margin-top: 1em;}
         #bottom-area { margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--medium-gray); min-height: 30px; }
 
-        /* --- View Control Buttons --- */
-        #view-controls-container { text-align: center; margin: 30px 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px;}
-        #register-patient-button, /* New button */
-        #pdf-preview-button,
-        #exit-preview-button,
-        #export-excel-button,
-        #preview-exit-button-inline,
-        #view-analysis-button { /* Added analysis button here for common styling */
-            font-family: 'Futura', sans-serif;
-            font-size: 1rem;
-            font-weight: bold;
-            padding: 10px 25px;
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 95, 115, 0.2);
-            letter-spacing: 0.5px;
-            margin: 0 5px;
-        }
-        #pdf-preview-button { background-image: linear-gradient(to right, var(--secondary-color), var(--primary-color)); }
-        #pdf-preview-button:hover { background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color)); box-shadow: 0 6px 15px rgba(0, 95, 115, 0.3); transform: translateY(-2px); }
-        #pdf-preview-button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(0, 95, 115, 0.2); }
-        #pdf-preview-button i { margin-right: 8px; }
 
-        #exit-preview-button { background-color: var(--danger-color-dark); display: none; }
-        #exit-preview-button:hover { background-color: #b91c1c; box-shadow: 0 6px 15px rgba(185, 28, 28, 0.3); transform: translateY(-2px); }
-        #exit-preview-button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(185, 28, 28, 0.2); }
-        #exit-preview-button i { margin-right: 8px; }
-
-        #export-excel-button { background-color: var(--success-color); }
-        #export-excel-button:hover { background-color: #15803d; box-shadow: 0 6px 15px rgba(22, 163, 74, 0.3); transform: translateY(-2px); }
-        #export-excel-button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(22, 163, 74, 0.2); }
-        #export-excel-button i { margin-right: 8px; }
-
-        /* Styling for new button */
-        #register-patient-button { background-color: var(--accent-color); }
-        #register-patient-button:hover { background-color: #ca8a04; box-shadow: 0 6px 15px rgba(238, 155, 0, 0.3); transform: translateY(-2px); }
-        #register-patient-button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(238, 155, 0, 0.2); }
-        #register-patient-button i { margin-right: 8px; }
-
-        /* Styling for View Analysis button */
-        #view-analysis-button { background-image: linear-gradient(to right, #0077b6, #023e8a); } /* Example color */
-        #view-analysis-button:hover { background-image: linear-gradient(to right, #023e8a, #0077b6); box-shadow: 0 6px 15px rgba(0, 59, 138, 0.3); transform: translateY(-2px); }
-        #view-analysis-button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(0, 59, 138, 0.2); }
-        #view-analysis-button i { margin-right: 8px; }
-
-
-        #preview-exit-button-inline {
-            display: none;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--danger-color-dark);
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            z-index: 100;
-        }
+        /* --- Exit Preview Button (Inline) --- */
+        #preview-exit-button-inline { display: none; position: fixed; top: calc(var(--top-bar-height) + 15px); right: 15px; background-color: var(--danger-color-dark); color: white; padding: 8px 15px; font-size: 0.9rem; font-weight: var(--normal-font-weight); border: none; border-radius: var(--border-radius); cursor: pointer; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease; font-family: inherit; }
          #preview-exit-button-inline:hover { background-color: #b91c1c; box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3); transform: translateY(-1px); }
          #preview-exit-button-inline:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(185, 28, 28, 0.2); }
          #preview-exit-button-inline i { margin-right: 6px; }
 
 
         /* --- Explanation Box (for PDF view) --- */
-        .explanation-box { display: none; background-color: var(--light-gray); border: 1px solid var(--medium-gray); border-left: 5px solid var(--primary-color); padding: 15px; margin: 1em 0 2em 0; border-radius: var(--border-radius); font-size: 0.9em; color: var(--dark-gray); }
-        .explanation-box h4 { margin-top: 0; color: var(--primary-color); font-family: 'Futura', sans-serif; }
+        .explanation-box { display: none; background-color: var(--light-gray); border: 1px solid var(--medium-gray); border-left: 5px solid var(--app-primary-color); padding: 15px; margin: 1em 0 2em 0; border-radius: var(--border-radius); font-size: 0.9em; color: var(--dark-gray); }
+        .explanation-box h4 { margin-top: 0; color: var(--app-primary-color); font-family: inherit; font-weight: var(--normal-font-weight); } /* Normal weight */
         .explanation-box p { margin-bottom: 0.5em; }
         .explanation-box ul { margin-top: 0.5em; padding-left: 20px; }
 
-        /* --- Plotly Specific Styling --- */
-        .js-plotly-plot .plotly { font-family: 'Avenir', sans-serif !important; }
-        .js-plotly-plot .plotly .gtitle { font-family: 'Futura', sans-serif !important; font-size: 1rem !important; fill: var(--primary-color) !important; font-weight: 500 !important; }
-        .js-plotly-plot .plotly .axistitle { font-size: 0.85rem !important; fill: var(--dark-gray) !important; font-weight: 500 !important; }
-        .js-plotly-plot .plotly .tick text { font-size: 0.8rem !important; fill: var(--dark-gray) !important; }
-        .js-plotly-plot .plotly .legendtext { font-size: 0.85rem !important; }
-        .js-plotly-plot .plotly .annotation text { font-family: 'Futura', sans-serif !important; }
-        .plotly .annotation .norm-label { font-size: 0.95em !important; font-weight: bold !important; fill: var(--dark-gray) !important; }
-        .plotly .annotation .norm-value { font-size: 0.9em !important; font-weight: bold !important; fill: var(--primary-color) !important; }
-        .plotly .annotation .left-label { font-size: 1.05em !important; font-weight: bold !important; fill: var(--left-line-color) !important; }
-        .plotly .annotation .right-label { font-size: 1.05em !important; font-weight: bold !important; fill: var(--right-line-color) !important; }
-        .plotly .annotation .value-display { font-size: 0.95em !important; font-weight: normal !important; fill: var(--dark-gray) !important; text-anchor: middle;}
-        .plotly .annotation .nkg-combined-text .left-label { fill: var(--left-line-color) !important; font-weight: normal !important; }
-        .plotly .annotation .nkg-combined-text .right-label { fill: var(--right-line-color) !important; font-weight: normal !important; }
+        /* --- Plotly Specific Styling (Normal weights) --- */
+        .js-plotly-plot .plotly { font-family: 'Avenir', sans-serif !important; font-weight: var(--normal-font-weight) !important; }
+        .js-plotly-plot .plotly .gtitle { font-family: 'Avenir', sans-serif !important; font-size: 1rem !important; fill: var(--app-primary-color) !important; font-weight: var(--normal-font-weight) !important; }
+        .js-plotly-plot .plotly .axistitle { font-size: 0.85rem !important; fill: var(--dark-gray) !important; font-weight: var(--normal-font-weight) !important; }
+        .js-plotly-plot .plotly .tick text { font-size: 0.8rem !important; fill: var(--dark-gray) !important; font-weight: var(--normal-font-weight) !important; }
+        .js-plotly-plot .plotly .legendtext { font-size: 0.85rem !important; font-weight: var(--normal-font-weight) !important; }
+        .js-plotly-plot .plotly .annotation text { font-family: 'Avenir', sans-serif !important; font-weight: var(--normal-font-weight) !important; }
+        .plotly .annotation .norm-label { font-size: 0.95em !important; font-weight: var(--normal-font-weight) !important; fill: var(--dark-gray) !important; }
+        .plotly .annotation .norm-value { font-size: 0.9em !important; font-weight: var(--normal-font-weight) !important; fill: var(--app-primary-color) !important; }
+        .plotly .annotation .left-label { font-size: 1.05em !important; font-weight: var(--normal-font-weight) !important; fill: var(--left-line-color) !important; }
+        .plotly .annotation .right-label { font-size: 1.05em !important; font-weight: var(--normal-font-weight) !important; fill: var(--right-line-color) !important; }
+        .plotly .annotation .value-display { font-size: 0.95em !important; font-weight: var(--normal-font-weight) !important; fill: var(--dark-gray) !important; text-anchor: middle;}
+        .plotly .annotation .nkg-combined-text .left-label { fill: var(--left-line-color) !important; font-weight: var(--normal-font-weight) !important; }
+        .plotly .annotation .nkg-combined-text .right-label { fill: var(--right-line-color) !important; font-weight: var(--normal-font-weight) !important; }
+        .plotly .annotation .asymmetry-percent { font-size: 1.1em !important; font-weight: var(--normal-font-weight) !important; }
 
 
         /* --- On-Screen PDF Preview Styles --- */
-        body.pdf-preview-active { font-size: var(--base-font-size); background-color: var(--white) !important; padding-top: 0 !important; }
-        body.pdf-preview-active #top-container,
-        body.pdf-preview-active #patient-data-container, /* Hide patient data in preview */
-        body.pdf-preview-active #input-summary-table,
-        body.pdf-preview-active #view-controls-container,
+        body.pdf-preview-active { font-size: var(--base-font-size); background-color: var(--white) !important; padding-top: 0 !important; display: block; }
+        body.pdf-preview-active .top-header-bar { display: none; }
+        body.pdf-preview-active .app-sidebar { display: none; }
+        body.pdf-preview-active .app-main-content { margin-left: 0; padding: 15px 40px; height: auto; }
+        body.pdf-preview-active #top-controls,
+        body.pdf-preview-active #patient-data-container,
+        body.pdf-preview-active #input-section-container, /* Hide new input container */
         body.pdf-preview-active #bottom-area,
-        body.pdf-preview-active .input-header-container { display: none; } /* Hide clear button container in preview */
-
+        body.pdf-preview-active h2#input-title { display: none; }
         body.pdf-preview-active h1, body.pdf-preview-active h2#results-title { display: block; }
-        /* Show original h2 title in preview */
-        body.pdf-preview-active h2#input-title-original { display: block; }
         body.pdf-preview-active .explanation-box { display: block; }
-        body.pdf-preview-active #preview-exit-button-inline { display: inline-block; }
-
-        body.pdf-preview-active .container {
-            box-shadow: none;
-            border: none;
-            margin: 15px auto;
-            padding: 15px 140px;
-            max-width: 1400px;
-        }
-        body.pdf-preview-active .position-row {
-            display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed var(--medium-gray);
-            align-items: stretch;
-        }
+        body.pdf-preview-active #preview-exit-button-inline { display: inline-block; top: 15px; }
+        body.pdf-preview-active .content-container { box-shadow: none; border: none; margin: 15px auto; padding: 0; max-width: 1100px; }
+        body.pdf-preview-active .position-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed var(--medium-gray); align-items: stretch; }
         body.pdf-preview-active .position-row:last-child { border-bottom: none; margin-bottom: 0; }
         body.pdf-preview-active .asymmetry-graph-container { flex: 6; min-width: 320px; }
         body.pdf-preview-active .normative-graph-container { flex: 4; min-width: 260px; }
         body.pdf-preview-active .position-box,
         body.pdf-preview-active .green-box,
-        body.pdf-preview-active .normative-box {
-             box-shadow: var(--box-shadow);
-             border: 1px solid var(--medium-gray);
-             padding: 10px;
-             min-height: var(--graph-box-min-height);
-         }
-        body.pdf-preview-active .green-box {
-            border-color: var(--success-border-color) !important;
-            border-width: 2px !important;
-            box-shadow: 0 0 15px 5px var(--success-shadow-color) !important;
-        }
-        body.pdf-preview-active h3 { font-size: 1.2rem; } body.pdf-preview-active h3.normative-title { font-size: 1.1rem; }
+        body.pdf-preview-active .normative-box { box-shadow: var(--box-shadow); border: 1px solid var(--medium-gray); padding: 10px; min-height: var(--graph-box-min-height); }
+        body.pdf-preview-active .green-box { border-color: var(--success-border-color) !important; border-width: 2px !important; box-shadow: 0 0 15px 5px var(--success-shadow-color) !important; }
+        body.pdf-preview-active h3 { font-size: 1.1rem; font-weight: var(--normal-font-weight); }
+        body.pdf-preview-active h3.normative-title { font-size: 1.0rem; font-weight: var(--normal-font-weight); }
 
 
         /* --- Media Queries for Responsiveness --- */
-        @media (max-width: 1450px) {
-             .container { padding: 40px 100px; margin: 20px auto 80px auto; }
-             body.pdf-preview-active .container { padding: 15px 100px; }
-        }
-        @media (max-width: 1200px) {
-             .container { padding: 30px 60px; margin: 20px auto 60px auto; }
-             body.pdf-preview-active .container { padding: 15px 60px; }
-        }
         @media (max-width: 992px) {
-             .container { padding: 25px 40px; margin: 20px auto 40px auto; }
-             body.pdf-preview-active .container { padding: 15px 40px; }
-             .position-row { flex-direction: column; align-items: stretch; }
-             body.pdf-preview-active .position-row { align-items: stretch; }
-             .asymmetry-graph-container, .normative-graph-container { flex: none; width: 100%; min-width: unset; }
-             .position-box, .green-box, .normative-box { min-height: unset; }
+            :root { --sidebar-width: 70px; }
+            .app-main-content { margin-left: var(--sidebar-width); padding: 25px 30px; }
+            .app-sidebar { padding: 20px 10px; top: var(--top-bar-height); height: calc(100vh - var(--top-bar-height)); }
+            .app-sidebar .sidebar-logo-placeholder { height: 40px; margin-bottom: 40px; font-size: 1.3rem; }
+            .app-sidebar .button-text { display: none; }
+            .app-sidebar button, .app-sidebar a button { justify-content: center; padding: 10px 0; gap: 0; font-size: 0.85rem; } /* Adjust size */
+            .app-sidebar button i { width: auto; margin: 0; }
+
+            .position-row { flex-direction: column; align-items: stretch; }
+            .asymmetry-graph-container, .normative-graph-container { flex: none; width: 100%; min-width: unset; }
+            .position-box, .green-box, .normative-box { min-height: unset; }
+            #patient-data-grid { grid-template-columns: 1fr; }
+            #input-section-container { flex-direction: column; } /* Stack input boxes */
+            .input-position-box { min-width: unset; }
+
+            body.pdf-preview-active .app-main-content { padding: 15px 30px; }
+            body.pdf-preview-active .position-row { align-items: stretch; }
              body.pdf-preview-active .position-box,
              body.pdf-preview-active .green-box,
              body.pdf-preview-active .normative-box { min-height: unset; }
-             #patient-data-grid { grid-template-columns: 1fr; } /* Stack patient data on smaller screens */
         }
+
         @media (max-width: 768px) {
-             .container { margin: 15px auto 30px auto; padding: 20px 25px; }
-             body.pdf-preview-active .container { padding: 10px 25px; }
-             h1 { font-size: 1.8rem; } h2 { font-size: 1.4rem; } h3.position-title { font-size: 1.1rem; } h3.normative-title { font-size: 1rem; }
-             #top-container { flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;}
-             #left-container { flex-direction: column; align-items: center; gap: 10px; width: 100%;}
-             #controls-box { justify-content: center; width: 100%;}
-             #input-summary-table th, #input-summary-table td { padding: 8px 6px; font-size: 0.8rem; }
-             #input-summary-table .number-input { width: 60px; font-size: 0.8rem; padding: 5px;}
-             .position-box, .green-box, .normative-box { padding: 10px; margin-bottom: 0;}
-             #register-patient-button,
-             #pdf-preview-button,
-             #exit-preview-button,
-             #export-excel-button,
-             #preview-exit-button-inline,
-             #view-analysis-button { font-size: 0.9rem; padding: 8px 18px;} /* Adjust button size */
-             #preview-exit-button-inline { top: 10px; right: 10px; }
-             body.pdf-preview-active .container { padding: 10px; }
-             .input-header-container { flex-direction: column; align-items: flex-start; gap: 5px;} /* Stack title and button on small screens */
-             #clear-all-inputs-btn { margin-left: 0; }
+            body { padding-top: var(--top-bar-height); }
+            .app-layout { flex-direction: column; min-height: calc(100vh - var(--top-bar-height)); }
+            .app-sidebar {
+                width: 100%; height: auto; position: relative;
+                top: 0;
+                flex-direction: row; flex-wrap: wrap; justify-content: center;
+                padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                border-right: none; border-bottom: 1px solid var(--sidebar-border-color);
+                z-index: 5;
+            }
+            .sidebar-logo-placeholder { display: none; }
+            .sidebar-buttons { flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; }
+            .app-sidebar button, .app-sidebar a button {
+                 width: auto; flex-grow: 1; max-width: 180px;
+                 justify-content: center; font-size: 0.85rem; font-weight: var(--semibold-font-weight); /* Semibold */
+                 padding: 8px 10px; margin: 5px; gap: 8px;
+            }
+             .app-sidebar .button-text { display: inline-block; }
+             .app-sidebar button i { width: auto; margin-right: 5px; }
+
+            .app-main-content { margin-left: 0; padding: 20px 15px; height: auto; }
+
+            h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; }
+            h3.position-title, h3.normative-title { font-size: 1.0rem; }
+            #top-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;}
+            .control-item { justify-content: space-between; }
+            .input-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .input-fields { width: 100%; justify-content: space-between; }
+            .input-fields .number-input { width: 48%; } /* Adjust width for two inputs */
+            .position-box, .green-box, .normative-box { padding: 10px; margin-bottom: 0;}
+
+            #preview-exit-button-inline { top: calc(var(--top-bar-height) + 10px); right: 10px; font-size: 0.8rem; padding: 6px 10px;}
+
+            body.pdf-preview-active .app-main-content { padding: 10px 15px; }
         }
+
          @media (max-width: 480px) {
-             .container { margin: 10px auto 20px auto; padding: 15px 15px; }
-             body.pdf-preview-active .container { padding: 10px 15px; }
-             h1 { font-size: 1.6rem; } h2 { font-size: 1.2rem; } h3.position-title { font-size: 1rem; } h3.normative-title { font-size: 0.9rem; }
-             .control-item { width: 90%; justify-content: space-between;}
-             #injured-side-radio { width: 70px;} #bodyweight-input { width: 60px;}
-             #input-summary-table { font-size: 0.75rem; }
+             :root { --top-bar-height: 45px; }
+             .top-header-bar { padding: 0 15px; }
+             .top-header-bar .brand-name { font-size: 1.1rem; }
+             .top-header-bar .version-text { font-size: 0.7rem; }
+             .top-header-bar .social-links a { font-size: 1rem; margin-left: 10px; }
+
+             h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; }
+             .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px;}
+             #input-summary-table { font-size: 0.75rem; } /* Keep for potential future use */
              #input-summary-table th, #input-summary-table td { padding: 6px 4px; }
              #input-summary-table .number-input { width: 50px; }
+             .input-fields .number-input { width: 47%; } /* Adjust width */
          }
 
-         /* --- Print Styles --- */
-         @media print {
-             body { background-color: white !important; color: black !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-size: 9pt !important; padding-top: 0 !important; }
-             .container { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 5mm !important; max-width: 100% !important; width: 100% !important; }
-             #top-container,
-             #patient-data-container,
-             #input-summary-table,
-             #view-controls-container,
-             #bottom-area,
-             .print-instruction,
-             .explanation-box,
-             #preview-exit-button-inline,
-             .input-header-container #clear-all-inputs-btn { display: none !important; } /* Hide clear button in print */
-             h1 { font-size: 16pt !important; margin-bottom: 5mm !important; text-align: center !important; display: block !important; }
-             h2 { display: block !important; font-size: 12pt !important; margin-top: 8mm; margin-bottom: 4mm; border: none !important; }
-             /* Ensure original h2 title is visible in print */
-             .input-header-container h2#input-title { display: block !important; margin-bottom: 4mm !important; }
-             h3 { font-size: 10pt !important; margin-bottom: 3mm !important; }
-             #report-content { padding: 0 !important; }
-             .position-row { display: block !important; width: 100% !important; page-break-inside: avoid !important; border: none !important; margin-bottom: 5mm !important; padding: 0 !important;}
-             .asymmetry-graph-container, .normative-graph-container { width: 100% !important; display: block !important; margin-bottom: 5mm; page-break-inside: avoid !important; padding: 0 !important; }
-             .position-box, .green-box, .normative-box { box-shadow: none !important; border: 1px solid #ccc !important; margin-bottom: 3mm; height: auto !important; min-height: unset !important; padding: 5px !important; page-break-inside: avoid !important; }
-             .green-box { border-color: #ccc !important; border-width: 1px !important; }
-             .js-plotly-plot { width: 100% !important; height: auto !important; }
-             .plotly .scatterlayer .trace.fill { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-             .plotly .annotation text { fill: black !important; font-size: 8pt !important; }
-             .plotly .annotation .norm-label, .plotly .annotation .norm-value { fill: black !important; font-size: 7pt !important; }
-             .plotly .legend { display: none !important; }
-             .plotly .xaxislayer-above, .plotly .yaxislayer-above { font-size: 8pt !important; }
-             .plotly .axistitle { font-size: 9pt !important; }
-             .modebar { display: none !important; }
-             #bar-chart-I, #bar-chart-Y, #bar-chart-T { height: 180px !important; }
-             #normative-chart-I, #normative-chart-Y, #normative-chart-T { height: 180px !important; }
-         }
+        /* --- Print Styles (Normal weights) --- */
+        @media print {
+            body { background-color: white !important; color: black !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-size: 9pt !important; padding: 0 !important; display: block !important; font-weight: normal !important;} /* Normal base weight */
+            .top-header-bar, .app-sidebar, #top-controls, #patient-data-container, #input-section-container, #bottom-area, .print-instruction, #preview-exit-button-inline { display: none !important; }
+            .app-layout { display: block !important; }
+            .app-main-content { margin: 0 !important; padding: 5mm !important; width: 100% !important; max-width: 100% !important; box-shadow: none !important; border: none !important; height: auto !important; }
+            .content-container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+
+            h1 { font-size: 16pt !important; margin-bottom: 5mm !important; text-align: center !important; display: block !important; color: black !important; font-weight: bold !important; } /* Standard bold */
+            h2 { display: block !important; font-size: 12pt !important; margin-top: 8mm; margin-bottom: 4mm; border: none !important; color: black !important; font-weight: bold !important; } /* Standard bold */
+            h3 { font-size: 10pt !important; margin-bottom: 3mm !important; color: black !important; font-weight: bold !important; } /* Standard bold */
+            #report-content { padding: 0 !important; }
+            .position-row { display: block !important; width: 100% !important; page-break-inside: avoid !important; border: none !important; margin-bottom: 5mm !important; padding: 0 !important;}
+            .asymmetry-graph-container, .normative-graph-container { width: 100% !important; display: block !important; margin-bottom: 5mm; page-break-inside: avoid !important; padding: 0 !important; }
+            .position-box, .green-box, .normative-box { box-shadow: none !important; border: 1px solid #ccc !important; margin-bottom: 3mm; height: auto !important; min-height: unset !important; padding: 5px !important; page-break-inside: avoid !important; background-color: white !important; }
+            .green-box { border-color: #ccc !important; border-width: 1px !important; }
+            .js-plotly-plot { width: 100% !important; height: auto !important; }
+            .plotly .scatterlayer .trace.fill { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* Force black text, normal weight for annotations */
+            .plotly .annotation text,
+            .plotly .annotation .norm-label,
+            .plotly .annotation .left-label,
+            .plotly .annotation .right-label,
+            .plotly .annotation .value-display,
+            .plotly .annotation .nkg-combined-text span,
+            .plotly .annotation .asymmetry-percent { fill: black !important; color: black !important; font-weight: normal !important; }
+             .plotly .annotation .norm-value { font-weight: normal !important; }
+
+            .plotly .gtitle { fill: black !important; font-weight: bold !important; }
+            .plotly .axistitle { fill: black !important; font-size: 9pt !important; font-weight: normal !important; }
+            .plotly .tick text { fill: black !important; font-size: 8pt !important; font-weight: normal !important; }
+            .plotly .legend { display: none !important; }
+            .modebar { display: none !important; }
+            #bar-chart-I, #bar-chart-Y, #bar-chart-T { height: 180px !important; }
+            #normative-chart-I, #normative-chart-Y, #normative-chart-T { height: 180px !important; }
+        }
 
     </style>
 </head>
 <body>
 
-<div class="container">
-    <button id="preview-exit-button-inline"><i class="fas fa-times-circle"></i> Exit Preview</button>
+<div class="top-header-bar">
+    <div class="brand-info">
+        <span class="version-text">ASH Test V1.2</span>
+    </div>
+    <div class="social-links">
+        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" title="Website"><i class="fas fa-globe"></i></a>
+        </div>
+</div>
 
-    <div id="report-content">
+<div class="app-layout">
+    <aside class="app-sidebar">
+        <div class="sidebar-logo-placeholder">
+            <i class="fas fa-bars"></i> </div>
+        <div class="sidebar-buttons">
+            <button id="register-patient-button">
+                <i class="fas fa-user-plus"></i>
+                <span class="button-text">Register Patient</span>
+            </button>
+            <a href="assets/analysis.html" id="analysis-link-button">
+                <button type="button" id="view-analysis-button">
+                    <i class="fas fa-history"></i> <span class="button-text">Patient History</span> </button>
+            </a>
+            <button id="pdf-preview-button">
+                <i class="fas fa-file-pdf"></i>
+                <span class="button-text">PDF Preview</span>
+            </button>
+            <button id="export-excel-button">
+                <i class="fas fa-file-excel"></i>
+                <span class="button-text">Export Data (CSV)</span>
+            </button>
+             <button id="clear-all-button"> <i class="fas fa-eraser"></i>
+                 <span class="button-text">Clear All</span>
+             </button>
+            </div>
+    </aside>
 
-        <div id="top-container">
-            <div id="left-container">
-                <div id="controls-box">
+    <main class="app-main-content">
+        <button id="preview-exit-button-inline"><i class="fas fa-times-circle"></i> Exit Preview</button>
+
+        <div class="content-container">
+            <div id="report-content">
+
+                <h1>Functional Shoulder Screening</h1>
+
+                <div id="top-controls">
                     <div class="control-item">
                         <label class="control-label" for="injured-side-radio">Injured Side:</label>
                         <select id="injured-side-radio">
@@ -480,242 +602,267 @@
                         <input id="bodyweight-input" type="number" placeholder="kg">
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <h1>Functional Shoulder Screening</h1>
+                 <div class="explanation-box">
+                     <h4>About This Report</h4> <p>This report summarizes the results of the Functional Shoulder Screening using the ASH test (Positions I, Y, T).</p>
+                     <ul> <li><strong>Asymmetry Graphs:</strong> Show the percentage difference between the injured and uninjured side for key metrics (Max Force, RFD, % Max Force at 100ms). Values closer to 100% indicate better symmetry. Annotations above the bars show the percentage difference relative to the uninjured side (100%).</li> <li><strong>Normative Graphs:</strong> Visually represent the estimated percentile rank for Max Force / Bodyweight (N/kg) for each side, based on normative thresholds. Background colors indicate performance zones (Poor, Average, Good, Excellent). Vertical dashed lines show the estimated percentile for the Left (Red) and Right (Blue) values.</li> </ul>
+                     <p><i>To save as PDF: Click 'PDF Preview', then use your browser's Print function (Ctrl+P or Cmd+P) and select 'Save as PDF'. Click 'Exit Preview' to return.</i></p>
+                 </div>
 
-        <div id="view-controls-container">
-            <button id="register-patient-button"><i class="fas fa-user-plus"></i> Register Patient</button>
-            <a href="assets/analysis.html" id="analysis-link-button" style="text-decoration: none;">
-                <button type="button" id="view-analysis-button">
-                    <i class="fas fa-chart-line"></i> View Analysis
-                </button>
-            </a>
-            <button id="pdf-preview-button"><i class="fas fa-file-pdf"></i> PDF Preview</button>
-            <button id="export-excel-button"><i class="fas fa-file-excel"></i> Export Data (CSV)</button>
-            <button id="exit-preview-button"><i class="fas fa-times-circle"></i> Exit Preview</button>
-        </div>
+                 <div id="patient-data-container">
+                     <div id="patient-data-grid">
+                         <div class="patient-data-item">
+                              <label for="fp-nr-input">Patient ID:</label>
+                              <input id="fp-nr-input" type="text" placeholder="Patient ID">
+                         </div>
+                         <div class="patient-data-item">
+                              <label for="age-input">Age:</label>
+                              <input id="age-input" type="number" placeholder="Years">
+                         </div>
+                         <div class="patient-data-item">
+                              <label for="gender-select">Gender:</label>
+                              <select id="gender-select">
+                                   <option value="">Select...</option>
+                                   <option value="Male">Male</option>
+                                   <option value="Female">Female</option>
+                                   <option value="Other">Other</option>
+                                   <option value="Prefer not to say">Prefer not to say</option>
+                              </select>
+                         </div>
+                         <div class="patient-data-item">
+                              <label for="sport-input">Sport:</label>
+                              <input id="sport-input" type="text" placeholder="Main Sport">
+                         </div>
+                     </div>
+                 </div>
 
-         <div class="explanation-box">
-             <h4>About This Report</h4> <p>This report summarizes the results of the Functional Shoulder Screening using the ASH test (Positions I, Y, T).</p>
-             <ul> <li><strong>Asymmetry Graphs:</strong> Show the percentage difference between the injured and uninjured side for key metrics (Max Force, RFD, % Max Force at 100ms). Values closer to 100% indicate better symmetry. Annotations above the bars show the percentage difference relative to the uninjured side (100%).</li> <li><strong>Normative Graphs:</strong> Visually represent the estimated percentile rank for Max Force / Bodyweight (N/kg) for each side, based on normative thresholds. Background colors indicate performance zones (Poor, Average, Good, Excellent). Vertical dashed lines show the estimated percentile for the Left (Red) and Right (Blue) values.</li> </ul>
-             <p><i>To save as PDF: Click 'PDF Preview', then use your browser's Print function (Ctrl+P or Cmd+P) and select 'Save as PDF'. Click 'Exit Preview' to return.</i></p>
-         </div>
 
-        <div id="patient-data-container">
-            <div id="patient-data-grid">
-                <div class="patient-data-item">
-                     <label for="fp-nr-input">Patient ID:</label>
-                     <input id="fp-nr-input" type="text" placeholder="Patient ID">
-                </div>
-                <div class="patient-data-item">
-                     <label for="age-input">Age:</label>
-                     <input id="age-input" type="number" placeholder="Years">
-                </div>
-                <div class="patient-data-item">
-                     <label for="gender-select">Gender:</label>
-                     <select id="gender-select">
-                         <option value="">Select...</option>
-                         <option value="Male">Male</option>
-                         <option value="Female">Female</option>
-                         <option value="Other">Other</option>
-                         <option value="Prefer not to say">Prefer not to say</option>
-                     </select>
-                </div>
-                <div class="patient-data-item">
-                     <label for="sport-input">Sport:</label>
-                     <input id="sport-input" type="text" placeholder="Main Sport">
-                </div>
-            </div>
-        </div>
+                 <h2 id="input-title">Input Overview</h2>
+                 <div id="input-section-container">
+                     <div class="input-position-box">
+                         <h4>ASH Test Position I</h4>
+                         <div class="input-row">
+                             <label>Max Force (N):</label>
+                             <div class="input-fields">
+                                 <input id="left-max-force-i" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-max-force-i" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                         <div class="input-row">
+                             <label>RFD 100ms (N/s):</label>
+                             <div class="input-fields">
+                                 <input id="left-rfd-i" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-rfd-i" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                     </div>
+                     <div class="input-position-box">
+                         <h4>ASH Test Position Y</h4>
+                         <div class="input-row">
+                             <label>Max Force (N):</label>
+                             <div class="input-fields">
+                                 <input id="left-max-force-y" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-max-force-y" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                         <div class="input-row">
+                             <label>RFD 100ms (N/s):</label>
+                             <div class="input-fields">
+                                 <input id="left-rfd-y" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-rfd-y" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                     </div>
+                     <div class="input-position-box">
+                         <h4>ASH Test Position T</h4>
+                         <div class="input-row">
+                             <label>Max Force (N):</label>
+                             <div class="input-fields">
+                                 <input id="left-max-force-t" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-max-force-t" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                         <div class="input-row">
+                             <label>RFD 100ms (N/s):</label>
+                             <div class="input-fields">
+                                 <input id="left-rfd-t" type="number" class="number-input" placeholder="Left">
+                                 <input id="right-rfd-t" type="number" class="number-input" placeholder="Right">
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <h2 id="results-title">Results</h2>
 
-        <div class="input-header-container">
-            <h2 id="input-title">Input Overview</h2>
-            <button id="clear-all-inputs-btn" title="Clear all input fields">
-                <i class="fas fa-eraser"></i> Clear All
-            </button>
-        </div>
+                 <div class="position-row">
+                     <div class="asymmetry-graph-container">
+                         <div id="position-box-I" class="position-box">
+                             <h3 class="position-title">Position I - Asymmetry</h3>
+                             <div id="bar-chart-I" class="js-plotly-plot"></div> </div>
+                     </div>
+                     <div class="normative-graph-container">
+                         <div id="normative-chart-container-I" class="normative-box">
+                             <h3 class="normative-title">Position I - Normative Comparison</h3>
+                             <div id="normative-chart-I" class="js-plotly-plot"></div> </div>
+                     </div>
+                 </div>
+                 <div class="position-row">
+                     <div class="asymmetry-graph-container">
+                         <div id="position-box-Y" class="position-box">
+                             <h3 class="position-title">Position Y - Asymmetry</h3>
+                             <div id="bar-chart-Y" class="js-plotly-plot"></div>
+                         </div>
+                     </div>
+                     <div class="normative-graph-container">
+                         <div id="normative-chart-container-Y" class="normative-box">
+                             <h3 class="normative-title">Position Y - Normative Comparison</h3>
+                             <div id="normative-chart-Y" class="js-plotly-plot"></div>
+                         </div>
+                     </div>
+                 </div>
+                  <div class="position-row">
+                     <div class="asymmetry-graph-container">
+                         <div id="position-box-T" class="position-box">
+                             <h3 class="position-title">Position T - Asymmetry</h3>
+                             <div id="bar-chart-T" class="js-plotly-plot"></div>
+                         </div>
+                     </div>
+                     <div class="normative-graph-container">
+                         <div id="normative-chart-container-T" class="normative-box">
+                             <h3 class="normative-title">Position T - Normative Comparison</h3>
+                             <div id="normative-chart-T" class="js-plotly-plot"></div>
+                         </div>
+                     </div>
+                 </div>
 
-        <table id="input-summary-table">
-           <thead> <tr> <th>Position</th> <th>Metric</th> <th>Left Value</th> <th>Right Value</th> </tr> </thead>
-           <tbody>
-               <tr> <td rowspan="2" data-position="ASH Test Position I">ASH Test Position I</td> <td>Max Force (N)</td> <td><input id="left-max-force-i" type="number" class="number-input" placeholder="N"></td> <td><input id="right-max-force-i" type="number" class="number-input" placeholder="N"></td> </tr>
-               <tr> <td>RFD 100ms (N/s)</td> <td><input id="left-rfd-i" type="number" class="number-input" placeholder="N/s"></td> <td><input id="right-rfd-i" type="number" class="number-input" placeholder="N/s"></td> </tr>
-               <tr> <td rowspan="2" data-position="ASH Test Position Y">ASH Test Position Y</td> <td>Max Force (N)</td> <td><input id="left-max-force-y" type="number" class="number-input" placeholder="N"></td> <td><input id="right-max-force-y" type="number" class="number-input" placeholder="N"></td> </tr>
-               <tr> <td>RFD 100ms (N/s)</td> <td><input id="left-rfd-y" type="number" class="number-input" placeholder="N/s"></td> <td><input id="right-rfd-y" type="number" class="number-input" placeholder="N/s"></td> </tr>
-               <tr> <td rowspan="2" data-position="ASH Test Position T">ASH Test Position T</td> <td>Max Force (N)</td> <td><input id="left-max-force-t" type="number" class="number-input" placeholder="N"></td> <td><input id="right-max-force-t" type="number" class="number-input" placeholder="N"></td> </tr>
-               <tr> <td>RFD 100ms (N/s)</td> <td><input id="left-rfd-t" type="number" class="number-input" placeholder="N/s"></td> <td><input id="right-rfd-t" type="number" class="number-input" placeholder="N/s"></td> </tr>
-           </tbody>
-        </table>
+                 <div id="normative-placeholder" style="display: none;"> Enter bodyweight to see normative comparisons. </div>
+                 <div id="bottom-area"></div>
 
-        <h2 id="input-title-original" style="display: none;">Input Overview</h2>
-        <h2 id="results-title">Results</h2>
+            </div> </div> </main>
+</div> <script>
+    // Check if Plotly is loaded
+    if (typeof Plotly === 'undefined') {
+        console.error("Plotly.js not loaded!");
+        document.body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;">Error: Plotly library failed to load. Please check your internet connection or contact support.</div>';
+    } else {
+        // --- DOM Element References ---
+        // Controls
+        const injuredSideRadio = document.getElementById('injured-side-radio');
+        const bodyweightInput = document.getElementById('bodyweight-input');
+        // Sidebar Buttons
+        const registerPatientButton = document.getElementById('register-patient-button');
+        const pdfPreviewButton = document.getElementById('pdf-preview-button');
+        const exportExcelButton = document.getElementById('export-excel-button');
+        const viewAnalysisButtonLink = document.getElementById('analysis-link-button');
+        const clearAllButton = document.getElementById('clear-all-button'); // New button reference
+        // Other Elements
+        const previewExitButtonInline = document.getElementById('preview-exit-button-inline');
+        const explanationBox = document.querySelector('.explanation-box');
+        const reportContentDiv = document.getElementById('report-content');
+        const normativePlaceholder = document.getElementById('normative-placeholder');
+        // Removed reference to old input table
+        const inputSectionContainer = document.getElementById('input-section-container'); // New container
+        const allNumberInputs = inputSectionContainer.querySelectorAll('.number-input'); // Update selector
+        const patientDataContainer = document.getElementById('patient-data-container');
+        const fpNrInput = document.getElementById('fp-nr-input');
+        const ageInput = document.getElementById('age-input');
+        const genderSelect = document.getElementById('gender-select');
+        const sportInput = document.getElementById('sport-input');
+        // Chart/Box Divs
+        const asymmetryChartDivs = ['bar-chart-I', 'bar-chart-Y', 'bar-chart-T'];
+        const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T'];
+        const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
+        // Input field references (remain the same as IDs are kept)
+        const leftMaxForceInputI = document.getElementById('left-max-force-i'); const rightMaxForceInputI = document.getElementById('right-max-force-i'); const leftRfdInputI = document.getElementById('left-rfd-i'); const rightRfdInputI = document.getElementById('right-rfd-i');
+        const leftMaxForceInputY = document.getElementById('left-max-force-y'); const rightMaxForceInputY = document.getElementById('right-max-force-y'); const leftRfdInputY = document.getElementById('left-rfd-y'); const rightRfdInputY = document.getElementById('right-rfd-y');
+        const leftMaxForceInputT = document.getElementById('left-max-force-t'); const rightMaxForceInputT = document.getElementById('right-max-force-t'); const leftRfdInputT = document.getElementById('left-rfd-t'); const rightRfdInputT = document.getElementById('right-rfd-t');
 
-        <div class="position-row">
-            <div class="asymmetry-graph-container">
-                <div id="position-box-I" class="position-box">
-                    <h3 class="position-title">Position I - Asymmetry</h3>
-                    <div id="bar-chart-I" class="js-plotly-plot"></div> </div>
-            </div>
-            <div class="normative-graph-container">
-                <div id="normative-chart-container-I" class="normative-box">
-                    <h3 class="normative-title">Position I - Normative Comparison</h3>
-                    <div id="normative-chart-I" class="js-plotly-plot"></div> </div>
-            </div>
-        </div>
-        <div class="position-row">
-            <div class="asymmetry-graph-container">
-                <div id="position-box-Y" class="position-box">
-                    <h3 class="position-title">Position Y - Asymmetry</h3>
-                    <div id="bar-chart-Y" class="js-plotly-plot"></div>
-                </div>
-            </div>
-            <div class="normative-graph-container">
-                <div id="normative-chart-container-Y" class="normative-box">
-                    <h3 class="normative-title">Position Y - Normative Comparison</h3>
-                    <div id="normative-chart-Y" class="js-plotly-plot"></div>
-                </div>
-            </div>
-        </div>
-         <div class="position-row">
-            <div class="asymmetry-graph-container">
-                <div id="position-box-T" class="position-box">
-                    <h3 class="position-title">Position T - Asymmetry</h3>
-                    <div id="bar-chart-T" class="js-plotly-plot"></div>
-                </div>
-            </div>
-            <div class="normative-graph-container">
-                <div id="normative-chart-container-T" class="normative-box">
-                    <h3 class="normative-title">Position T - Normative Comparison</h3>
-                    <div id="normative-chart-T" class="js-plotly-plot"></div>
-                </div>
-            </div>
-        </div>
+        // --- Normative Data (Unchanged) ---
+        const normativeThresholds = {
+            'I': { poor_max: 1.47, average_mid: 1.65, good_min: 1.85, excellent_min: 2.1 },
+            'Y': { poor_max: 1.25, average_mid: 1.4,  good_min: 1.6,  excellent_min: 1.76 },
+            'T': { poor_max: 1.15, average_mid: 1.25, good_min: 1.4,  excellent_min: 1.58 }
+        };
+        const percentileZones = { poor: 30, average: 70, good: 90, excellent: 100 };
+        const percentileMidpoint = 50;
+        const normZoneColors = {
+             poor: getComputedStyle(document.documentElement).getPropertyValue('--norm-poor-bg').trim() || 'rgba(252, 165, 165, 0.5)',
+             average: getComputedStyle(document.documentElement).getPropertyValue('--norm-average-bg').trim() || 'rgba(252, 211, 77, 0.5)',
+             good: getComputedStyle(document.documentElement).getPropertyValue('--norm-good-bg').trim() || 'rgba(167, 243, 208, 0.5)',
+             excellent: getComputedStyle(document.documentElement).getPropertyValue('--norm-excellent-bg').trim() || 'rgba(52, 211, 153, 0.5)'
+        };
+        const normativeLabels = { poor: 'Poor', average: 'Average', good: 'Good', excellent: 'Excellent' };
 
-        <div id="normative-placeholder" style="display: none;"> Enter bodyweight to see normative comparisons. </div>
-        <div id="bottom-area"></div>
+        // --- Plotly Configuration (Unchanged) ---
+        const plotlyConfig = {
+            displaylogo: false,
+            modeBarButtonsToRemove: ['sendDataToCloud', 'lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian'],
+            modeBarButtonsToAdd: [{
+                name: 'Download plot as PNG',
+                icon: Plotly.Icons.camera,
+                click: function(gd) {
+                    const titleText = (gd.layout.title?.text || 'plot').replace(/<br>/g, ' ');
+                    Plotly.downloadImage(gd, { format: 'png', width: gd._fullLayout.width, height: gd._fullLayout.height, filename: titleText });
+                }
+            }]
+        };
 
-    </div> </div> <script>
-     // Check if Plotly is loaded
-     if (typeof Plotly === 'undefined') {
-         console.error("Plotly.js not loaded!");
-         document.body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;">Error: Plotly library failed to load. Please check your internet connection or contact support.</div>';
-     } else {
-         // --- DOM Element References ---
-         const injuredSideRadio = document.getElementById('injured-side-radio');
-         const bodyweightInput = document.getElementById('bodyweight-input');
-         const pdfPreviewButton = document.getElementById('pdf-preview-button');
-         const exitPreviewButton = document.getElementById('exit-preview-button');
-         const previewExitButtonInline = document.getElementById('preview-exit-button-inline');
-         const exportExcelButton = document.getElementById('export-excel-button');
-         const explanationBox = document.querySelector('.explanation-box');
-         const reportContentDiv = document.getElementById('report-content');
-         const normativePlaceholder = document.getElementById('normative-placeholder');
-         const asymmetryChartDivs = ['bar-chart-I', 'bar-chart-Y', 'bar-chart-T'];
-         const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T'];
-         const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
-         const inputTable = document.getElementById('input-summary-table');
-         const allTableInputs = inputTable.querySelectorAll('.number-input');
-         const clearAllInputsBtn = document.getElementById('clear-all-inputs-btn'); // Added reference
-
-         // Patient data references
-         const registerPatientButton = document.getElementById('register-patient-button');
-         const patientDataContainer = document.getElementById('patient-data-container');
-         const fpNrInput = document.getElementById('fp-nr-input');
-         const ageInput = document.getElementById('age-input');
-         const genderSelect = document.getElementById('gender-select');
-         const sportInput = document.getElementById('sport-input');
-
-         // Input field references
-         const leftMaxForceInputI = document.getElementById('left-max-force-i'); const rightMaxForceInputI = document.getElementById('right-max-force-i'); const leftRfdInputI = document.getElementById('left-rfd-i'); const rightRfdInputI = document.getElementById('right-rfd-i');
-         const leftMaxForceInputY = document.getElementById('left-max-force-y'); const rightMaxForceInputY = document.getElementById('right-max-force-y'); const leftRfdInputY = document.getElementById('left-rfd-y'); const rightRfdInputY = document.getElementById('right-rfd-y');
-         const leftMaxForceInputT = document.getElementById('left-max-force-t'); const rightMaxForceInputT = document.getElementById('right-max-force-t'); const leftRfdInputT = document.getElementById('left-rfd-t'); const rightRfdInputT = document.getElementById('right-rfd-t');
-
-         // --- Normative Data ---
-         const normativeThresholds = {
-             'I': { poor_max: 1.47, average_mid: 1.65, good_min: 1.85, excellent_min: 2.1 },
-             'Y': { poor_max: 1.25, average_mid: 1.4,  good_min: 1.6,  excellent_min: 1.76 },
-             'T': { poor_max: 1.15, average_mid: 1.25, good_min: 1.4,  excellent_min: 1.58 }
-         };
-         const percentileZones = { poor: 30, average: 70, good: 90, excellent: 100 };
-         const percentileMidpoint = 50;
-         const normZoneColors = {
-              poor: getComputedStyle(document.documentElement).getPropertyValue('--norm-poor-bg').trim() || 'rgba(252, 165, 165, 0.5)',
-              average: getComputedStyle(document.documentElement).getPropertyValue('--norm-average-bg').trim() || 'rgba(252, 211, 77, 0.5)',
-              good: getComputedStyle(document.documentElement).getPropertyValue('--norm-good-bg').trim() || 'rgba(167, 243, 208, 0.5)',
-              excellent: getComputedStyle(document.documentElement).getPropertyValue('--norm-excellent-bg').trim() || 'rgba(52, 211, 153, 0.5)'
-         };
-         const normativeLabels = { poor: 'Poor', average: 'Average', good: 'Good', excellent: 'Excellent' };
-
-         // --- Plotly Configuration ---
-         const plotlyConfig = {
-             displaylogo: false,
-             modeBarButtonsToRemove: ['sendDataToCloud', 'lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian'],
-             modeBarButtonsToAdd: [{
-                 name: 'Download plot as PNG',
-                 icon: Plotly.Icons.camera,
-                 click: function(gd) {
-                     const titleText = (gd.layout.title?.text || 'plot').replace(/<br>/g, ' ');
-                     Plotly.downloadImage(gd, { format: 'png', width: gd._fullLayout.width, height: gd._fullLayout.height, filename: titleText });
-                 }
-             }]
-         };
-
-         // --- Initial Setup: Create empty plots ---
-         function createEmptyPlot(targetDivId, title = 'Enter Data', height = 280) {
+        // --- Initial Setup: Create empty plots (Unchanged logic) ---
+        function createEmptyPlot(targetDivId, title = 'Enter Data', height = 280) {
              const targetDiv = document.getElementById(targetDivId);
              if (!targetDiv) { console.error(`Target div ${targetDivId} not found.`); return; }
              try {
                  Plotly.react(targetDiv, [{ x: [], y: [], type: 'bar' }], {
-                     title: { text: title, font: { size: 16 } },
+                     title: { text: title /* Style via CSS */ },
                      height: height,
                      margin: { l: 60, r: 40, b: 40, t: 50, pad: 4 },
                      paper_bgcolor: 'var(--white)',
                      plot_bgcolor: 'var(--light-gray)',
                      xaxis: { showgrid: false, zeroline: false, showticklabels: false },
                      yaxis: { showgrid: true, zeroline: true, gridcolor: 'var(--medium-gray)', showticklabels: false },
-                     font: { family: 'Avenir, sans-serif', size: 12, color: 'var(--dark-gray)' }
+                     font: { /* Styles primarily controlled by CSS */ }
                  }, plotlyConfig);
              } catch (error) {
                  console.error(`Error creating empty plot in ${targetDivId}:`, error);
                  targetDiv.innerHTML = `<p style="color: red; text-align: center; padding: 20px;">Error displaying chart.</p>`;
              }
-         }
-         asymmetryChartDivs.forEach(chartDivId => createEmptyPlot(chartDivId, 'Enter Data', 280));
-         normativeChartDivs.forEach(chartDivId => createEmptyPlot(chartDivId, 'Enter Bodyweight', 280));
+        }
+        asymmetryChartDivs.forEach(chartDivId => createEmptyPlot(chartDivId, 'Enter Data', 280));
+        normativeChartDivs.forEach(chartDivId => createEmptyPlot(chartDivId, 'Enter Bodyweight', 280));
 
 
-         // --- Core Logic Functions ---
-         function processInputAndCalculate(position) {
-             let leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput;
-             switch (position) {
-                 case 'I': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputI, rightMaxForceInputI, leftRfdInputI, rightRfdInputI]; break;
-                 case 'Y': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputY, rightMaxForceInputY, leftRfdInputY, rightRfdInputY]; break;
-                 case 'T': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputT, rightMaxForceInputT, leftRfdInputT, rightRfdInputT]; break;
-                 default: console.error("Invalid position:", position); return null;
-             }
-             if (!leftMaxForceInput || !rightMaxForceInput || !leftRfdInput || !rightRfdInput) {
-                 console.error(`Input elements not found for position ${position}`);
-                 return null;
-             }
-             const leftMaxForce = parseFloat(leftMaxForceInput.value) || 0;
-             const rightMaxForce = parseFloat(rightMaxForceInput.value) || 0;
-             const leftRfd = parseFloat(leftRfdInput.value) || 0;
-             const rightRfd = parseFloat(rightRfdInput.value) || 0;
+        // --- Core Logic Functions ---
+        // processInputAndCalculate (Updated to use new IDs, logic same)
+        function processInputAndCalculate(position) {
+            let leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput;
+            switch (position) {
+                case 'I': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputI, rightMaxForceInputI, leftRfdInputI, rightRfdInputI]; break;
+                case 'Y': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputY, rightMaxForceInputY, leftRfdInputY, rightRfdInputY]; break;
+                case 'T': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputT, rightMaxForceInputT, leftRfdInputT, rightRfdInputT]; break;
+                default: console.error("Invalid position:", position); return null;
+            }
+            if (!leftMaxForceInput || !rightMaxForceInput || !leftRfdInput || !rightRfdInput) {
+                console.error(`Input elements not found for position ${position}`);
+                return null;
+            }
+            const leftMaxForce = parseFloat(leftMaxForceInput.value) || 0;
+            const rightMaxForce = parseFloat(rightMaxForceInput.value) || 0;
+            const leftRfd = parseFloat(leftRfdInput.value) || 0;
+            const rightRfd = parseFloat(rightRfdInput.value) || 0;
 
-             if (leftMaxForceInput.value === '' && rightMaxForceInput.value === '' &&
-                 leftRfdInput.value === '' && rightRfdInput.value === '') {
-                 return null; // Return null if all inputs for this position are empty
-             }
+            // Check if *all* inputs for this specific position are empty
+            if (leftMaxForceInput.value === '' && rightMaxForceInput.value === '' &&
+                leftRfdInput.value === '' && rightRfdInput.value === '') {
+                return null; // Return null if all inputs for this position are empty
+            }
 
-             return {
-                 left: { max_force: leftMaxForce, rfd: leftRfd },
-                 right: { max_force: rightMaxForce, rfd: rightRfd }
-             };
-         }
+            return {
+                left: { max_force: leftMaxForce, rfd: leftRfd },
+                right: { max_force: rightMaxForce, rfd: rightRfd }
+            };
+        }
 
-         function createAsymmetryChart(positionData, injuredSide, posLabel) {
+        // createAsymmetryChart (Unchanged logic, uses updated CSS)
+        function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
                  return [{}, false];
@@ -767,12 +914,12 @@
                  layout: {
                      height: 280,
                      barmode: 'group',
-                     yaxis: { title: `Injured Side Asymmetry (%)<br>(Relative to uninjured side = 100%)`, titlefont: { size: 13 }, tickfont: { size: 11 }, range: [0, 115], gridcolor: 'var(--medium-gray)', gridwidth: 1, zerolinecolor: 'var(--dark-gray)', zerolinewidth: 1.5 },
-                     xaxis: { tickfont: { size: 11 }, showgrid: false, zeroline: false },
+                     yaxis: { title: `Injured Side Asymmetry (%)<br>(Relative to uninjured side = 100%)`, range: [0, 115], gridcolor: 'var(--medium-gray)', gridwidth: 1, zerolinecolor: 'var(--dark-gray)', zerolinewidth: 1.5 },
+                     xaxis: { showgrid: false, zeroline: false },
                      paper_bgcolor: 'var(--white)',
                      plot_bgcolor: 'var(--light-gray)',
-                     font: { color: 'var(--dark-gray)', family: 'Avenir, sans-serif', size: 12 },
-                     legend: { orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5, font: { size: 12 } },
+                     font: { }, // Use CSS
+                     legend: { orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5 }, // Use CSS
                      margin: { l: 70, r: 30, b: 80, t: 40, pad: 10 },
                      shapes: [
                          { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: "var(--dark-gray)", width: 2, dash: "dash" }, layer: "below" },
@@ -786,7 +933,7 @@
              const metricsNamesForAnnotation = Object.keys(barDataRatios);
              const validRatios = Object.values(barDataRatios).flat().filter(isFinite);
              const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110;
-             const annotationY = maxYValue + 8;
+             const annotationY = Math.max(...plotYLeft.filter(isFinite), ...plotYRight.filter(isFinite), 110) + 8;
              fig.layout.yaxis.range[1] = annotationY + 12;
 
              for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
@@ -795,7 +942,7 @@
                  const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
 
                  if (!isFinite(injuredRatio)) {
-                     fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey', size: 18, weight: 'bold' }, xanchor: 'center', yanchor: 'bottom' });
+                     fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey' }, xanchor: 'center', yanchor: 'bottom', css_class: 'asymmetry-percent' });
                      allGreen = false;
                      continue;
                  }
@@ -808,285 +955,141 @@
                  else { color = '#ae2012'; }
 
                  if (color !== '#2a9d8f') { allGreen = false; }
-                 fig.layout.annotations.push({ x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false, font: { color: color, size: 20, weight: 'bold' }, xanchor: 'center', yanchor: 'bottom' });
+                 fig.layout.annotations.push({
+                     x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`,
+                     showarrow: false, font: { color: color }, xanchor: 'center', yanchor: 'bottom',
+                     css_class: 'asymmetry-percent'
+                 });
              }
              return [fig, allGreen];
-         }
+        }
 
-         function mapNkgToPercentile(nkgValue, positionLabel) {
+        // mapNkgToPercentile (Unchanged logic)
+        function mapNkgToPercentile(nkgValue, positionLabel) {
              const thresholds = normativeThresholds[positionLabel];
              if (!thresholds || typeof nkgValue !== 'number' || !isFinite(nkgValue)) { return 0; }
-             const pMap = [
-                 { v: 0.5, p: 0 },
-                 { v: thresholds.poor_max, p: percentileZones.poor },
-                 { v: thresholds.average_mid, p: percentileMidpoint },
-                 { v: thresholds.good_min, p: percentileZones.average },
-                 { v: thresholds.excellent_min, p: percentileZones.good },
-                 { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent }
-             ];
-             const minVal = pMap[0].v;
-             const maxVal = pMap[pMap.length - 1].v;
+             const pMap = [ { v: 0.5, p: 0 }, { v: thresholds.poor_max, p: percentileZones.poor }, { v: thresholds.average_mid, p: percentileMidpoint }, { v: thresholds.good_min, p: percentileZones.average }, { v: thresholds.excellent_min, p: percentileZones.good }, { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent } ];
+             const minVal = pMap[0].v; const maxVal = pMap[pMap.length - 1].v;
              const clampedValue = Math.max(minVal, Math.min(nkgValue, maxVal));
-             let lowerPoint = pMap[0];
-             let upperPoint = pMap[pMap.length - 1];
-              for (let i = 0; i < pMap.length - 1; i++) {
-                  if (clampedValue === pMap[i].v) { lowerPoint = upperPoint = pMap[i]; break; }
-                  if (clampedValue > pMap[i].v && clampedValue <= pMap[i + 1].v) { lowerPoint = pMap[i]; upperPoint = pMap[i + 1]; break; }
-              }
+             let lowerPoint = pMap[0]; let upperPoint = pMap[pMap.length - 1];
+              for (let i = 0; i < pMap.length - 1; i++) { if (clampedValue === pMap[i].v) { lowerPoint = upperPoint = pMap[i]; break; } if (clampedValue > pMap[i].v && clampedValue <= pMap[i + 1].v) { lowerPoint = pMap[i]; upperPoint = pMap[i + 1]; break; } }
               if (clampedValue === upperPoint.v) { lowerPoint = upperPoint; }
-             let percentile = lowerPoint.p;
-             const valueRange = upperPoint.v - lowerPoint.v;
-             const percentileRange = upperPoint.p - lowerPoint.p;
-             if (valueRange > 0) { percentile += ((clampedValue - lowerPoint.v) / valueRange) * percentileRange; }
-             return Math.max(0, Math.min(percentile, 100));
-         }
+              let percentile = lowerPoint.p; const valueRange = upperPoint.v - lowerPoint.v; const percentileRange = upperPoint.p - lowerPoint.p;
+              if (valueRange > 0) { percentile += ((clampedValue - lowerPoint.v) / valueRange) * percentileRange; }
+              return Math.max(0, Math.min(percentile, 100));
+        }
 
-
-         function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
+        // createNormativeComparisonChart (Unchanged logic, uses updated CSS)
+        function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
              const bwVal = parseFloat(bodyweight);
-             if (isNaN(bwVal) || bwVal <= 0 || !positionData) {
-                 console.warn(`Invalid BW/data for normative chart ${positionLabel}`);
-                 return {};
-             }
-             const leftNkg = positionData.left.max_force / bwVal;
-             const rightNkg = positionData.right.max_force / bwVal;
+             if (isNaN(bwVal) || bwVal <= 0 || !positionData) { console.warn(`Invalid BW/data for normative chart ${positionLabel}`); return {}; }
+             const leftNkg = positionData.left.max_force / bwVal; const rightNkg = positionData.right.max_force / bwVal;
              const thresholds = normativeThresholds[positionLabel];
-             if (!thresholds) {
-                 console.error(`Normative thresholds missing for ${positionLabel}`);
-                 return {};
-             }
-             const leftPercentile = mapNkgToPercentile(leftNkg, positionLabel);
-             const rightPercentile = mapNkgToPercentile(rightNkg, positionLabel);
+             if (!thresholds) { console.error(`Normative thresholds missing for ${positionLabel}`); return {}; }
+             const leftPercentile = mapNkgToPercentile(leftNkg, positionLabel); const rightPercentile = mapNkgToPercentile(rightNkg, positionLabel);
 
              const baseCurveX = []; const baseCurveY = [];
              const mean = 55; const stdDev = 22; const amplitude = 0.9;
-             for (let i = 0; i <= 100; i += 0.5) {
-                 baseCurveX.push(i);
-                 const y = amplitude * Math.exp(-Math.pow(i - mean, 2) / (2 * Math.pow(stdDev, 2)));
-                 baseCurveY.push(y);
-             }
+             for (let i = 0; i <= 100; i += 0.5) { baseCurveX.push(i); const y = amplitude * Math.exp(-Math.pow(i - mean, 2) / (2 * Math.pow(stdDev, 2))); baseCurveY.push(y); }
 
              const zoneBoundaries = [0, percentileZones.poor, percentileZones.average, percentileZones.good, percentileZones.excellent];
-             const traces = [];
-             const zoneColorsList = [normZoneColors.poor, normZoneColors.average, normZoneColors.good, normZoneColors.excellent];
-             for (let i = 0; i < zoneBoundaries.length - 1; i++) {
-                 const x0 = zoneBoundaries[i]; const x1 = zoneBoundaries[i+1];
-                 const zoneFillColor = zoneColorsList[i];
-                 const segmentX = [x0]; const segmentY = [0];
-                 for(let j=0; j < baseCurveX.length; j++) { if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) { segmentX.push(baseCurveX[j]); segmentY.push(baseCurveY[j]); } }
-                 segmentX.push(x1); segmentY.push(0);
-                 traces.push({ x: segmentX, y: segmentY, type: 'scatter', mode: 'lines', line: { width: 0 }, fill: 'tozeroy', fillcolor: zoneFillColor, hoverinfo: 'none', name: Object.keys(normativeLabels)[i], showlegend: false });
-             }
+             const traces = []; const zoneColorsList = [normZoneColors.poor, normZoneColors.average, normZoneColors.good, normZoneColors.excellent];
+             for (let i = 0; i < zoneBoundaries.length - 1; i++) { const x0 = zoneBoundaries[i]; const x1 = zoneBoundaries[i+1]; const zoneFillColor = zoneColorsList[i]; const segmentX = [x0]; const segmentY = [0]; for(let j=0; j < baseCurveX.length; j++) { if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) { segmentX.push(baseCurveX[j]); segmentY.push(baseCurveY[j]); } } segmentX.push(x1); segmentY.push(0); traces.push({ x: segmentX, y: segmentY, type: 'scatter', mode: 'lines', line: { width: 0 }, fill: 'tozeroy', fillcolor: zoneFillColor, hoverinfo: 'none', name: Object.keys(normativeLabels)[i], showlegend: false }); }
              traces.push({ x: baseCurveX, y: baseCurveY, type: 'scatter', mode: 'lines', line: { color: 'rgba(100, 100, 100, 0.7)', width: 1.5, shape: 'spline' }, hoverinfo: 'none', name: 'Distribution (Visual)', showlegend: false });
 
-             const layout = {
-                 height: 280,
-                 margin: { t: 55, b: 95, l: 30, r: 30 },
-                 paper_bgcolor: 'var(--white)',
-                 plot_bgcolor: 'var(--white)',
-                 xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false },
-                 yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' },
-                 shapes: [], annotations: [],
-                 font: { size: 11 },
-                 showlegend: false
-             };
+             const layout = { height: 280, margin: { t: 55, b: 95, l: 30, r: 30 }, paper_bgcolor: 'var(--white)', plot_bgcolor: 'var(--white)', xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false }, yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' }, shapes: [], annotations: [], font: { }, showlegend: false }; // Use CSS
 
-             const thresholdAnnotations = [
-                 { p: percentileZones.poor, val: thresholds.poor_max },
-                 { p: percentileZones.average, val: thresholds.good_min },
-                 { p: percentileZones.good, val: thresholds.excellent_min }
-             ];
-             thresholdAnnotations.forEach(t => {
-                 layout.annotations.push({
-                     xref: 'x', yref: 'paper', x: t.p, y: -0.08,
-                     text: `<span class="norm-value">${t.val.toFixed(2)}</span>`,
-                     showarrow: false, xanchor: 'center', yanchor: 'top',
-                     font: { size: 10 }
-                 });
-             });
+             const thresholdAnnotations = [ { p: percentileZones.poor, val: thresholds.poor_max }, { p: percentileZones.average, val: thresholds.good_min }, { p: percentileZones.good, val: thresholds.excellent_min } ];
+             thresholdAnnotations.forEach(t => { layout.annotations.push({ xref: 'x', yref: 'paper', x: t.p, y: -0.08, text: `<span class="norm-value">${t.val.toFixed(2)}</span>`, showarrow: false, xanchor: 'center', yanchor: 'top', font: { } }); }); // Use CSS
 
-              layout.shapes.push({
-                  type: 'line', xref: 'x', yref: 'paper',
-                  x0: percentileMidpoint, x1: percentileMidpoint, y0: 0, y1: 1,
-                  line: { color: 'var(--medium-gray)', width: 1.5, dash: 'dot' },
-                  layer: 'below'
-              });
-
+              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: percentileMidpoint, x1: percentileMidpoint, y0: 0, y1: 1, line: { color: 'var(--medium-gray)', width: 1.5, dash: 'dot' }, layer: 'below' });
               const avgValueForPos = thresholds.average_mid.toFixed(2);
-              layout.annotations.push({
-                  xref: 'x', yref: 'paper',
-                  x: percentileMidpoint,
-                  y: -0.08,
-                  text: avgValueForPos,
-                  showarrow: false,
-                  xanchor: 'center',
-                  yanchor: 'top',
-                  font: { size: 10, color: 'var(--dark-gray)' }
-              });
+              layout.annotations.push({ xref: 'x', yref: 'paper', x: percentileMidpoint, y: -0.08, text: `<span class="value-display">${avgValueForPos}</span>`, showarrow: false, xanchor: 'center', yanchor: 'top', font: { } }); // Use CSS
 
              const labelYPosition = 1.15;
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { size: 11 } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { size: 11 }, align: 'center' });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { size: 11 } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { size: 11 } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { }, align: 'center' });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
 
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: 'var(--left-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: '<b>L</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--left-line-color)', font: {color: 'var(--left-line-color)', size: 14} });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--left-line-color)', font: {color: 'var(--left-line-color)' }, css_class: 'left-label' });
 
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: 'var(--right-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: '<b>R</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--right-line-color)', font: {color: 'var(--right-line-color)', size: 14} });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--right-line-color)', font: {color: 'var(--right-line-color)' }, css_class: 'right-label' });
 
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;
-             layout.annotations.push({
-                 xref: 'paper', yref: 'paper', x: 0.5, y: -0.30,
-                 text: combinedNkgText,
-                 showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center',
-                 font: { size: 15, color: 'var(--dark-gray)' }
-             });
+             layout.annotations.push({ xref: 'paper', yref: 'paper', x: 0.5, y: -0.30, text: combinedNkgText, showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center', font: { } }); // Use CSS
 
              return { data: traces, layout };
-         }
+        }
 
 
-         // --- Main Update Function ---
-         function updateGraphsAndTable() {
-             console.log("Updating graphs and table...");
-             const injuredSide = injuredSideRadio.value;
-             const bodyweight = bodyweightInput.value;
-             const bwVal = parseFloat(bodyweight);
-             const bodyweightValid = !isNaN(bwVal) && bwVal > 0;
+        // --- Main Update Function (Unchanged logic) ---
+        function updateGraphsAndTable() {
+            // console.log("Updating graphs and table..."); // Less console noise
+            const injuredSide = injuredSideRadio.value;
+            const bodyweight = bodyweightInput.value;
+            const bwVal = parseFloat(bodyweight);
+            const bodyweightValid = !isNaN(bwVal) && bwVal > 0;
 
-             // Highlight Injured Side Input
-             allTableInputs.forEach(input => {
-                 input.classList.remove('injured-side-input');
-                 if (injuredSide === 'Left' && input.id.includes('left-')) {
-                     input.classList.add('injured-side-input');
-                 } else if (injuredSide === 'Right' && input.id.includes('right-')) {
-                     input.classList.add('injured-side-input');
-                 }
-             });
+            allNumberInputs.forEach(input => { input.classList.remove('injured-side-input'); if ((injuredSide === 'Left' && input.id.includes('left-')) || (injuredSide === 'Right' && input.id.includes('right-'))) { input.classList.add('injured-side-input'); } });
+            if (normativePlaceholder) { normativePlaceholder.style.display = bodyweightValid ? 'none' : 'block'; }
+            normativeChartDivs.forEach(divId => { const container = document.getElementById(divId)?.closest('.normative-graph-container'); if (container) { container.style.display = bodyweightValid ? 'block' : 'none'; } });
 
-             if (normativePlaceholder) { normativePlaceholder.style.display = bodyweightValid ? 'none' : 'block'; }
-             normativeChartDivs.forEach(divId => {
-                 const container = document.getElementById(divId)?.closest('.normative-graph-container');
-                 if (container) { container.style.display = bodyweightValid ? 'block' : 'none'; }
-             });
+            const positions = ['I', 'Y', 'T'];
+            positions.forEach((pos, i) => {
+                const asymmetryChartDivId = asymmetryChartDivs[i]; const asymmetryPositionBoxDivId = asymmetryPositionBoxDivs[i]; const asymmetryPositionBoxDiv = document.getElementById(asymmetryPositionBoxDivId); const normativeChartDivId = normativeChartDivs[i];
+                if (!asymmetryPositionBoxDiv || !document.getElementById(asymmetryChartDivId) || !document.getElementById(normativeChartDivId)) { console.error(`Elements not found for position ${pos}`); return; }
+                const positionData = processInputAndCalculate(pos);
 
-             const positions = ['I', 'Y', 'T'];
-             positions.forEach((pos, i) => {
-                 const asymmetryChartDivId = asymmetryChartDivs[i];
-                 const asymmetryPositionBoxDivId = asymmetryPositionBoxDivs[i];
-                 const asymmetryPositionBoxDiv = document.getElementById(asymmetryPositionBoxDivId);
-                 const normativeChartDivId = normativeChartDivs[i];
+                if (positionData) {
+                    try { const [fig, allGreen] = createAsymmetryChart(positionData, injuredSide, pos); if (fig?.data && fig?.layout) { Plotly.react(asymmetryChartDivId, fig.data, fig.layout, plotlyConfig); asymmetryPositionBoxDiv.className = allGreen ? 'position-box green-box' : 'position-box'; } else { throw new Error("Generated asymmetry figure invalid."); } } catch (error) { console.error(`Error creating asymmetry chart for ${pos}:`, error); createEmptyPlot(asymmetryChartDivId, 'Error loading asymmetry data', 280); asymmetryPositionBoxDiv.className = 'position-box'; }
+                } else { createEmptyPlot(asymmetryChartDivId, 'Enter Data', 280); asymmetryPositionBoxDiv.className = 'position-box'; }
 
-                 if (!asymmetryPositionBoxDiv || !document.getElementById(asymmetryChartDivId) || !document.getElementById(normativeChartDivId)) {
-                     console.error(`Elements not found for position ${pos}`);
-                     return;
-                 }
+                if (bodyweightValid && positionData) {
+                    try { const config = createNormativeComparisonChart(positionData, bodyweight, pos); if (config?.data && config?.layout) { Plotly.react(normativeChartDivId, config.data, config.layout, plotlyConfig); } else { throw new Error("Generated normative figure invalid."); } } catch (error) { console.error(`Error creating normative chart for ${pos}:`, error); createEmptyPlot(normativeChartDivId, 'Error Loading Data', 280); }
+                } else if (!bodyweightValid) { createEmptyPlot(normativeChartDivId, 'Enter Bodyweight', 280); }
+                else { createEmptyPlot(normativeChartDivId, 'Enter Data', 280); }
+            });
+             setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+        }
 
-                 const positionData = processInputAndCalculate(pos);
+        // --- Functions for Patient Data Show/Hide (Unchanged logic) ---
+        function togglePatientData() {
+            if (patientDataContainer) {
+                const isVisible = patientDataContainer.classList.toggle('visible');
+                if (registerPatientButton) {
+                    const buttonTextSpan = registerPatientButton.querySelector('.button-text');
+                    if (buttonTextSpan) {
+                         registerPatientButton.innerHTML = isVisible
+                             ? `<i class="fas fa-user-minus"></i> <span class="button-text">Hide Patient Data</span>`
+                             : `<i class="fas fa-user-plus"></i> <span class="button-text">Register Patient</span>`;
+                    }
+                }
+            }
+        }
 
-                 // Update asymmetry chart
-                 if (positionData) {
-                     try {
-                         const [fig, allGreen] = createAsymmetryChart(positionData, injuredSide, pos);
-                         if (fig?.data && fig?.layout) {
-                             Plotly.react(asymmetryChartDivId, fig.data, fig.layout, plotlyConfig);
-                             asymmetryPositionBoxDiv.className = allGreen ? 'position-box green-box' : 'position-box'; // Apply both classes if green
-                         } else { throw new Error("Generated asymmetry figure invalid."); }
-                     } catch (error) {
-                         console.error(`Error creating asymmetry chart for ${pos}:`, error);
-                         createEmptyPlot(asymmetryChartDivId, 'Error loading asymmetry data', 280);
-                         asymmetryPositionBoxDiv.className = 'position-box';
-                     }
-                 } else {
-                     createEmptyPlot(asymmetryChartDivId, 'Enter Data', 280);
-                     asymmetryPositionBoxDiv.className = 'position-box';
-                 }
+        // --- Functions for PDF Preview Mode (Unchanged logic) ---
+        function enterPreviewMode() {
+            document.body.classList.add('pdf-preview-active');
+            if(previewExitButtonInline) previewExitButtonInline.style.display = 'inline-block';
+            if(explanationBox) explanationBox.style.display = 'block';
+            window.dispatchEvent(new Event('resize'));
+            console.log("Entered PDF preview mode");
+        }
 
-                 // Update normative chart
-                 if (bodyweightValid && positionData) {
-                     try {
-                         const config = createNormativeComparisonChart(positionData, bodyweight, pos);
-                          if (config?.data && config?.layout) {
-                             Plotly.react(normativeChartDivId, config.data, config.layout, plotlyConfig);
-                          } else { throw new Error("Generated normative figure invalid."); }
-                     } catch (error) {
-                         console.error(`Error creating normative chart for ${pos}:`, error);
-                         createEmptyPlot(normativeChartDivId, 'Error Loading Data', 280);
-                     }
-                 } else if (!bodyweightValid) {
-                     createEmptyPlot(normativeChartDivId, 'Enter Bodyweight', 280);
-                 } else {
-                      createEmptyPlot(normativeChartDivId, 'Enter Data', 280);
-                 }
-             });
-              // Trigger resize event slightly after updates to ensure Plotly redraws correctly
-              setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
-         }
+        function exitPreviewMode() {
+            document.body.classList.remove('pdf-preview-active');
+            if(previewExitButtonInline) previewExitButtonInline.style.display = 'none';
+            if(explanationBox) explanationBox.style.display = 'none';
+            window.dispatchEvent(new Event('resize'));
+            console.log("Exited PDF preview mode");
+        }
 
-         // --- Functions for Patient Data Show/Hide ---
-         function togglePatientData() {
-             if (patientDataContainer) {
-                 const isVisible = patientDataContainer.classList.toggle('visible');
-                 if (registerPatientButton) {
-                     registerPatientButton.innerHTML = isVisible
-                         ? '<i class="fas fa-user-minus"></i> Hide Patient Data'
-                         : '<i class="fas fa-user-plus"></i> Register Patient';
-                 }
-             }
-         }
-
-         // --- Functions for PDF Preview Mode ---
-         function enterPreviewMode() {
-             document.body.classList.add('pdf-preview-active');
-             if(registerPatientButton) registerPatientButton.style.display = 'none';
-             if(document.getElementById('view-analysis-button')) document.getElementById('view-analysis-button').parentElement.style.display = 'none'; // Hide analysis button link
-             if(pdfPreviewButton) pdfPreviewButton.style.display = 'none';
-             if(exportExcelButton) exportExcelButton.style.display = 'none';
-             if(exitPreviewButton) exitPreviewButton.style.display = 'none';
-             if(previewExitButtonInline) previewExitButtonInline.style.display = 'inline-block';
-             if(explanationBox) explanationBox.style.display = 'block';
-             // Hide the original h2 title container in preview
-             const inputHeaderContainer = document.querySelector('.input-header-container');
-             if (inputHeaderContainer) inputHeaderContainer.style.display = 'none';
-             // Show the separate h2 title for preview/print
-             const inputTitleOriginal = document.getElementById('input-title-original');
-             if (inputTitleOriginal) inputTitleOriginal.style.display = 'block';
-
-             window.dispatchEvent(new Event('resize'));
-             console.log("Entered PDF preview mode");
-         }
-
-         function exitPreviewMode() {
-             document.body.classList.remove('pdf-preview-active');
-              if(registerPatientButton) registerPatientButton.style.display = 'inline-block';
-              if(document.getElementById('view-analysis-button')) document.getElementById('view-analysis-button').parentElement.style.display = 'inline-block'; // Show analysis button link
-              if(pdfPreviewButton) pdfPreviewButton.style.display = 'inline-block';
-              if(exportExcelButton) exportExcelButton.style.display = 'inline-block';
-              if(exitPreviewButton) exitPreviewButton.style.display = 'none';
-              if(previewExitButtonInline) previewExitButtonInline.style.display = 'none';
-              if(explanationBox) explanationBox.style.display = 'none';
-              // Show the original h2 title container
-              const inputHeaderContainer = document.querySelector('.input-header-container');
-              if (inputHeaderContainer) inputHeaderContainer.style.display = 'flex';
-              // Hide the separate h2 title for preview/print
-              const inputTitleOriginal = document.getElementById('input-title-original');
-              if (inputTitleOriginal) inputTitleOriginal.style.display = 'none';
-
-              window.dispatchEvent(new Event('resize'));
-              console.log("Exited PDF preview mode");
-         }
-
-         // --- Function for Exporting to CSV ---
+        // --- Function for Exporting to CSV (Updated for new structure) ---
          function exportTableToCsv() {
-             const table = document.getElementById('input-summary-table');
-             if (!table) {
-                 console.error("Input table not found for export.");
-                 alert("Could not find the data table to export.");
-                 return;
-             }
-
+             // Check if patient data container exists (optional, for patient info)
              const fpNr = fpNrInput ? fpNrInput.value.trim() : '';
              const age = ageInput ? ageInput.value.trim() : '';
              const gender = genderSelect ? genderSelect.value : '';
@@ -1108,37 +1111,37 @@
              ];
              let csv = [headers.join(',')];
 
-             const rows = table.querySelectorAll('tbody tr');
-             let currentPosition = '';
+             const positions = ['I', 'Y', 'T'];
+             const metrics = ['Max Force (N)', 'RFD 100ms (N/s)'];
 
-             rows.forEach(row => {
-                 const cells = row.querySelectorAll('td');
-                 let rowData = [];
-                 let metric = '';
-                 let leftInputVal = '';
-                 let rightInputVal = '';
+             positions.forEach(pos => {
+                 const positionName = `ASH Test Position ${pos}`;
+                 metrics.forEach(metric => {
+                     let leftInputId, rightInputId;
+                     if (metric === 'Max Force (N)') {
+                         leftInputId = `left-max-force-${pos.toLowerCase()}`;
+                         rightInputId = `right-max-force-${pos.toLowerCase()}`;
+                     } else if (metric === 'RFD 100ms (N/s)') {
+                         leftInputId = `left-rfd-${pos.toLowerCase()}`;
+                         rightInputId = `right-rfd-${pos.toLowerCase()}`;
+                     } else {
+                         return; // Skip if metric is unknown
+                     }
 
-                 if (cells[0].hasAttribute('rowspan')) {
-                     currentPosition = cells[0].getAttribute('data-position') || cells[0].innerText.trim();
-                     metric = cells[1].innerText.trim();
-                     const leftInput = cells[2].querySelector('input');
-                     const rightInput = cells[3].querySelector('input');
-                     leftInputVal = leftInput ? leftInput.value : '';
-                     rightInputVal = rightInput ? rightInput.value : '';
-                 } else {
-                     metric = cells[0].innerText.trim();
-                     const leftInput = cells[1].querySelector('input');
-                     const rightInput = cells[2].querySelector('input');
-                     leftInputVal = leftInput ? leftInput.value : '';
-                     rightInputVal = rightInput ? rightInput.value : '';
-                 }
+                     const leftInput = document.getElementById(leftInputId);
+                     const rightInput = document.getElementById(rightInputId);
 
-                  rowData = [
-                      `"${fpNr}"`, `"${age}"`, `"${gender}"`, `"${sport}"`, `"${bodyweight}"`, `"${injuredSide}"`,
-                      `"${currentPosition}"`, `"${metric}"`, `"${leftInputVal}"`, `"${rightInputVal}"`
-                  ];
-                  csv.push(rowData.join(','));
+                     const leftVal = leftInput ? leftInput.value : '';
+                     const rightVal = rightInput ? rightInput.value : '';
+
+                     const rowData = [
+                         `"${fpNr}"`, `"${age}"`, `"${gender}"`, `"${sport}"`, `"${bodyweight}"`, `"${injuredSide}"`,
+                         `"${positionName}"`, `"${metric}"`, `"${leftVal}"`, `"${rightVal}"`
+                     ];
+                     csv.push(rowData.join(','));
+                 });
              });
+
 
              const csvString = "\uFEFF" + csv.join('\n'); // Add BOM for Excel compatibility
              const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
@@ -1158,10 +1161,34 @@
              }
          }
 
-         // --- localStorage Functions ---
-         const localStorageKey = 'screeningAppData';
+        // --- Function to Clear All Input Fields ---
+        function clearAllFields() {
+            console.log("Clearing all fields...");
+            // Clear patient data
+            if (fpNrInput) fpNrInput.value = '';
+            if (ageInput) ageInput.value = '';
+            if (genderSelect) genderSelect.value = ''; // Reset to default empty option
+            if (sportInput) sportInput.value = '';
 
-         function saveInputsToLocalStorage() {
+            // Clear top controls
+            if (injuredSideRadio) injuredSideRadio.value = 'Left'; // Reset to default
+            if (bodyweightInput) bodyweightInput.value = '';
+
+            // Clear all number inputs in the input boxes
+            allNumberInputs.forEach(input => {
+                input.value = '';
+            });
+
+            // Update graphs and save cleared state
+            updateGraphsAndTable();
+            saveInputsToLocalStorage();
+            console.log("Fields cleared.");
+        }
+
+
+        // --- localStorage Functions (Updated for new structure) ---
+        const localStorageKey = 'screeningAppData_v2'; // Keep same key for compatibility? Or change? Let's keep it for now.
+        function saveInputsToLocalStorage() {
              const dataToSave = {
                  injuredSide: injuredSideRadio.value,
                  bodyweight: bodyweightInput.value,
@@ -1169,7 +1196,7 @@
                  age: ageInput.value,
                  gender: genderSelect.value,
                  sport: sportInput.value,
-                 // Test values
+                 // Save values from the new input structure
                  'left-max-force-i': leftMaxForceInputI.value, 'right-max-force-i': rightMaxForceInputI.value,
                  'left-rfd-i': leftRfdInputI.value, 'right-rfd-i': rightRfdInputI.value,
                  'left-max-force-y': leftMaxForceInputY.value, 'right-max-force-y': rightMaxForceInputY.value,
@@ -1177,117 +1204,65 @@
                  'left-max-force-t': leftMaxForceInputT.value, 'right-max-force-t': rightMaxForceInputT.value,
                  'left-rfd-t': leftRfdInputT.value, 'right-rfd-t': rightRfdInputT.value,
              };
-             try {
-                 localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
-                 console.log('Screening inputs saved to localStorage.');
-             } catch (error) {
-                 console.error('Error saving screening inputs to localStorage:', error);
-             }
-         }
-
-         function loadInputsFromLocalStorage() {
+             try { localStorage.setItem(localStorageKey, JSON.stringify(dataToSave)); /* console.log('Inputs saved.'); */ } catch (error) { console.error('Error saving inputs:', error); }
+        }
+        function loadInputsFromLocalStorage() {
              try {
                  const savedDataString = localStorage.getItem(localStorageKey);
                  if (savedDataString) {
                      const savedData = JSON.parse(savedDataString);
-                     console.log('Loading screening inputs from localStorage:', savedData);
-
-                     // Restore values
+                     console.log('Loading inputs from localStorage');
                      injuredSideRadio.value = savedData.injuredSide || 'Left';
                      bodyweightInput.value = savedData.bodyweight || '';
                      fpNrInput.value = savedData.fpNr || '';
                      ageInput.value = savedData.age || '';
                      genderSelect.value = savedData.gender || '';
                      sportInput.value = savedData.sport || '';
+                     // Load values into the new input structure
+                     leftMaxForceInputI.value = savedData['left-max-force-i'] || ''; rightMaxForceInputI.value = savedData['right-max-force-i'] || '';
+                     leftRfdInputI.value = savedData['left-rfd-i'] || ''; rightRfdInputI.value = savedData['right-rfd-i'] || '';
+                     leftMaxForceInputY.value = savedData['left-max-force-y'] || ''; rightMaxForceInputY.value = savedData['right-max-force-y'] || '';
+                     leftRfdInputY.value = savedData['left-rfd-y'] || ''; rightRfdInputY.value = savedData['right-rfd-y'] || '';
+                     leftMaxForceInputT.value = savedData['left-max-force-t'] || ''; rightMaxForceInputT.value = savedData['right-max-force-t'] || '';
+                     leftRfdInputT.value = savedData['left-rfd-t'] || ''; rightRfdInputT.value = savedData['right-rfd-t'] || '';
 
-                     leftMaxForceInputI.value = savedData['left-max-force-i'] || '';
-                     rightMaxForceInputI.value = savedData['right-max-force-i'] || '';
-                     leftRfdInputI.value = savedData['left-rfd-i'] || '';
-                     rightRfdInputI.value = savedData['right-rfd-i'] || '';
-                     leftMaxForceInputY.value = savedData['left-max-force-y'] || '';
-                     rightMaxForceInputY.value = savedData['right-max-force-y'] || '';
-                     leftRfdInputY.value = savedData['left-rfd-y'] || '';
-                     rightRfdInputY.value = savedData['right-rfd-y'] || '';
-                     leftMaxForceInputT.value = savedData['left-max-force-t'] || '';
-                     rightMaxForceInputT.value = savedData['right-max-force-t'] || '';
-                     leftRfdInputT.value = savedData['left-rfd-t'] || '';
-                     rightRfdInputT.value = savedData['right-rfd-t'] || '';
-
-                    // If patient data fields have values, show the container
-                    if (fpNrInput.value || ageInput.value || genderSelect.value || sportInput.value) {
-                        if (patientDataContainer && !patientDataContainer.classList.contains('visible')) {
-                            togglePatientData(); // Show the container if it was hidden
-                        }
-                    }
-
+                     // Show patient data section if any patient info was loaded
+                     if (fpNrInput.value || ageInput.value || genderSelect.value || sportInput.value) {
+                         if (patientDataContainer && !patientDataContainer.classList.contains('visible')) {
+                             togglePatientData();
+                         }
+                     }
                  } else {
-                     console.log('No screening data found in localStorage.');
+                     /* console.log('No data found.'); */
                  }
              } catch (error) {
-                 console.error('Error loading screening inputs from localStorage:', error);
+                 console.error('Error loading inputs:', error);
              }
-         }
+        }
 
-         // --- Function to clear all input fields ---
-         function clearAllFields() {
-            console.log("Clearing all input fields...");
-            // Clear top controls
-            injuredSideRadio.value = 'Left'; // Reset to default
-            bodyweightInput.value = '';
+        // --- Event Listeners ---
+        if (injuredSideRadio) injuredSideRadio.addEventListener('change', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
+        if (bodyweightInput) bodyweightInput.addEventListener('input', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
+        if (fpNrInput) fpNrInput.addEventListener('change', saveInputsToLocalStorage);
+        if (ageInput) ageInput.addEventListener('change', saveInputsToLocalStorage);
+        if (genderSelect) genderSelect.addEventListener('change', saveInputsToLocalStorage);
+        if (sportInput) sportInput.addEventListener('change', saveInputsToLocalStorage);
+        // Update event listener to cover new inputs
+        allNumberInputs.forEach(input => { // Changed selector variable name
+             input.addEventListener('input', updateGraphsAndTable);
+             input.addEventListener('change', saveInputsToLocalStorage);
+        });
+        if (pdfPreviewButton) { pdfPreviewButton.addEventListener('click', enterPreviewMode); }
+        if (exportExcelButton) { exportExcelButton.addEventListener('click', exportTableToCsv); }
+        if (registerPatientButton) { registerPatientButton.addEventListener('click', togglePatientData); }
+        if (previewExitButtonInline) { previewExitButtonInline.addEventListener('click', exitPreviewMode); }
+        if (clearAllButton) { clearAllButton.addEventListener('click', clearAllFields); } // Add listener for new button
 
-            // Clear patient data fields
-            fpNrInput.value = '';
-            ageInput.value = '';
-            genderSelect.selectedIndex = 0; // Reset to 'Select...'
-            sportInput.value = '';
+        // --- Initial Load (Unchanged logic) ---
+        document.addEventListener('DOMContentLoaded', () => { console.log("DOM loaded."); loadInputsFromLocalStorage(); updateGraphsAndTable(); });
+        window.addEventListener('load', () => { setTimeout(() => window.dispatchEvent(new Event('resize')), 200); });
 
-            // Clear table inputs
-            allTableInputs.forEach(input => {
-                input.value = '';
-            });
-
-            // Update graphs to reflect cleared data
-            updateGraphsAndTable();
-
-            // Save the cleared state to local storage
-            saveInputsToLocalStorage();
-         }
-
-
-         // --- Event Listeners ---
-         if (injuredSideRadio) injuredSideRadio.addEventListener('change', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
-         if (bodyweightInput) bodyweightInput.addEventListener('input', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
-         if (fpNrInput) fpNrInput.addEventListener('change', saveInputsToLocalStorage);
-         if (ageInput) ageInput.addEventListener('change', saveInputsToLocalStorage);
-         if (genderSelect) genderSelect.addEventListener('change', saveInputsToLocalStorage);
-         if (sportInput) sportInput.addEventListener('change', saveInputsToLocalStorage);
-
-         allTableInputs.forEach(input => {
-             input.addEventListener('input', updateGraphsAndTable); // Update graphs immediately on input
-             input.addEventListener('change', saveInputsToLocalStorage); // Save only when focus is lost (less frequent)
-         });
-         if (pdfPreviewButton) { pdfPreviewButton.addEventListener('click', enterPreviewMode); }
-         if (exitPreviewButton) { exitPreviewButton.addEventListener('click', exitPreviewMode); }
-         if (previewExitButtonInline) { previewExitButtonInline.addEventListener('click', exitPreviewMode); }
-         if (exportExcelButton) { exportExcelButton.addEventListener('click', exportTableToCsv); }
-         if (registerPatientButton) { registerPatientButton.addEventListener('click', togglePatientData); }
-         // Add event listener for the new clear button
-         if (clearAllInputsBtn) { clearAllInputsBtn.addEventListener('click', clearAllFields); }
-
-         // --- Initial Update on Load ---
-         document.addEventListener('DOMContentLoaded', () => {
-             console.log("DOM fully loaded.");
-             loadInputsFromLocalStorage(); // Load saved data first
-             updateGraphsAndTable(); // Then update graphs based on loaded/default data
-             // Ensure the correct h2 title is shown initially
-             const inputTitleOriginal = document.getElementById('input-title-original');
-             if (inputTitleOriginal) inputTitleOriginal.style.display = 'none';
-         });
-         window.addEventListener('load', () => {
-            setTimeout(() => window.dispatchEvent(new Event('resize')), 200); // Ensure Plotly resizes after load
-         });
-     } // End of else block (if Plotly loaded)
-
+    } // End of else block (if Plotly loaded)
 </script>
 </body>
 </html>

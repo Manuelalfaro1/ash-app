@@ -133,6 +133,47 @@
              outline: none;
          }
 
+        /* --- Input Title and Clear Button --- */
+        .input-header-container {
+            display: flex;
+            justify-content: space-between; /* Pushes title and button apart */
+            align-items: center; /* Vertically aligns items */
+            margin-bottom: 0.75em; /* Keep original h2 margin */
+        }
+        #input-title {
+             margin-bottom: 0; /* Remove bottom margin from h2 */
+             border-bottom: none; /* Remove border if desired, or adjust padding */
+             padding-bottom: 0;
+        }
+        #clear-all-inputs-btn {
+            font-family: 'Avenir', sans-serif;
+            font-size: 0.8rem; /* Smaller font */
+            font-weight: 500;
+            padding: 4px 10px; /* Smaller padding */
+            color: var(--dark-gray);
+            background-color: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-left: 15px; /* Space between title and button */
+        }
+        #clear-all-inputs-btn:hover {
+            background-color: var(--medium-gray);
+            border-color: var(--dark-gray);
+            color: var(--text-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        #clear-all-inputs-btn:active {
+            transform: translateY(1px);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        #clear-all-inputs-btn i {
+            margin-right: 4px;
+        }
+
+
         /* --- Input Table --- */
         #input-summary-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; margin-bottom: 30px; box-shadow: var(--box-shadow); border-radius: var(--border-radius); overflow: hidden; }
         #input-summary-table th, #input-summary-table td { border-bottom: 1px solid var(--medium-gray); padding: 10px 14px; text-align: center; font-size: 0.9rem; vertical-align: middle; }
@@ -289,9 +330,11 @@
         body.pdf-preview-active #input-summary-table,
         body.pdf-preview-active #view-controls-container,
         body.pdf-preview-active #bottom-area,
-        body.pdf-preview-active h2#input-title { display: none; }
+        body.pdf-preview-active .input-header-container { display: none; } /* Hide clear button container in preview */
 
         body.pdf-preview-active h1, body.pdf-preview-active h2#results-title { display: block; }
+        /* Show original h2 title in preview */
+        body.pdf-preview-active h2#input-title-original { display: block; }
         body.pdf-preview-active .explanation-box { display: block; }
         body.pdf-preview-active #preview-exit-button-inline { display: inline-block; }
 
@@ -364,6 +407,8 @@
              #view-analysis-button { font-size: 0.9rem; padding: 8px 18px;} /* Adjust button size */
              #preview-exit-button-inline { top: 10px; right: 10px; }
              body.pdf-preview-active .container { padding: 10px; }
+             .input-header-container { flex-direction: column; align-items: flex-start; gap: 5px;} /* Stack title and button on small screens */
+             #clear-all-inputs-btn { margin-left: 0; }
         }
          @media (max-width: 480px) {
              .container { margin: 10px auto 20px auto; padding: 15px 15px; }
@@ -387,9 +432,12 @@
              #bottom-area,
              .print-instruction,
              .explanation-box,
-             #preview-exit-button-inline { display: none !important; }
+             #preview-exit-button-inline,
+             .input-header-container #clear-all-inputs-btn { display: none !important; } /* Hide clear button in print */
              h1 { font-size: 16pt !important; margin-bottom: 5mm !important; text-align: center !important; display: block !important; }
              h2 { display: block !important; font-size: 12pt !important; margin-top: 8mm; margin-bottom: 4mm; border: none !important; }
+             /* Ensure original h2 title is visible in print */
+             .input-header-container h2#input-title { display: block !important; margin-bottom: 4mm !important; }
              h3 { font-size: 10pt !important; margin-bottom: 3mm !important; }
              #report-content { padding: 0 !important; }
              .position-row { display: block !important; width: 100% !important; page-break-inside: avoid !important; border: none !important; margin-bottom: 5mm !important; padding: 0 !important;}
@@ -482,8 +530,13 @@
             </div>
         </div>
 
+        <div class="input-header-container">
+            <h2 id="input-title">Input Overview</h2>
+            <button id="clear-all-inputs-btn" title="Clear all input fields">
+                <i class="fas fa-eraser"></i> Clear All
+            </button>
+        </div>
 
-        <h2 id="input-title">Input Overview</h2>
         <table id="input-summary-table">
            <thead> <tr> <th>Position</th> <th>Metric</th> <th>Left Value</th> <th>Right Value</th> </tr> </thead>
            <tbody>
@@ -496,6 +549,7 @@
            </tbody>
         </table>
 
+        <h2 id="input-title-original" style="display: none;">Input Overview</h2>
         <h2 id="results-title">Results</h2>
 
         <div class="position-row">
@@ -563,6 +617,7 @@
          const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
          const inputTable = document.getElementById('input-summary-table');
          const allTableInputs = inputTable.querySelectorAll('.number-input');
+         const clearAllInputsBtn = document.getElementById('clear-all-inputs-btn'); // Added reference
 
          // Patient data references
          const registerPatientButton = document.getElementById('register-patient-button');
@@ -992,6 +1047,13 @@
              if(exitPreviewButton) exitPreviewButton.style.display = 'none';
              if(previewExitButtonInline) previewExitButtonInline.style.display = 'inline-block';
              if(explanationBox) explanationBox.style.display = 'block';
+             // Hide the original h2 title container in preview
+             const inputHeaderContainer = document.querySelector('.input-header-container');
+             if (inputHeaderContainer) inputHeaderContainer.style.display = 'none';
+             // Show the separate h2 title for preview/print
+             const inputTitleOriginal = document.getElementById('input-title-original');
+             if (inputTitleOriginal) inputTitleOriginal.style.display = 'block';
+
              window.dispatchEvent(new Event('resize'));
              console.log("Entered PDF preview mode");
          }
@@ -1005,6 +1067,13 @@
               if(exitPreviewButton) exitPreviewButton.style.display = 'none';
               if(previewExitButtonInline) previewExitButtonInline.style.display = 'none';
               if(explanationBox) explanationBox.style.display = 'none';
+              // Show the original h2 title container
+              const inputHeaderContainer = document.querySelector('.input-header-container');
+              if (inputHeaderContainer) inputHeaderContainer.style.display = 'flex';
+              // Hide the separate h2 title for preview/print
+              const inputTitleOriginal = document.getElementById('input-title-original');
+              if (inputTitleOriginal) inputTitleOriginal.style.display = 'none';
+
               window.dispatchEvent(new Event('resize'));
               console.log("Exited PDF preview mode");
          }
@@ -1071,7 +1140,7 @@
                   csv.push(rowData.join(','));
              });
 
-             const csvString = "\uFEFF" + csv.join('\n');
+             const csvString = "\uFEFF" + csv.join('\n'); // Add BOM for Excel compatibility
              const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
              const link = document.createElement('a');
 
@@ -1159,6 +1228,31 @@
              }
          }
 
+         // --- Function to clear all input fields ---
+         function clearAllFields() {
+            console.log("Clearing all input fields...");
+            // Clear top controls
+            injuredSideRadio.value = 'Left'; // Reset to default
+            bodyweightInput.value = '';
+
+            // Clear patient data fields
+            fpNrInput.value = '';
+            ageInput.value = '';
+            genderSelect.selectedIndex = 0; // Reset to 'Select...'
+            sportInput.value = '';
+
+            // Clear table inputs
+            allTableInputs.forEach(input => {
+                input.value = '';
+            });
+
+            // Update graphs to reflect cleared data
+            updateGraphsAndTable();
+
+            // Save the cleared state to local storage
+            saveInputsToLocalStorage();
+         }
+
 
          // --- Event Listeners ---
          if (injuredSideRadio) injuredSideRadio.addEventListener('change', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
@@ -1177,12 +1271,17 @@
          if (previewExitButtonInline) { previewExitButtonInline.addEventListener('click', exitPreviewMode); }
          if (exportExcelButton) { exportExcelButton.addEventListener('click', exportTableToCsv); }
          if (registerPatientButton) { registerPatientButton.addEventListener('click', togglePatientData); }
+         // Add event listener for the new clear button
+         if (clearAllInputsBtn) { clearAllInputsBtn.addEventListener('click', clearAllFields); }
 
          // --- Initial Update on Load ---
          document.addEventListener('DOMContentLoaded', () => {
              console.log("DOM fully loaded.");
              loadInputsFromLocalStorage(); // Load saved data first
              updateGraphsAndTable(); // Then update graphs based on loaded/default data
+             // Ensure the correct h2 title is shown initially
+             const inputTitleOriginal = document.getElementById('input-title-original');
+             if (inputTitleOriginal) inputTitleOriginal.style.display = 'none';
          });
          window.addEventListener('load', () => {
             setTimeout(() => window.dispatchEvent(new Event('resize')), 200); // Ensure Plotly resizes after load

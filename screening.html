@@ -692,17 +692,17 @@
         }
 
          @media (max-width: 480px) {
-              :root { --top-bar-height: 45px; }
-              .top-header-bar { padding: 0 15px; }
-              .top-header-bar .brand-name { font-size: 1.1rem; }
-              .top-header-bar .version-text { font-size: 0.7rem; }
-              .top-header-bar .social-links a { font-size: 1rem; margin-left: 10px; }
+             :root { --top-bar-height: 45px; }
+             .top-header-bar { padding: 0 15px; }
+             .top-header-bar .brand-name { font-size: 1.1rem; }
+             .top-header-bar .version-text { font-size: 0.7rem; }
+             .top-header-bar .social-links a { font-size: 1rem; margin-left: 10px; }
 
-              /* Bruker normal vekt for liten mobil */
-              h1 { font-size: 1.4rem; font-weight: var(--normal-font-weight);}
-              h2 { font-size: 1.1rem; font-weight: var(--normal-font-weight);}
-              .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px; font-weight: var(--normal-font-weight);} /* Knapper normal vekt */
-              /* Further adjust input row for very small screens already handled */
+             /* Bruker normal vekt for liten mobil */
+             h1 { font-size: 1.4rem; font-weight: var(--normal-font-weight);}
+             h2 { font-size: 1.1rem; font-weight: var(--normal-font-weight);}
+             .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px; font-weight: var(--normal-font-weight);} /* Knapper normal vekt */
+             /* Further adjust input row for very small screens already handled */
          }
 
         /* --- Print Styles (Bruker 'normal' for standardisering) --- */
@@ -1062,6 +1062,18 @@
             }]
         };
 
+        // --- Helper function to convert HEX to RGBA ---
+        function hexToRgba(hex, alpha) {
+            // Remove # if present
+            hex = hex.replace('#', '');
+            // Parse r, g, b values
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            // Return rgba string
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
         // --- Initial Setup: Create empty plots (Using normal weight) ---
         function createEmptyPlot(targetDivId, title = 'Enter Data', height = 280) {
              const targetDiv = document.getElementById(targetDivId);
@@ -1077,7 +1089,7 @@
                      margin: { l: 60, r: 40, b: 40, t: 50, pad: 4 },
                      paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
                      plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
-                     xaxis: { showgrid: false, zeroline: false, showticklabels: false },
+                     xaxis: { visible: false }, // Hide x-axis for empty plots too
                      yaxis: { showgrid: false, zeroline: true, gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--medium-gray').trim(), showticklabels: false }, // Removed grid
                      // Use normal font weight for empty plot base
                      font: { family: 'Avenir, sans-serif', size: 12, weight: 400 }
@@ -1140,7 +1152,7 @@
         }
 
 
-        // createAsymmetryChart (Using normal font weight)
+        // createAsymmetryChart (Using normal font weight, alpha 0.8, HIDDEN x-axis, thinner lines, legend entry)
         function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
@@ -1186,56 +1198,69 @@
                  console.error("Asymmetry chart: Plot data arrays length mismatch after processing!", {plotX, plotYLeft, plotYRight});
                  return [{}, false];
              }
+
+             // --- Get colors and apply alpha ---
+             const leftColorHex = getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim();
+             const rightColorHex = getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim();
+             const leftColorRgba = hexToRgba(leftColorHex, 0.8); // Apply alpha 0.8
+             const rightColorRgba = hexToRgba(rightColorHex, 0.8); // Apply alpha 0.8
+             const thresholdLineColor = getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(); // Color for dashed lines
+
              // Define Plotly figure
              const fig = {
                  data: [
                      // Left Bar
                      { type: 'bar', name: 'Left', x: plotX, y: plotYLeft,
-                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim() }, // Uses new orange color
+                       marker: { color: leftColorRgba }, // Use RGBA color
                        text: leftTexts, textposition: 'inside', insidetextanchor: "middle",
-                       // Use normal font weight for bar text
                        textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
                        hoverinfo: 'x+name+text', hovertemplate: 'Left: %{text} <extra></extra>' },
                      // Right Bar
                      { type: 'bar', name: 'Right', x: plotX, y: plotYRight,
-                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim() }, // Uses new blue color
+                       marker: { color: rightColorRgba }, // Use RGBA color
                        text: rightTexts, textposition: 'inside', insidetextanchor: 'middle',
-                       // Use normal font weight for bar text
                        textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
-                       hoverinfo: 'x+name+text', hovertemplate: 'Right: %{text} <extra></extra>' }
+                       hoverinfo: 'x+name+text', hovertemplate: 'Right: %{text} <extra></extra>' },
+                     // Trace for threshold legend entry
+                     {
+                       x: [null], // No actual data points
+                       y: [null],
+                       mode: 'lines',
+                       name: '±10% Thresholds', // Legend text
+                       line: {
+                         color: thresholdLineColor,
+                         width: 1, // Match the shape line width
+                         dash: 'dash'
+                       },
+                       hoverinfo: 'none',
+                       showlegend: true // Ensure this appears in the legend
+                     }
                  ],
                  layout: {
                      height: 280, barmode: 'group',
-                     // Use normal font weight for base layout
                      font: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', size: 12, weight: 400 }, // Normal weight
                      yaxis: {
                          title: "Injured Side Asymmetry (%)",
-                         // Use normal font weight for axis title
                          titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
-                         // Use normal font weight for tick labels
                          tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                          range: [0, 115], // Initial range, might be adjusted
                          showgrid: false, // Removed grid
                          zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), zerolinewidth: 1.5
                      },
                      xaxis: {
-                         // Use normal font weight for tick labels
-                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
-                         showgrid: false, // Removed grid
-                         zeroline: false
+                         visible: false // <<< KORRIGERT IGJEN: Denne linjen SKAL skjule x-aksen helt.
                      },
                      paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
                      plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
                      legend: {
                          orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5,
-                         // Use normal font weight for legend
                          font: { size: 12, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } // Normal weight
                      },
                      margin: { l: 70, r: 30, b: 80, t: 40, pad: 10 },
-                     // Threshold lines
+                     // Threshold lines - width set to 1
                      shapes: [
-                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), width: 2, dash: "dash" }, layer: "below" }, // 90% line
-                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 110, y1: 110, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), width: 2, dash: "dash" }, layer: "below" } // 110% line
+                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: thresholdLineColor, width: 1, dash: "dash" }, layer: "below" }, // 90% line
+                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 110, y1: 110, line: { color: thresholdLineColor, width: 1, dash: "dash" }, layer: "below" } // 110% line
                      ],
                      annotations: [] // Annotations for percentage difference
                  }
@@ -1308,16 +1333,16 @@
              // Find the two points the value falls between
              let lowerPoint = pMap[0]; let upperPoint = pMap[pMap.length - 1];
               for (let i = 0; i < pMap.length - 1; i++) { if (clampedValue === pMap[i].v) { lowerPoint = upperPoint = pMap[i]; break; } if (clampedValue > pMap[i].v && clampedValue <= pMap[i + 1].v) { lowerPoint = pMap[i]; upperPoint = pMap[i + 1]; break; } }
-              // Handle edge case where value is exactly the upper point's value
-              if (clampedValue === upperPoint.v) { lowerPoint = upperPoint; }
-              // Linear interpolation
-              let percentile = lowerPoint.p; const valueRange = upperPoint.v - lowerPoint.v; const percentileRange = upperPoint.p - lowerPoint.p;
-              if (valueRange > 0) { percentile += ((clampedValue - lowerPoint.v) / valueRange) * percentileRange; }
-              // Ensure percentile is between 0 and 100
-              return Math.max(0, Math.min(percentile, 100));
+             // Handle edge case where value is exactly the upper point's value
+             if (clampedValue === upperPoint.v) { lowerPoint = upperPoint; }
+             // Linear interpolation
+             let percentile = lowerPoint.p; const valueRange = upperPoint.v - lowerPoint.v; const percentileRange = upperPoint.p - lowerPoint.p;
+             if (valueRange > 0) { percentile += ((clampedValue - lowerPoint.v) / valueRange) * percentileRange; }
+             // Ensure percentile is between 0 and 100
+             return Math.max(0, Math.min(percentile, 100));
         }
 
-        // createNormativeComparisonChart (Using normal font weight)
+        // createNormativeComparisonChart (Using normal font weight, white curve, TRANSPARENT background, fills under curve)
         function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
              const bwVal = parseFloat(bodyweight);
              if (isNaN(bwVal) || bwVal <= 0 || !positionData) { console.warn(`Invalid BW/data for normative chart ${positionLabel}`); return {}; }
@@ -1326,23 +1351,64 @@
              if (!thresholds) { console.error(`Normative thresholds missing for ${positionLabel}`); return {}; }
              // Map N/kg values to percentiles
              const leftPercentile = mapNkgToPercentile(leftNkg, positionLabel); const rightPercentile = mapNkgToPercentile(rightNkg, positionLabel);
+
              // --- Create visual background distribution curve (aesthetic) ---
              const baseCurveX = []; const baseCurveY = [];
              const mean = 55; const stdDev = 22; const amplitude = 0.9; // Parameters for Gaussian-like curve shape
              for (let i = 0; i <= 100; i += 0.5) { baseCurveX.push(i); const y = amplitude * Math.exp(-Math.pow(i - mean, 2) / (2 * Math.pow(stdDev, 2))); baseCurveY.push(y); }
-             // --- Create filled area traces for each normative zone ---
+
+             // --- Create filled area traces for each normative zone (under curve) ---
              const zoneBoundaries = [0, percentileZones.poor, percentileZones.average, percentileZones.good, percentileZones.excellent];
              const traces = []; const zoneColorsList = [normZoneColors.poor, normZoneColors.average, normZoneColors.good, normZoneColors.excellent];
-             for (let i = 0; i < zoneBoundaries.length - 1; i++) { const x0 = zoneBoundaries[i]; const x1 = zoneBoundaries[i+1]; const zoneFillColor = zoneColorsList[i]; const segmentX = [x0]; const segmentY = [0]; for(let j=0; j < baseCurveX.length; j++) { if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) { segmentX.push(baseCurveX[j]); segmentY.push(baseCurveY[j]); } } segmentX.push(x1); segmentY.push(0); traces.push({ x: segmentX, y: segmentY, type: 'scatter', mode: 'lines', line: { width: 0 }, fill: 'tozeroy', fillcolor: zoneFillColor, hoverinfo: 'none', name: Object.keys(normativeLabels)[i], showlegend: false }); }
-             // Add the outline curve on top
-             traces.push({ x: baseCurveX, y: baseCurveY, type: 'scatter', mode: 'lines', line: { color: 'rgba(100, 100, 100, 0.7)', width: 1.5, shape: 'spline' }, hoverinfo: 'none', name: 'Distribution (Visual)', showlegend: false });
+
+             // Logic to fill under curve
+             for (let i = 0; i < zoneBoundaries.length - 1; i++) {
+                 const x0 = zoneBoundaries[i];
+                 const x1 = zoneBoundaries[i+1];
+                 const zoneFillColor = zoneColorsList[i];
+                 const segmentX = [x0]; // Start segment at x0
+                 const segmentY = [0]; // Start segment at y=0
+                 // Find points on the base curve within this zone
+                 for(let j=0; j < baseCurveX.length; j++) {
+                     if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) {
+                         segmentX.push(baseCurveX[j]);
+                         segmentY.push(baseCurveY[j]);
+                     }
+                 }
+                 segmentX.push(x1); // End segment at x1
+                 segmentY.push(0); // End segment at y=0
+                 traces.push({
+                     x: segmentX,
+                     y: segmentY,
+                     type: 'scatter',
+                     mode: 'lines',
+                     line: { width: 0 },
+                     fill: 'tozeroy', // Fill down to y=0 axis
+                     fillcolor: zoneFillColor,
+                     hoverinfo: 'none',
+                     name: Object.keys(normativeLabels)[i],
+                     showlegend: false
+                 });
+             }
+
+             // --- Add Curve trace (white) ---
+             traces.push({
+                 x: baseCurveX,
+                 y: baseCurveY,
+                 type: 'scatter',
+                 mode: 'lines',
+                 line: { color: '#ffffff', width: 1.5, shape: 'spline' }, // White curve
+                 hoverinfo: 'none',
+                 name: 'Distribution (Visual)',
+                 showlegend: false
+             });
 
              // --- Define Layout ---
              const layout = {
                  height: 280,
                  margin: { t: 55, b: 95, l: 30, r: 30 }, // Adjusted bottom margin for annotations
-                 paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
-                 plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
+                 paper_bgcolor: 'rgba(0,0,0,0)', // Transparent paper
+                 plot_bgcolor: 'rgba(0,0,0,0)', // <<< ENDRING: Gjennomsiktig plot-bakgrunn
                  xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false },
                  yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' },
                  shapes: [], annotations: [],
@@ -1383,15 +1449,15 @@
 
              // --- Add Lines and Labels for Left/Right Percentiles ---
              // Left Side
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new orange color
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Uses new orange color
-                                       // Use normal font weight
-                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 1, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new orange color
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 1.02, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Uses new orange color
+                                     // Use normal font weight
+                                     font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
              // Right Side
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new blue color
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Uses new blue color
-                                       // Use normal font weight
-                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 1, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new blue color
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 1.02, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Uses new blue color
+                                     // Use normal font weight
+                                     font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
 
              // --- Add Combined N/kg Display Below Chart ---
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;

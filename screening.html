@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Functional Shoulder Screening</title>
     <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;600;700&display=swap">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;600;700&family=Futura:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -106,7 +106,7 @@
             font-family: sans-serif; /* Standard sans-serif */
             font-size: 0.9rem; /* Slightly larger */
             font-weight: var(--normal-font-weight); /* Normal weight */
-            color: var(--text-color); /* Black text */
+            color: var(--medium-gray); /* Medium gray text */
         }
         .top-header-bar .social-links a {
             color: var(--text-color); /* Black icons */
@@ -248,16 +248,16 @@
             font-size: 1.15rem;
             color: var(--app-primary-color);
             margin-bottom: 1em;
-            font-weight: var(--normal-font-weight); /* Keep graph titles normal */
+            font-weight: var(--bold-font-weight); /* Make Graph Titles Bold */
         }
         h3.normative-title { text-align: center;}
 
         #report-content { background-color: var(--white); padding: 15px 0; }
 
-        /* --- Top Controls (Injured Side, Bodyweight) --- */
+        /* --- Top Controls (Injured Side, Bodyweight) - Reverted --- */
         #top-controls {
             display: flex;
-            justify-content: flex-start;
+            justify-content: flex-start; /* Align to left */
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 0; /* Removed padding */
@@ -273,15 +273,30 @@
         #injured-side-radio { width: 80px; } #bodyweight-input { width: 60px; }
 
         /* --- Patient Data Fields --- */
-        #patient-data-container { display: none; background-color: var(--light-gray); padding: 15px 20px; border: 1px solid var(--medium-gray); border-radius: var(--border-radius); margin-bottom: 25px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        #patient-data-container {
+            display: none; /* Initially hidden */
+            background-color: var(--light-gray);
+            padding: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
         #patient-data-container.visible { display: block; }
-        #patient-data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        #patient-data-grid {
+            display: grid;
+            /* Adjust grid columns */
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px 20px; /* Row and column gap */
+        }
         .patient-data-item { display: flex; flex-direction: column; gap: 5px; }
         .patient-data-item label { font-family: 'Avenir', sans-serif; font-size: 0.9rem; color: var(--dark-gray); font-weight: var(--bold-font-weight); } /* Make labels bold */
         .patient-data-item input,
         .patient-data-item select { font-family: 'Avenir', sans-serif; font-size: 0.9rem; padding: 6px 10px; border: 1px solid var(--medium-gray); border-radius: 5px; background-color: var(--white); transition: border-color 0.2s ease; width: 100%; box-sizing: border-box; font-weight: var(--normal-font-weight); } /* Normal weight */
         .patient-data-item input:focus,
         .patient-data-item select:focus { border-color: var(--app-primary-color); outline: none; }
+        /* Removed .control-item-moved styling */
+
 
         /* --- Input Section (New Structure) --- */
         #input-section-container {
@@ -384,21 +399,21 @@
         .explanation-box p { margin-bottom: 0.5em; }
         .explanation-box ul { margin-top: 0.5em; padding-left: 20px; }
 
-        /* --- Plotly Specific Styling (Normal weights) --- */
-        .js-plotly-plot .plotly { font-family: 'Avenir', sans-serif !important; font-weight: var(--normal-font-weight) !important; }
-        .js-plotly-plot .plotly .gtitle { font-family: 'Avenir', sans-serif !important; font-size: 1rem !important; fill: var(--app-primary-color) !important; font-weight: var(--normal-font-weight) !important; }
-        .js-plotly-plot .plotly .axistitle { font-size: 0.85rem !important; fill: var(--dark-gray) !important; font-weight: var(--normal-font-weight) !important; }
-        .js-plotly-plot .plotly .tick text { font-size: 0.8rem !important; fill: var(--dark-gray) !important; font-weight: var(--normal-font-weight) !important; }
-        .js-plotly-plot .plotly .legendtext { font-size: 0.85rem !important; font-weight: var(--normal-font-weight) !important; }
-        .js-plotly-plot .plotly .annotation text { font-family: 'Avenir', sans-serif !important; font-weight: var(--normal-font-weight) !important; }
-        .plotly .annotation .norm-label { font-size: 0.95em !important; font-weight: var(--normal-font-weight) !important; fill: var(--dark-gray) !important; }
-        .plotly .annotation .norm-value { font-size: 0.9em !important; font-weight: var(--normal-font-weight) !important; fill: var(--app-primary-color) !important; }
-        .plotly .annotation .left-label { font-size: 1.05em !important; font-weight: var(--normal-font-weight) !important; fill: var(--left-line-color) !important; }
-        .plotly .annotation .right-label { font-size: 1.05em !important; font-weight: var(--normal-font-weight) !important; fill: var(--right-line-color) !important; }
-        .plotly .annotation .value-display { font-size: 0.95em !important; font-weight: var(--normal-font-weight) !important; fill: var(--dark-gray) !important; text-anchor: middle;}
-        .plotly .annotation .nkg-combined-text .left-label { fill: var(--left-line-color) !important; font-weight: var(--normal-font-weight) !important; }
-        .plotly .annotation .nkg-combined-text .right-label { fill: var(--right-line-color) !important; font-weight: var(--normal-font-weight) !important; }
-        .plotly .annotation .asymmetry-percent { font-size: 1.1em !important; font-weight: var(--normal-font-weight) !important; }
+        /* --- Plotly Specific Styling (Using Futura 400) --- */
+        .js-plotly-plot .plotly { font-family: 'Futura', sans-serif !important; font-weight: 400 !important; }
+        .js-plotly-plot .plotly .gtitle { font-family: 'Futura', sans-serif !important; font-size: 1rem !important; fill: var(--primary-color) !important; font-weight: 700 !important; } /* Bold graph title */
+        .js-plotly-plot .plotly .axistitle { font-size: 0.85rem !important; fill: var(--dark-gray) !important; font-weight: 400 !important; }
+        .js-plotly-plot .plotly .tick text { font-size: 0.8rem !important; fill: var(--dark-gray) !important; font-weight: 400 !important; }
+        .js-plotly-plot .plotly .legendtext { font-size: 0.85rem !important; font-weight: 400 !important; }
+        .js-plotly-plot .plotly .annotation text { font-family: 'Futura', sans-serif !important; font-weight: 400 !important; }
+        .plotly .annotation .norm-label { font-size: 0.95em !important; font-weight: 400 !important; fill: var(--dark-gray) !important; }
+        .plotly .annotation .norm-value { font-size: 0.9em !important; font-weight: 400 !important; fill: var(--primary-color) !important; }
+        .plotly .annotation .left-label { font-size: 1.05em !important; font-weight: 400 !important; fill: var(--left-line-color) !important; }
+        .plotly .annotation .right-label { font-size: 1.05em !important; font-weight: 400 !important; fill: var(--right-line-color) !important; }
+        .plotly .annotation .value-display { font-size: 0.95em !important; font-weight: 400 !important; fill: var(--dark-gray) !important; text-anchor: middle;}
+        .plotly .annotation .nkg-combined-text .left-label { fill: var(--left-line-color) !important; font-weight: 400 !important; }
+        .plotly .annotation .nkg-combined-text .right-label { fill: var(--right-line-color) !important; font-weight: 400 !important; }
+        /* Asymmetry percentage styling is handled in JS */
 
 
         /* --- On-Screen PDF Preview Styles --- */
@@ -406,8 +421,8 @@
         body.pdf-preview-active .top-header-bar { display: none; }
         body.pdf-preview-active .app-sidebar { display: none; }
         body.pdf-preview-active .app-main-content { margin-left: 0; padding: 15px 40px; height: auto; }
-        body.pdf-preview-active #top-controls,
-        body.pdf-preview-active #patient-data-container,
+        body.pdf-preview-active #top-controls, /* Hide original top controls */
+        body.pdf-preview-active #patient-data-container, /* Hide the whole container in preview */
         body.pdf-preview-active #input-section-container, /* Hide new input container */
         body.pdf-preview-active #bottom-area,
         body.pdf-preview-active h2#input-title { display: none; }
@@ -423,8 +438,8 @@
         body.pdf-preview-active .green-box,
         body.pdf-preview-active .normative-box { box-shadow: var(--box-shadow); border: 1px solid var(--medium-gray); padding: 10px; min-height: var(--graph-box-min-height); }
         body.pdf-preview-active .green-box { border-color: var(--success-border-color) !important; border-width: 2px !important; box-shadow: 0 0 15px 5px var(--success-shadow-color) !important; }
-        body.pdf-preview-active h3 { font-size: 1.1rem; font-weight: var(--normal-font-weight); }
-        body.pdf-preview-active h3.normative-title { font-size: 1.0rem; font-weight: var(--normal-font-weight); }
+        body.pdf-preview-active h3 { font-size: 1.1rem; font-weight: var(--bold-font-weight); } /* Bold graph titles in preview */
+        body.pdf-preview-active h3.normative-title { font-size: 1.0rem; font-weight: var(--bold-font-weight); }
 
 
         /* --- Media Queries for Responsiveness --- */
@@ -440,7 +455,7 @@
             .position-row { flex-direction: column; align-items: stretch; }
             .asymmetry-graph-container, .normative-graph-container { flex: none; width: 100%; min-width: unset; }
             .position-box, .green-box, .normative-box { min-height: unset; }
-            #patient-data-grid { grid-template-columns: 1fr; }
+            #patient-data-grid { grid-template-columns: 1fr; } /* Stack patient data items */
             #input-section-container { flex-direction: column; } /* Stack input boxes */
             .input-position-box { min-width: unset; }
 
@@ -476,7 +491,7 @@
 
             h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; }
             h3.position-title, h3.normative-title { font-size: 1.0rem; }
-            #top-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;}
+            #top-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;} /* Re-add for small screens */
             .control-item { justify-content: space-between; }
             .input-row { flex-direction: column; align-items: flex-start; gap: 5px; }
             .input-fields { width: 100%; justify-content: space-between; }
@@ -497,9 +512,6 @@
 
              h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; }
              .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px;}
-             #input-summary-table { font-size: 0.75rem; } /* Keep for potential future use */
-             #input-summary-table th, #input-summary-table td { padding: 6px 4px; }
-             #input-summary-table .number-input { width: 50px; }
              .input-fields .number-input { width: 47%; } /* Adjust width */
          }
 
@@ -745,7 +757,7 @@
         document.body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;">Error: Plotly library failed to load. Please check your internet connection or contact support.</div>';
     } else {
         // --- DOM Element References ---
-        // Controls
+        // Controls (Back to top controls)
         const injuredSideRadio = document.getElementById('injured-side-radio');
         const bodyweightInput = document.getElementById('bodyweight-input');
         // Sidebar Buttons
@@ -753,15 +765,14 @@
         const pdfPreviewButton = document.getElementById('pdf-preview-button');
         const exportExcelButton = document.getElementById('export-excel-button');
         const viewAnalysisButtonLink = document.getElementById('analysis-link-button');
-        const clearAllButton = document.getElementById('clear-all-button'); // New button reference
+        const clearAllButton = document.getElementById('clear-all-button');
         // Other Elements
         const previewExitButtonInline = document.getElementById('preview-exit-button-inline');
         const explanationBox = document.querySelector('.explanation-box');
         const reportContentDiv = document.getElementById('report-content');
         const normativePlaceholder = document.getElementById('normative-placeholder');
-        // Removed reference to old input table
-        const inputSectionContainer = document.getElementById('input-section-container'); // New container
-        const allNumberInputs = inputSectionContainer.querySelectorAll('.number-input'); // Update selector
+        const inputSectionContainer = document.getElementById('input-section-container');
+        const allNumberInputs = inputSectionContainer.querySelectorAll('.number-input');
         const patientDataContainer = document.getElementById('patient-data-container');
         const fpNrInput = document.getElementById('fp-nr-input');
         const ageInput = document.getElementById('age-input');
@@ -771,7 +782,7 @@
         const asymmetryChartDivs = ['bar-chart-I', 'bar-chart-Y', 'bar-chart-T'];
         const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T'];
         const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
-        // Input field references (remain the same as IDs are kept)
+        // Input field references
         const leftMaxForceInputI = document.getElementById('left-max-force-i'); const rightMaxForceInputI = document.getElementById('right-max-force-i'); const leftRfdInputI = document.getElementById('left-rfd-i'); const rightRfdInputI = document.getElementById('right-rfd-i');
         const leftMaxForceInputY = document.getElementById('left-max-force-y'); const rightMaxForceInputY = document.getElementById('right-max-force-y'); const leftRfdInputY = document.getElementById('left-rfd-y'); const rightRfdInputY = document.getElementById('right-rfd-y');
         const leftMaxForceInputT = document.getElementById('left-max-force-t'); const rightMaxForceInputT = document.getElementById('right-max-force-t'); const leftRfdInputT = document.getElementById('left-rfd-t'); const rightRfdInputT = document.getElementById('right-rfd-t');
@@ -861,7 +872,7 @@
             };
         }
 
-        // createAsymmetryChart (Unchanged logic, uses updated CSS)
+        // createAsymmetryChart (Updated font styles and y-axis title)
         function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
@@ -914,12 +925,24 @@
                  layout: {
                      height: 280,
                      barmode: 'group',
-                     yaxis: { title: `Injured Side Asymmetry (%)<br>(Relative to uninjured side = 100%)`, range: [0, 115], gridcolor: 'var(--medium-gray)', gridwidth: 1, zerolinecolor: 'var(--dark-gray)', zerolinewidth: 1.5 },
-                     xaxis: { showgrid: false, zeroline: false },
+                     yaxis: {
+                         title: "Injured Side Asymmetry (%)", // Shortened title
+                         titlefont: { size: 13, family: 'Futura, sans-serif', weight: 400 }, // Futura 400
+                         tickfont: { size: 11, family: 'Futura, sans-serif', weight: 400 }, // Futura 400
+                         range: [0, 115],
+                         gridcolor: 'var(--medium-gray)', gridwidth: 1, zerolinecolor: 'var(--dark-gray)', zerolinewidth: 1.5
+                     },
+                     xaxis: {
+                         tickfont: { size: 11, family: 'Futura, sans-serif', weight: 400 }, // Futura 400
+                         showgrid: false, zeroline: false
+                     },
                      paper_bgcolor: 'var(--white)',
                      plot_bgcolor: 'var(--light-gray)',
-                     font: { }, // Use CSS
-                     legend: { orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5 }, // Use CSS
+                     font: { color: 'var(--dark-gray)', family: 'Futura, sans-serif', size: 12, weight: 400 }, // Base font for plot
+                     legend: {
+                         orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5,
+                         font: { size: 12, family: 'Futura, sans-serif', weight: 400 } // Futura 400
+                     },
                      margin: { l: 70, r: 30, b: 80, t: 40, pad: 10 },
                      shapes: [
                          { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: "var(--dark-gray)", width: 2, dash: "dash" }, layer: "below" },
@@ -933,7 +956,7 @@
              const metricsNamesForAnnotation = Object.keys(barDataRatios);
              const validRatios = Object.values(barDataRatios).flat().filter(isFinite);
              const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110;
-             const annotationY = Math.max(...plotYLeft.filter(isFinite), ...plotYRight.filter(isFinite), 110) + 8;
+             const annotationY = maxYValue + 8;
              fig.layout.yaxis.range[1] = annotationY + 12;
 
              for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
@@ -942,7 +965,7 @@
                  const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
 
                  if (!isFinite(injuredRatio)) {
-                     fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey' }, xanchor: 'center', yanchor: 'bottom', css_class: 'asymmetry-percent' });
+                     fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey', size: 20, family: 'Futura, sans-serif', weight: 400 }, xanchor: 'center', yanchor: 'bottom' }); // Futura 400, Size 20
                      allGreen = false;
                      continue;
                  }
@@ -957,8 +980,9 @@
                  if (color !== '#2a9d8f') { allGreen = false; }
                  fig.layout.annotations.push({
                      x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`,
-                     showarrow: false, font: { color: color }, xanchor: 'center', yanchor: 'bottom',
-                     css_class: 'asymmetry-percent'
+                     showarrow: false,
+                     font: { color: color, size: 20, family: 'Futura, sans-serif', weight: 400 }, // Futura 400, Size 20
+                     xanchor: 'center', yanchor: 'bottom'
                  });
              }
              return [fig, allGreen];
@@ -968,7 +992,14 @@
         function mapNkgToPercentile(nkgValue, positionLabel) {
              const thresholds = normativeThresholds[positionLabel];
              if (!thresholds || typeof nkgValue !== 'number' || !isFinite(nkgValue)) { return 0; }
-             const pMap = [ { v: 0.5, p: 0 }, { v: thresholds.poor_max, p: percentileZones.poor }, { v: thresholds.average_mid, p: percentileMidpoint }, { v: thresholds.good_min, p: percentileZones.average }, { v: thresholds.excellent_min, p: percentileZones.good }, { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent } ];
+             const pMap = [
+                 { v: 0.5, p: 0 },
+                 { v: thresholds.poor_max, p: percentileZones.poor },
+                 { v: thresholds.average_mid, p: percentileMidpoint },
+                 { v: thresholds.good_min, p: percentileZones.average },
+                 { v: thresholds.excellent_min, p: percentileZones.good },
+                 { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent }
+             ];
              const minVal = pMap[0].v; const maxVal = pMap[pMap.length - 1].v;
              const clampedValue = Math.max(minVal, Math.min(nkgValue, maxVal));
              let lowerPoint = pMap[0]; let upperPoint = pMap[pMap.length - 1];
@@ -979,7 +1010,7 @@
               return Math.max(0, Math.min(percentile, 100));
         }
 
-        // createNormativeComparisonChart (Unchanged logic, uses updated CSS)
+        // createNormativeComparisonChart (Updated font styles)
         function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
              const bwVal = parseFloat(bodyweight);
              if (isNaN(bwVal) || bwVal <= 0 || !positionData) { console.warn(`Invalid BW/data for normative chart ${positionLabel}`); return {}; }
@@ -997,29 +1028,60 @@
              for (let i = 0; i < zoneBoundaries.length - 1; i++) { const x0 = zoneBoundaries[i]; const x1 = zoneBoundaries[i+1]; const zoneFillColor = zoneColorsList[i]; const segmentX = [x0]; const segmentY = [0]; for(let j=0; j < baseCurveX.length; j++) { if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) { segmentX.push(baseCurveX[j]); segmentY.push(baseCurveY[j]); } } segmentX.push(x1); segmentY.push(0); traces.push({ x: segmentX, y: segmentY, type: 'scatter', mode: 'lines', line: { width: 0 }, fill: 'tozeroy', fillcolor: zoneFillColor, hoverinfo: 'none', name: Object.keys(normativeLabels)[i], showlegend: false }); }
              traces.push({ x: baseCurveX, y: baseCurveY, type: 'scatter', mode: 'lines', line: { color: 'rgba(100, 100, 100, 0.7)', width: 1.5, shape: 'spline' }, hoverinfo: 'none', name: 'Distribution (Visual)', showlegend: false });
 
-             const layout = { height: 280, margin: { t: 55, b: 95, l: 30, r: 30 }, paper_bgcolor: 'var(--white)', plot_bgcolor: 'var(--white)', xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false }, yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' }, shapes: [], annotations: [], font: { }, showlegend: false }; // Use CSS
+             const layout = {
+                 height: 280,
+                 margin: { t: 55, b: 95, l: 30, r: 30 },
+                 paper_bgcolor: 'var(--white)',
+                 plot_bgcolor: 'var(--white)',
+                 xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false },
+                 yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' },
+                 shapes: [], annotations: [],
+                 font: { family: 'Futura, sans-serif', size: 11, weight: 400 }, // Base font for plot
+                 showlegend: false
+             };
 
-             const thresholdAnnotations = [ { p: percentileZones.poor, val: thresholds.poor_max }, { p: percentileZones.average, val: thresholds.good_min }, { p: percentileZones.good, val: thresholds.excellent_min } ];
-             thresholdAnnotations.forEach(t => { layout.annotations.push({ xref: 'x', yref: 'paper', x: t.p, y: -0.08, text: `<span class="norm-value">${t.val.toFixed(2)}</span>`, showarrow: false, xanchor: 'center', yanchor: 'top', font: { } }); }); // Use CSS
+             const thresholdAnnotations = [
+                 { p: percentileZones.poor, val: thresholds.poor_max },
+                 { p: percentileZones.average, val: thresholds.good_min },
+                 { p: percentileZones.good, val: thresholds.excellent_min }
+             ];
+             thresholdAnnotations.forEach(t => {
+                 layout.annotations.push({
+                     xref: 'x', yref: 'paper', x: t.p, y: -0.08,
+                     text: `<span class="norm-value">${t.val.toFixed(2)}</span>`, // Class for CSS styling
+                     showarrow: false, xanchor: 'center', yanchor: 'top',
+                     font: { family: 'Futura, sans-serif', size: 10, weight: 400 } // Futura 400
+                 });
+             });
 
               layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: percentileMidpoint, x1: percentileMidpoint, y0: 0, y1: 1, line: { color: 'var(--medium-gray)', width: 1.5, dash: 'dot' }, layer: 'below' });
               const avgValueForPos = thresholds.average_mid.toFixed(2);
-              layout.annotations.push({ xref: 'x', yref: 'paper', x: percentileMidpoint, y: -0.08, text: `<span class="value-display">${avgValueForPos}</span>`, showarrow: false, xanchor: 'center', yanchor: 'top', font: { } }); // Use CSS
+              layout.annotations.push({
+                  xref: 'x', yref: 'paper', x: percentileMidpoint, y: -0.08,
+                  text: `<span class="value-display">${avgValueForPos}</span>`, // Class for CSS styling
+                  showarrow: false, xanchor: 'center', yanchor: 'top',
+                  font: { family: 'Futura, sans-serif', size: 10, color: 'var(--dark-gray)', weight: 400 } // Futura 400
+              });
 
              const labelYPosition = 1.15;
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { }, align: 'center' });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Futura, sans-serif', size: 11, weight: 400 } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Futura, sans-serif', size: 11, weight: 400 }, align: 'center' });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Futura, sans-serif', size: 11, weight: 400 } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Futura, sans-serif', size: 11, weight: 400 } });
 
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: 'var(--left-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--left-line-color)', font: {color: 'var(--left-line-color)' }, css_class: 'left-label' });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: '<b>L</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--left-line-color)', font: {color: 'var(--left-line-color)', size: 14, family: 'Futura, sans-serif', weight: 400} }); // Futura 400
 
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: 'var(--right-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--right-line-color)', font: {color: 'var(--right-line-color)' }, css_class: 'right-label' });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: '<b>R</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--right-line-color)', font: {color: 'var(--right-line-color)', size: 14, family: 'Futura, sans-serif', weight: 400} }); // Futura 400
 
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;
-             layout.annotations.push({ xref: 'paper', yref: 'paper', x: 0.5, y: -0.30, text: combinedNkgText, showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center', font: { } }); // Use CSS
+             layout.annotations.push({
+                 xref: 'paper', yref: 'paper', x: 0.5, y: -0.30,
+                 text: combinedNkgText,
+                 showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center',
+                 font: { size: 15, color: 'var(--dark-gray)', family: 'Futura, sans-serif', weight: 400 } // Futura 400
+             });
 
              return { data: traces, layout };
         }

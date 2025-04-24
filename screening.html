@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Functional Shoulder Screening</title>
     <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;600;700&family=Futura:wght@400;700&display=swap">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Avenir:wght@400&family=Futura:wght@400&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -64,17 +64,17 @@
             --base-font-size: 16px;
             --graph-box-min-height: 340px; /* Lavere minimumshøyde */
             --sidebar-width: 180px; /* Smalere sidebar */
-            /* Font Weights */
+            /* Font Weights - KUN NORMAL VEKT */
             --normal-font-weight: 400;
-            --semibold-font-weight: 600;
-            --bold-font-weight: 700;
+            --semibold-font-weight: 400; /* Satt til normal */
+            --bold-font-weight: 400; /* Satt til normal */
             --top-bar-height: 50px;
             --main-content-margin: 20px; /* Margin mellom sidebar og innhold */
         }
 
         /* --- General Styling --- */
         body {
-            font-family: 'Avenir', sans-serif;
+            font-family: 'Avenir', sans-serif; /* Avenir først, så generell sans-serif */
             background-color: var(--light-gray);
             color: var(--text-color);
             margin: 0;
@@ -85,6 +85,11 @@
             line-height: 1.6;
             font-size: var(--base-font-size);
             font-weight: var(--normal-font-weight); /* Base weight set to normal (400) */
+
+            /* --- Font Rendering Hint --- */
+            -webkit-font-smoothing: antialiased; /* For Chrome, Safari, Edge */
+            -moz-osx-font-smoothing: grayscale; /* For Firefox på macOS */
+            font-synthesis: none; /* Ikke lag "falsk" fet/kursiv */
         }
 
         /* --- Top Header Bar --- */
@@ -185,12 +190,12 @@
             height: calc(100vh - var(--top-bar-height));
         }
 
-        /* --- Sidebar Buttons (Lys -> Mørk Gradient, Runde, Hvit tekst, Ikon-endring) --- */
+        /* --- Sidebar Buttons --- */
         .app-sidebar button,
         .app-sidebar a button {
             font-family: 'Avenir', sans-serif;
             font-size: 0.9rem;
-            font-weight: var(--semibold-font-weight); /* Tilbake til semibold */
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
             padding: 10px 15px;
             color: var(--app-text-on-primary); /* Hvit tekst */
             background-image: linear-gradient(to right, var(--app-button-light-gradient-start), var(--app-button-light-gradient-end)); /* Lys -> Mørk gradient */
@@ -258,7 +263,7 @@
             margin-top: 0;
             margin-bottom: 1em;
             color: var(--app-primary-color);
-            font-weight: var(--bold-font-weight);
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
         }
         /* H2 Titles and Borders */
         h2 {
@@ -266,7 +271,7 @@
             padding-bottom: 0.4em;
             margin-top: 1.8em;
             color: var(--app-secondary-color);
-            font-weight: var(--bold-font-weight); /* Make H2 bold */
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
         }
         /* Graph Box Titles */
         h3.position-title,
@@ -274,7 +279,7 @@
             font-size: 1.15rem;
             color: var(--app-primary-color);
             margin-bottom: 1em;
-            font-weight: var(--bold-font-weight); /* Make Graph Titles Bold */
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
         }
         h3.normative-title { text-align: center;}
 
@@ -315,7 +320,7 @@
             font-family: 'Avenir', sans-serif;
             font-size: 0.9rem;
             color: var(--dark-gray); /* Label color */
-            font-weight: var(--bold-font-weight);
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
         }
         /* Styling for Input/Select fields inside Top Controls */
         #top-controls #injured-side-radio,
@@ -350,7 +355,7 @@
              background-position: right 0.5rem center;
              background-size: 1.5em 1.5em;
              padding-right: 2.5rem; /* Space for the arrow */
-        }
+         }
         /* ======================= NY Top Controls Styling END ========================= */
 
 
@@ -381,7 +386,7 @@
             font-family: 'Avenir', sans-serif;
             font-size: 0.9rem;
             color: var(--dark-gray); /* Label color */
-            font-weight: var(--bold-font-weight);
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
         }
         /* Styling for Input/Select fields inside Patient Data Container (Updated Style) */
         #patient-data-container input[type="text"],
@@ -418,7 +423,7 @@
              background-position: right 0.5rem center;
              background-size: 1.5em 1.5em;
              padding-right: 2.5rem; /* Space for the arrow */
-        }
+         }
         /* ======================= NY Patient Data Styling END ========================= */
 
 
@@ -443,7 +448,7 @@
 
         .input-position-box h4 {
             font-family: 'Avenir', sans-serif;
-            font-weight: var(--bold-font-weight);
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt */
             font-size: 1.2rem;
             color: var(--app-primary-color);
             margin-top: 0;
@@ -483,7 +488,7 @@
         .input-row input {
             font-family: 'Avenir', sans-serif;
             font-size: 1.5rem; /* Større skrift for innskrevet tekst */
-            font-weight: var(--bold-font-weight); /* Fetere skrift for innskrevet tekst */
+            font-weight: var(--normal-font-weight); /* Bruker normal vekt for innskrevet tekst */
             width: 100px; /* Juster bredde etter behov */
             height: auto;
             border: none;
@@ -494,17 +499,14 @@
             box-sizing: border-box;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             background-color: transparent;
-            /* flex-basis er nå på wrapper */
             color: #ffffff; /* Hvit tekst for input verdi */
             position: relative;
             z-index: 1;
-            /* flex-grow: 1; */ /* Fjernet */
-            /* flex-shrink: 1; */ /* Fjernet */
         }
         .input-row input::placeholder {
             font-size: 0.8rem; /* Beholdt original størrelse for placeholder */
             color: #ffffff; /* Hvit */
-            font-weight: var(--normal-font-weight);
+            font-weight: var(--normal-font-weight); /* Placeholder bruker normal vekt */
             opacity: 0.8;
         }
         .input-row input:focus {
@@ -614,8 +616,9 @@
              box-shadow: 0 0 15px 5px var(--success-shadow-color) !important; /* <<< Beholdt bare skygge */
              border: none !important; /* <<< Fjernet kantlinje */
         }
-        body.pdf-preview-active h3 { font-size: 1.1rem; font-weight: var(--bold-font-weight); } /* Bold graph titles in preview */
-        body.pdf-preview-active h3.normative-title { font-size: 1.0rem; font-weight: var(--bold-font-weight); }
+        /* Bruker normal vekt for preview */
+        body.pdf-preview-active h3 { font-size: 1.1rem; font-weight: var(--normal-font-weight); }
+        body.pdf-preview-active h3.normative-title { font-size: 1.0rem; font-weight: var(--normal-font-weight); }
 
 
         /* --- Media Queries for Responsiveness --- */
@@ -657,7 +660,8 @@
              .sidebar-buttons { flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; }
              .app-sidebar button, .app-sidebar a button {
                  width: auto; flex-grow: 1; max-width: 180px;
-                 justify-content: center; font-size: 0.85rem; font-weight: var(--normal-font-weight); /* Normal weight (400) */
+                 justify-content: center; font-size: 0.85rem;
+                 font-weight: var(--normal-font-weight); /* Bruker normal vekt */
                  padding: 8px 10px; margin: 5px; gap: 8px;
              }
               .app-sidebar .button-text { display: inline-block; }
@@ -665,8 +669,10 @@
 
              .app-main-content { margin-left: 0; /* <<< Fjernet margin her */ padding: 20px 15px; height: auto; }
 
-             h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; }
-             h3.position-title, h3.normative-title { font-size: 1.0rem; }
+             /* Bruker normal vekt for mobil */
+             h1 { font-size: 1.6rem; font-weight: var(--normal-font-weight);}
+             h2 { font-size: 1.3rem; font-weight: var(--normal-font-weight);}
+             h3.position-title, h3.normative-title { font-size: 1.0rem; font-weight: var(--normal-font-weight);}
              #top-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;} /* Re-add for small screens */
              .control-item { justify-content: space-between; }
 
@@ -674,8 +680,8 @@
              .input-row { flex-direction: column; align-items: flex-start; gap: 5px; }
              .input-row label { flex-basis: auto; width: 100%; text-align: left; margin-bottom: 3px;}
              .input-row .input-wrapper { flex-basis: auto; width: 100%; justify-content: flex-start; } /* Juster wrapper for mobil */
-             .input-row input { width: auto; font-size: 1.2rem; } /* Juster input-størrelse for mobil */
-             .input-row input::placeholder { font-size: 0.8rem; } /* Behold placeholder-størrelse for mobil */
+             .input-row input { width: auto; font-size: 1.2rem; font-weight: var(--normal-font-weight); } /* Input verdi normal */
+             .input-row input::placeholder { font-size: 0.8rem; font-weight: var(--normal-font-weight);} /* Placeholder normal */
              .unit-text { margin-left: 8px; }
 
              .position-box, .green-box, .normative-box { padding: 10px; margin-bottom: 0;}
@@ -692,12 +698,14 @@
               .top-header-bar .version-text { font-size: 0.7rem; }
               .top-header-bar .social-links a { font-size: 1rem; margin-left: 10px; }
 
-              h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; }
-              .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px;}
+              /* Bruker normal vekt for liten mobil */
+              h1 { font-size: 1.4rem; font-weight: var(--normal-font-weight);}
+              h2 { font-size: 1.1rem; font-weight: var(--normal-font-weight);}
+              .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px; font-weight: var(--normal-font-weight);} /* Knapper normal vekt */
               /* Further adjust input row for very small screens already handled */
          }
 
-        /* --- Print Styles (Normal weights) --- */
+        /* --- Print Styles (Bruker 'normal' for standardisering) --- */
         @media print {
              body { background-color: white !important; color: black !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-size: 9pt !important; padding: 0 !important; display: block !important; font-weight: normal !important;} /* Normal base weight */
              .top-header-bar, .app-sidebar, #top-controls, #patient-data-container, #input-section-container, #canvas-container, #bottom-area, .print-instruction, #preview-exit-button-inline { display: none !important; } /* Hide canvas */
@@ -705,9 +713,9 @@
              .app-main-content { margin: 0 !important; padding: 5mm !important; width: 100% !important; max-width: 100% !important; box-shadow: none !important; border: none !important; height: auto !important; }
              .content-container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
 
-             h1 { font-size: 16pt !important; margin-bottom: 5mm !important; text-align: center !important; display: block !important; color: black !important; font-weight: bold !important; } /* Standard bold */
-             h2 { display: block !important; font-size: 12pt !important; margin-top: 8mm; margin-bottom: 4mm; border: none !important; color: black !important; font-weight: bold !important; } /* Standard bold */
-             h3 { font-size: 10pt !important; margin-bottom: 3mm !important; color: black !important; font-weight: bold !important; } /* Standard bold */
+             h1 { font-size: 16pt !important; margin-bottom: 5mm !important; text-align: center !important; display: block !important; color: black !important; font-weight: normal !important; } /* Standard normal */
+             h2 { display: block !important; font-size: 12pt !important; margin-top: 8mm; margin-bottom: 4mm; border: none !important; color: black !important; font-weight: normal !important; } /* Standard normal */
+             h3 { font-size: 10pt !important; margin-bottom: 3mm !important; color: black !important; font-weight: normal !important; } /* Standard normal */
              #report-content { padding: 0 !important; }
              .position-row { display: block !important; width: 100% !important; page-break-inside: avoid !important; border: none !important; margin-bottom: 5mm !important; padding: 0 !important;}
              .asymmetry-graph-container, .normative-graph-container { width: 100% !important; display: block !important; margin-bottom: 5mm; page-break-inside: avoid !important; padding: 0 !important; }
@@ -737,7 +745,7 @@
              .plotly .annotation .asymmetry-percent { fill: black !important; color: black !important; font-weight: normal !important; }
               .plotly .annotation .norm-value { font-weight: normal !important; }
 
-             .plotly .gtitle { fill: black !important; font-weight: bold !important; }
+             .plotly .gtitle { fill: black !important; font-weight: normal !important; } /* Tittel normal */
              .plotly .axistitle { fill: black !important; font-size: 9pt !important; font-weight: normal !important; }
              .plotly .tick text { fill: black !important; font-size: 8pt !important; font-weight: normal !important; }
              .plotly .legend { display: none !important; }
@@ -908,10 +916,7 @@
                     </div>
                 </div>
                 <div id="canvas-container">
-                    <canvas id="input-canvas-i" class="input-canvas" width="380" height="150"></canvas>
-                    <canvas id="input-canvas-y" class="input-canvas" width="380" height="150"></canvas>
-                    <canvas id="input-canvas-t" class="input-canvas" width="380" height="150"></canvas>
-                </div>
+                    </div>
                 <h2 id="results-title">Results</h2>
 
                 <div class="position-row">
@@ -988,7 +993,7 @@
         const explanationBox = document.querySelector('.explanation-box');
         const reportContentDiv = document.getElementById('report-content');
         const normativePlaceholder = document.getElementById('normative-placeholder');
-        const inputSectionContainer = document.getElementById('input-section-container'); // Referanse til NY container
+        const inputSectionContainer = document.getElementById('input-section-container'); // Reference to NEW container
         // Select all number inputs within the NEW input container
         const allNumberInputs = inputSectionContainer.querySelectorAll('input[type="number"]');
         const patientDataContainer = document.getElementById('patient-data-container');
@@ -998,10 +1003,10 @@
         const sportInput = document.getElementById('sport-input');
         // Chart/Box Divs (for Plotly graphs)
         const asymmetryChartDivs = ['bar-chart-I', 'bar-chart-Y', 'bar-chart-T'];
-        const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T']; // Disse er for Plotly-boksene
+        const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T']; // These are for the Plotly boxes
         const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
 
-        // --- Input field references (NY STRUKTUR) ---
+        // --- Input field references (NEW STRUCTURE) ---
         // Position I
         const nonInjuredMaxForceInputI = document.getElementById('non-injured-max-force-i');
         const nonInjuredRfdInputI = document.getElementById('non-injured-rfd-i');
@@ -1011,14 +1016,14 @@
         const nonInjuredMaxForceInputY = document.getElementById('non-injured-max-force-y');
         const nonInjuredRfdInputY = document.getElementById('non-injured-rfd-y');
         const injuredMaxForceInputY = document.getElementById('injured-max-force-y');
-        const injuredRfdInputY = document.getElementById('injured-rfd-y'); // Korrigert ID
+        const injuredRfdInputY = document.getElementById('injured-rfd-y');
         // Position T
         const nonInjuredMaxForceInputT = document.getElementById('non-injured-max-force-t');
         const nonInjuredRfdInputT = document.getElementById('non-injured-rfd-t');
         const injuredMaxForceInputT = document.getElementById('injured-max-force-t');
-        const injuredRfdInputT = document.getElementById('injured-rfd-t'); // Korrigert ID
+        const injuredRfdInputT = document.getElementById('injured-rfd-t');
 
-        // Create a map for easy access to injured/non-injured inputs (NY STRUKTUR)
+        // Create a map for easy access to injured/non-injured inputs (NEW STRUCTURE)
         const inputFieldMap = {
             'I': { nonInjured: [nonInjuredMaxForceInputI, nonInjuredRfdInputI], injured: [injuredMaxForceInputI, injuredRfdInputI] },
             'Y': { nonInjured: [nonInjuredMaxForceInputY, nonInjuredRfdInputY], injured: [injuredMaxForceInputY, injuredRfdInputY] },
@@ -1034,6 +1039,7 @@
         };
         const percentileZones = { poor: 30, average: 70, good: 90, excellent: 100 };
         const percentileMidpoint = 50;
+        // Get colors from CSS variables
         const normZoneColors = {
              poor: getComputedStyle(document.documentElement).getPropertyValue('--norm-poor-bg').trim() || 'rgba(252, 165, 165, 0.5)',
              average: getComputedStyle(document.documentElement).getPropertyValue('--norm-average-bg').trim() || 'rgba(252, 211, 77, 0.5)',
@@ -1056,7 +1062,7 @@
             }]
         };
 
-        // --- Initial Setup: Create empty plots (Unchanged logic) ---
+        // --- Initial Setup: Create empty plots (Using normal weight) ---
         function createEmptyPlot(targetDivId, title = 'Enter Data', height = 280) {
              const targetDiv = document.getElementById(targetDivId);
              if (!targetDiv) { console.error(`Target div ${targetDivId} not found.`); return; }
@@ -1064,15 +1070,17 @@
                  Plotly.react(targetDiv, [{ x: [], y: [], type: 'bar' }], {
                      title: {
                          text: title,
-                         font: { family: 'Avenir, sans-serif', size: 16, color: 'var(--app-primary-color)', weight: 'bold' } // Standard font for empty plot title
+                         // Use normal font weight for empty plot title
+                         font: { family: 'Avenir, sans-serif', size: 16, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim(), weight: 400 } // ENDRET til 400
                      },
                      height: height,
                      margin: { l: 60, r: 40, b: 40, t: 50, pad: 4 },
-                     paper_bgcolor: 'rgba(0,0,0,0)', // <<< Gjennomsiktig
-                     plot_bgcolor: 'rgba(0,0,0,0)', // <<< Gjennomsiktig
+                     paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
+                     plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
                      xaxis: { showgrid: false, zeroline: false, showticklabels: false },
-                     yaxis: { showgrid: false, zeroline: true, gridcolor: 'var(--medium-gray)', showticklabels: false }, // <<< Fjernet grid
-                     font: { family: 'Avenir, sans-serif' } // Standard font for empty plot
+                     yaxis: { showgrid: false, zeroline: true, gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--medium-gray').trim(), showticklabels: false }, // Removed grid
+                     // Use normal font weight for empty plot base
+                     font: { family: 'Avenir, sans-serif', size: 12, weight: 400 }
                  }, plotlyConfig);
              } catch (error) {
                  console.error(`Error creating empty plot in ${targetDivId}:`, error);
@@ -1106,10 +1114,12 @@
             const injuredMaxForceVal = injuredMaxForceInput.value;
             const injuredRfdVal = injuredRfdInput.value;
 
+            // Only return null if ALL fields for the position are empty
             if (nonInjuredMaxForceVal === '' && nonInjuredRfdVal === '' &&
                 injuredMaxForceVal === '' && injuredRfdVal === '') {
                 return null;
             }
+            // Parse values, default to 0 if empty or invalid
             const nonInjuredMaxForce = parseFloat(nonInjuredMaxForceVal) || 0;
             const nonInjuredRfd = parseFloat(nonInjuredRfdVal) || 0;
             const injuredMaxForce = parseFloat(injuredMaxForceVal) || 0;
@@ -1122,7 +1132,7 @@
             if (selectedInjuredSide === 'Left') {
                 leftData = { max_force: injuredMaxForce, rfd: injuredRfd };
                 rightData = { max_force: nonInjuredMaxForce, rfd: nonInjuredRfd };
-            } else {
+            } else { // Right is injured
                 leftData = { max_force: nonInjuredMaxForce, rfd: nonInjuredRfd };
                 rightData = { max_force: injuredMaxForce, rfd: injuredRfd };
             }
@@ -1130,7 +1140,7 @@
         }
 
 
-        // createAsymmetryChart (Avenir FONT, Oppdatert layout)
+        // createAsymmetryChart (Using normal font weight)
         function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
@@ -1138,30 +1148,35 @@
              }
              const leftDataRaw = positionData.left;
              const rightDataRaw = positionData.right;
+             // Calculate % Max Force at 100ms
              const leftPctMaxAt100ms = leftDataRaw.max_force !== 0 ? (leftDataRaw.rfd * 0.1 / leftDataRaw.max_force) * 100 : 0;
              const rightPctMaxAt100ms = rightDataRaw.max_force !== 0 ? (rightDataRaw.rfd * 0.1 / rightDataRaw.max_force) * 100 : 0;
+             // Data arrays for the three metrics
              const leftData = [leftDataRaw.max_force, leftDataRaw.rfd, leftPctMaxAt100ms];
              const rightData = [rightDataRaw.max_force, rightDataRaw.rfd, rightPctMaxAt100ms];
+             // Determine which side is the baseline (non-injured = 100%)
              const baseData = injuredSide === 'Right' ? leftData : rightData;
              const metricNames = [ 'Max Force (N)', 'RFD 100ms (N/s)', '% Max @ 100ms (%)', ];
              const barDataRatios = {};
-             const leftTexts = [];
-             const rightTexts = [];
+             const leftTexts = []; // Raw values for hover/bar text
+             const rightTexts = []; // Raw values for hover/bar text
 
              if (leftData.length !== 3 || rightData.length !== 3) {
                  console.error("Asymmetry chart: Data array length mismatch!");
                  return [{}, false];
              }
+             // Calculate ratios relative to the non-injured side
              for (let i = 0; i < metricNames.length; i++) {
                  const metricName = metricNames[i];
                  const baseValue = baseData[i];
                  const leftValue = leftData[i];
                  const rightValue = rightData[i];
+                 // Calculate ratio, handle division by zero (if base is 0, ratio is 100% if value is also 0, else Infinity)
                  const leftRatio = baseValue !== 0 ? (leftValue / baseValue) * 100 : (leftValue === 0 ? 100 : Infinity);
                  const rightRatio = baseValue !== 0 ? (rightValue / baseValue) * 100 : (rightValue === 0 ? 100 : Infinity);
-                 barDataRatios[metricName] = [rightRatio, leftRatio];
-                 leftTexts.push(leftValue.toFixed(1));
-                 rightTexts.push(rightValue.toFixed(1));
+                 barDataRatios[metricName] = [rightRatio, leftRatio]; // [Right Ratio, Left Ratio]
+                 leftTexts.push(leftValue.toFixed(1)); // Store formatted raw value
+                 rightTexts.push(rightValue.toFixed(1)); // Store formatted raw value
              }
              const plotX = Object.keys(barDataRatios);
              const plotYLeft = Object.values(barDataRatios).map(vals => vals[1]);
@@ -1171,194 +1186,274 @@
                  console.error("Asymmetry chart: Plot data arrays length mismatch after processing!", {plotX, plotYLeft, plotYRight});
                  return [{}, false];
              }
+             // Define Plotly figure
              const fig = {
                  data: [
-                     { type: 'bar', name: 'Left', x: plotX, y: plotYLeft, marker: { color: 'var(--left-line-color)' }, text: leftTexts, textposition: 'inside', insidetextanchor: "middle", textfont: { size: 14, color: 'var(--white)', family: 'Avenir, sans-serif', weight: 400 }, hoverinfo: 'x+name+text', hovertemplate: 'Left: %{text} <extra></extra>' },
-                     { type: 'bar', name: 'Right', x: plotX, y: plotYRight, marker: { color: 'var(--right-line-color)' }, text: rightTexts, textposition: 'inside', insidetextanchor: 'middle', textfont: { size: 14, color: 'var(--white)', family: 'Avenir, sans-serif', weight: 400 }, hoverinfo: 'x+name+text', hovertemplate: 'Right: %{text} <extra></extra>' }
+                     // Left Bar
+                     { type: 'bar', name: 'Left', x: plotX, y: plotYLeft,
+                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim() },
+                       text: leftTexts, textposition: 'inside', insidetextanchor: "middle",
+                       // Use normal font weight for bar text
+                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                       hoverinfo: 'x+name+text', hovertemplate: 'Left: %{text} <extra></extra>' },
+                     // Right Bar
+                     { type: 'bar', name: 'Right', x: plotX, y: plotYRight,
+                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim() },
+                       text: rightTexts, textposition: 'inside', insidetextanchor: 'middle',
+                       // Use normal font weight for bar text
+                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                       hoverinfo: 'x+name+text', hovertemplate: 'Right: %{text} <extra></extra>' }
                  ],
                  layout: {
                      height: 280, barmode: 'group',
-                     font: { color: 'var(--dark-gray)', family: 'Avenir, sans-serif', size: 12, weight: 400 }, // Base font Avenir
+                     // Use normal font weight for base layout
+                     font: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', size: 12, weight: 400 }, // ENDRET til 400
                      yaxis: {
                          title: "Injured Side Asymmetry (%)",
-                         titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: 'var(--dark-gray)' },
-                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: 'var(--dark-gray)' },
-                         range: [0, 115],
-                         showgrid: false, /* <<< Fjernet grid */
-                         zerolinecolor: 'var(--dark-gray)', zerolinewidth: 1.5
+                         // Use normal font weight for axis title
+                         titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         // Use normal font weight for tick labels
+                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         range: [0, 115], // Initial range, might be adjusted
+                         showgrid: false, // Removed grid
+                         zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), zerolinewidth: 1.5
                      },
                      xaxis: {
-                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: 'var(--dark-gray)' },
-                         showgrid: false, /* <<< Fjernet grid */
+                         // Use normal font weight for tick labels
+                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         showgrid: false, // Removed grid
                          zeroline: false
                      },
-                     paper_bgcolor: 'rgba(0,0,0,0)', /* <<< ENDRET: Gjennomsiktig */
-                     plot_bgcolor: 'rgba(0,0,0,0)', /* <<< ENDRET: Gjennomsiktig */
+                     paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
+                     plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
                      legend: {
                          orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5,
-                         font: { size: 12, family: 'Avenir, sans-serif', weight: 400, color: 'var(--dark-gray)' }
+                         // Use normal font weight for legend
+                         font: { size: 12, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } // ENDRET til 400
                      },
                      margin: { l: 70, r: 30, b: 80, t: 40, pad: 10 },
-                     shapes: [ { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: "var(--dark-gray)", width: 2, dash: "dash" }, layer: "below" }, { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 110, y1: 110, line: { color: "var(--dark-gray)", width: 2, dash: "dash" }, layer: "below" } ],
-                     annotations: []
+                     // Threshold lines
+                     shapes: [
+                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), width: 2, dash: "dash" }, layer: "below" }, // 90% line
+                         { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 110, y1: 110, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), width: 2, dash: "dash" }, layer: "below" } // 110% line
+                     ],
+                     annotations: [] // Annotations for percentage difference
                  }
              };
-             let allGreen = true;
+             // --- Add Percentage Difference Annotations ---
+             let allGreen = true; // Flag to track if all metrics are within 10%
              const metricsNamesForAnnotation = Object.keys(barDataRatios);
+             // Find max Y value among valid ratios to position annotations dynamically
              const validRatios = Object.values(barDataRatios).flat().filter(isFinite);
-             const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110;
-             const annotationY = maxYValue + 8;
-             fig.layout.yaxis.range[1] = annotationY + 12;
+             const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110; // Ensure space for 110% line
+             const annotationY = maxYValue + 8; // Position annotations above the highest bar or 110% line
+             fig.layout.yaxis.range[1] = annotationY + 12; // Adjust y-axis range to fit annotations
 
              for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
                  const metricName = metricsNamesForAnnotation[i];
                  const ratios = barDataRatios[metricName];
                  const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
+
+                 // Handle cases where ratio is Infinity (division by zero where value > 0)
                  if (!isFinite(injuredRatio)) {
-                     fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, xanchor: 'center', yanchor: 'bottom' });
-                     allGreen = false; continue;
+                     fig.layout.annotations.push({
+                         x: metricName, y: annotationY, text: "N/A", showarrow: false,
+                         // Use normal font weight
+                         font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                         xanchor: 'center', yanchor: 'bottom'
+                     });
+                     allGreen = false; // Mark as not green if N/A
+                     continue; // Skip to next metric
                  }
+
+                 // Calculate percentage difference from non-injured (100%)
                  const percentageDiff = injuredRatio - 100;
                  let color;
-                 if (percentageDiff >= -10) { color = '#2a9d8f'; } else if (percentageDiff >= -15) { color = '#ee9b00'; } else if (percentageDiff >= -20) { color = '#e85d04'; } else { color = '#ae2012'; }
+                 // Determine color based on percentage difference thresholds
+                 if (percentageDiff >= -10) { color = '#2a9d8f'; } // Green (within 10%)
+                 else if (percentageDiff >= -15) { color = '#ee9b00'; } // Orange (10-15% deficit)
+                 else if (percentageDiff >= -20) { color = '#e85d04'; } // Darker Orange (15-20% deficit)
+                 else { color = '#ae2012'; } // Red (>20% deficit)
+
+                 // If the color is not green, set the allGreen flag to false
                  if (color !== '#2a9d8f') { allGreen = false; }
-                 fig.layout.annotations.push({ x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false, font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, xanchor: 'center', yanchor: 'bottom' });
+
+                 // Add the annotation
+                 fig.layout.annotations.push({
+                     x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false,
+                     // Use normal font weight
+                     font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                     xanchor: 'center', yanchor: 'bottom'
+                 });
              }
-             return [fig, allGreen];
+             return [fig, allGreen]; // Return the figure and the allGreen status
         }
 
         // mapNkgToPercentile (Unchanged logic)
         function mapNkgToPercentile(nkgValue, positionLabel) {
              const thresholds = normativeThresholds[positionLabel];
              if (!thresholds || typeof nkgValue !== 'number' || !isFinite(nkgValue)) { return 0; }
-             const pMap = [ { v: 0.5, p: 0 }, { v: thresholds.poor_max, p: percentileZones.poor }, { v: thresholds.average_mid, p: percentileMidpoint }, { v: thresholds.good_min, p: percentileZones.average }, { v: thresholds.excellent_min, p: percentileZones.good }, { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent } ];
+             // Define points for linear interpolation: (value, percentile)
+             const pMap = [
+                 { v: 0.5, p: 0 }, // Assume a minimum practical value maps to 0 percentile
+                 { v: thresholds.poor_max, p: percentileZones.poor }, // Top of Poor zone
+                 { v: thresholds.average_mid, p: percentileMidpoint }, // Midpoint of Average zone (50th percentile)
+                 { v: thresholds.good_min, p: percentileZones.average }, // Bottom of Good zone (Top of Average)
+                 { v: thresholds.excellent_min, p: percentileZones.good }, // Bottom of Excellent zone (Top of Good)
+                 { v: thresholds.excellent_min * 1.25, p: percentileZones.excellent } // Assume a value 25% above excellent_min maps to 100th percentile
+             ];
              const minVal = pMap[0].v; const maxVal = pMap[pMap.length - 1].v;
+             // Clamp the input value within the defined range
              const clampedValue = Math.max(minVal, Math.min(nkgValue, maxVal));
+             // Find the two points the value falls between
              let lowerPoint = pMap[0]; let upperPoint = pMap[pMap.length - 1];
               for (let i = 0; i < pMap.length - 1; i++) { if (clampedValue === pMap[i].v) { lowerPoint = upperPoint = pMap[i]; break; } if (clampedValue > pMap[i].v && clampedValue <= pMap[i + 1].v) { lowerPoint = pMap[i]; upperPoint = pMap[i + 1]; break; } }
+              // Handle edge case where value is exactly the upper point's value
               if (clampedValue === upperPoint.v) { lowerPoint = upperPoint; }
+              // Linear interpolation
               let percentile = lowerPoint.p; const valueRange = upperPoint.v - lowerPoint.v; const percentileRange = upperPoint.p - lowerPoint.p;
               if (valueRange > 0) { percentile += ((clampedValue - lowerPoint.v) / valueRange) * percentileRange; }
+              // Ensure percentile is between 0 and 100
               return Math.max(0, Math.min(percentile, 100));
         }
 
-        // createNormativeComparisonChart (OPPDATERT MED Avenir FONT og layout)
+        // createNormativeComparisonChart (Using normal font weight)
         function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
              const bwVal = parseFloat(bodyweight);
              if (isNaN(bwVal) || bwVal <= 0 || !positionData) { console.warn(`Invalid BW/data for normative chart ${positionLabel}`); return {}; }
              const leftNkg = positionData.left.max_force / bwVal; const rightNkg = positionData.right.max_force / bwVal;
              const thresholds = normativeThresholds[positionLabel];
              if (!thresholds) { console.error(`Normative thresholds missing for ${positionLabel}`); return {}; }
+             // Map N/kg values to percentiles
              const leftPercentile = mapNkgToPercentile(leftNkg, positionLabel); const rightPercentile = mapNkgToPercentile(rightNkg, positionLabel);
+             // --- Create visual background distribution curve (aesthetic) ---
              const baseCurveX = []; const baseCurveY = [];
-             const mean = 55; const stdDev = 22; const amplitude = 0.9;
+             const mean = 55; const stdDev = 22; const amplitude = 0.9; // Parameters for Gaussian-like curve shape
              for (let i = 0; i <= 100; i += 0.5) { baseCurveX.push(i); const y = amplitude * Math.exp(-Math.pow(i - mean, 2) / (2 * Math.pow(stdDev, 2))); baseCurveY.push(y); }
+             // --- Create filled area traces for each normative zone ---
              const zoneBoundaries = [0, percentileZones.poor, percentileZones.average, percentileZones.good, percentileZones.excellent];
              const traces = []; const zoneColorsList = [normZoneColors.poor, normZoneColors.average, normZoneColors.good, normZoneColors.excellent];
              for (let i = 0; i < zoneBoundaries.length - 1; i++) { const x0 = zoneBoundaries[i]; const x1 = zoneBoundaries[i+1]; const zoneFillColor = zoneColorsList[i]; const segmentX = [x0]; const segmentY = [0]; for(let j=0; j < baseCurveX.length; j++) { if (baseCurveX[j] >= x0 && baseCurveX[j] <= x1) { segmentX.push(baseCurveX[j]); segmentY.push(baseCurveY[j]); } } segmentX.push(x1); segmentY.push(0); traces.push({ x: segmentX, y: segmentY, type: 'scatter', mode: 'lines', line: { width: 0 }, fill: 'tozeroy', fillcolor: zoneFillColor, hoverinfo: 'none', name: Object.keys(normativeLabels)[i], showlegend: false }); }
+             // Add the outline curve on top
              traces.push({ x: baseCurveX, y: baseCurveY, type: 'scatter', mode: 'lines', line: { color: 'rgba(100, 100, 100, 0.7)', width: 1.5, shape: 'spline' }, hoverinfo: 'none', name: 'Distribution (Visual)', showlegend: false });
 
+             // --- Define Layout ---
              const layout = {
                  height: 280,
-                 margin: { t: 55, b: 95, l: 30, r: 30 },
-                 paper_bgcolor: 'rgba(0,0,0,0)', /* <<< ENDRET: Gjennomsiktig */
-                 plot_bgcolor: 'rgba(0,0,0,0)', /* <<< ENDRET: Gjennomsiktig */
+                 margin: { t: 55, b: 95, l: 30, r: 30 }, // Adjusted bottom margin for annotations
+                 paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
+                 plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
                  xaxis: { title: '', range: [0, 100], showgrid: false, zeroline: false, showticklabels: false },
                  yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' },
                  shapes: [], annotations: [],
-                 font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: 'var(--dark-gray)' }, // Base font Avenir
+                 // Use normal font weight for base layout
+                 font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
                  showlegend: false
              };
 
+             // --- Add Annotations for Thresholds and Zone Labels ---
+             // Threshold N/kg values at zone boundaries
              const thresholdAnnotations = [ { p: percentileZones.poor, val: thresholds.poor_max }, { p: percentileZones.average, val: thresholds.good_min }, { p: percentileZones.good, val: thresholds.excellent_min } ];
              thresholdAnnotations.forEach(t => {
                  layout.annotations.push({
-                     xref: 'x', yref: 'paper', x: t.p, y: -0.08,
-                     text: `<span class="norm-value">${t.val.toFixed(2)}</span>`,
+                     xref: 'x', yref: 'paper', x: t.p, y: -0.08, // Position below x-axis
+                     text: `<span class="norm-value">${t.val.toFixed(2)}</span>`, // Display N/kg value
                      showarrow: false, xanchor: 'center', yanchor: 'top',
-                     font: { family: 'Avenir, sans-serif', size: 10, weight: 400, color: 'var(--app-primary-color)' } // Avenir font
+                     // Use normal font weight
+                     font: { family: 'Avenir, sans-serif', size: 10, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim() } // ENDRET til 400
                  });
              });
-              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: percentileMidpoint, x1: percentileMidpoint, y0: 0, y1: 1, line: { color: 'var(--medium-gray)', width: 1.5, dash: 'dot' }, layer: 'below' });
+             // Add 50th percentile line and value
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: percentileMidpoint, x1: percentileMidpoint, y0: 0, y1: 1, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--medium-gray').trim(), width: 1.5, dash: 'dot' }, layer: 'below' });
               const avgValueForPos = thresholds.average_mid.toFixed(2);
               layout.annotations.push({
-                  xref: 'x', yref: 'paper', x: percentileMidpoint, y: -0.08,
+                  xref: 'x', yref: 'paper', x: percentileMidpoint, y: -0.08, // Position below x-axis
                   text: `<span class="value-display">${avgValueForPos}</span>`,
                   showarrow: false, xanchor: 'center', yanchor: 'top',
-                  font: { family: 'Avenir, sans-serif', size: 10, color: 'var(--dark-gray)', weight: 400 } // Avenir font
+                  // Use normal font weight
+                  font: { family: 'Avenir, sans-serif', size: 10, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), weight: 400 } // ENDRET til 400
               });
-             const labelYPosition = 1.15;
-             // Oppdaterer font for sone-etiketter
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: 'var(--dark-gray)' } }); // Avenir font
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: 'var(--dark-gray)' }, align: 'center' }); // Avenir font
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: 'var(--dark-gray)' } }); // Avenir font
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: 'var(--dark-gray)' } }); // Avenir font
+             // Zone Labels above the chart
+             const labelYPosition = 1.15; // Position above the plot area
+             // Use normal font weight for zone labels
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, align: 'center' }); // ENDRET til 400
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
 
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: 'var(--left-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: '<b>L</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--left-line-color)', font: {color: 'var(--left-line-color)', size: 14, family: 'Avenir, sans-serif', weight: 700} }); // Avenir font (bold)
+             // --- Add Lines and Labels for Left/Right Percentiles ---
+             // Left Side
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Fjernet <b>
+                                       // Use normal font weight
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // ENDRET til 400
+             // Right Side
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } });
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Fjernet <b>
+                                       // Use normal font weight
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // ENDRET til 400
 
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: 'var(--right-line-color)', width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: '<b>R</b>', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: 'var(--right-line-color)', font: {color: 'var(--right-line-color)', size: 14, family: 'Avenir, sans-serif', weight: 700} }); // Avenir font (bold)
-
+             // --- Add Combined N/kg Display Below Chart ---
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;
              layout.annotations.push({
-                 xref: 'paper', yref: 'paper', x: 0.5, y: -0.30,
+                 xref: 'paper', yref: 'paper', x: 0.5, y: -0.30, // Positioned further down
                  text: combinedNkgText,
                  showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center',
-                 font: { size: 15, color: 'var(--dark-gray)', family: 'Avenir, sans-serif', weight: 400 } // Avenir font
+                 // Use normal font weight
+                 font: { size: 15, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', weight: 400 } // ENDRET til 400
              });
 
              return { data: traces, layout };
         }
 
 
-        // --- Main Update Function (Oppdaterer KUN Plotly-grafer) ---
+        // --- Main Update Function (Updates ONLY Plotly graphs) ---
         function updateGraphsAndTable() {
             const injuredSide = injuredSideRadio.value;
             const bodyweight = bodyweightInput.value;
             const bwVal = parseFloat(bodyweight);
             const bodyweightValid = !isNaN(bwVal) && bwVal > 0;
 
-            // Highlight injured inputs is removed as it's not needed with transparent bg
-
+            // Show/hide normative placeholder and containers based on bodyweight validity
             if (normativePlaceholder) { normativePlaceholder.style.display = bodyweightValid ? 'none' : 'block'; }
             normativeChartDivs.forEach(divId => { const container = document.getElementById(divId)?.closest('.normative-graph-container'); if (container) { container.style.display = bodyweightValid ? 'block' : 'none'; } });
 
             const positions = ['I', 'Y', 'T'];
             positions.forEach((pos, i) => {
                 const asymmetryChartDivId = asymmetryChartDivs[i];
-                const asymmetryPositionBoxDivId = asymmetryPositionBoxDivs[i]; // ID for Plotly-grafboksen
+                const asymmetryPositionBoxDivId = asymmetryPositionBoxDivs[i]; // ID for the Plotly graph box
                 const asymmetryPositionBoxDiv = document.getElementById(asymmetryPositionBoxDivId);
                 const normativeChartDivId = normativeChartDivs[i];
 
+                // Ensure all necessary DOM elements exist
                 if (!asymmetryPositionBoxDiv || !document.getElementById(asymmetryChartDivId) || !document.getElementById(normativeChartDivId)) {
                     console.error(`Plotly chart elements not found for position ${pos}`);
-                    return;
+                    return; // Skip this position if elements are missing
                 }
 
                 const positionData = processInputAndCalculate(pos);
 
-                // Update Asymmetry Chart (Plotly)
-                if (positionData) {
+                // --- Update Asymmetry Chart (Plotly) ---
+                if (positionData) { // Only update if there's some data for the position
                     try {
                         const [fig, allGreen] = createAsymmetryChart(positionData, injuredSide, pos);
                         if (fig?.data && fig?.layout) {
                             Plotly.react(asymmetryChartDivId, fig.data, fig.layout, plotlyConfig);
-                            // Oppdater klassen på Plotly-grafboksen
+                            // Update the class of the Plotly graph box based on 'allGreen' status
                             asymmetryPositionBoxDiv.className = allGreen ? 'position-box green-box' : 'position-box';
                         } else { throw new Error("Generated asymmetry figure invalid."); }
                     } catch (error) {
                         console.error(`Error creating asymmetry chart for ${pos}:`, error);
                         createEmptyPlot(asymmetryChartDivId, 'Error loading asymmetry data', 280);
-                        asymmetryPositionBoxDiv.className = 'position-box';
+                        asymmetryPositionBoxDiv.className = 'position-box'; // Reset class on error
                     }
-                } else {
+                } else { // If no data for the position, show empty plot
                     createEmptyPlot(asymmetryChartDivId, 'Enter Data', 280);
-                    asymmetryPositionBoxDiv.className = 'position-box';
+                    asymmetryPositionBoxDiv.className = 'position-box'; // Ensure default class
                 }
 
-                // Update Normative Chart (Plotly)
-                if (bodyweightValid && positionData) {
+                // --- Update Normative Chart (Plotly) ---
+                if (bodyweightValid && positionData) { // Only update if bodyweight is valid AND there's data
                     try {
                         const config = createNormativeComparisonChart(positionData, bodyweight, pos);
                         if (config?.data && config?.layout) {
@@ -1368,13 +1463,13 @@
                         console.error(`Error creating normative chart for ${pos}:`, error);
                         createEmptyPlot(normativeChartDivId, 'Error Loading Data', 280);
                     }
-                } else if (!bodyweightValid) {
+                } else if (!bodyweightValid) { // If bodyweight is invalid, show placeholder
                     createEmptyPlot(normativeChartDivId, 'Enter Bodyweight', 280);
-                } else {
+                } else { // If bodyweight is valid but no data, show placeholder
                     createEmptyPlot(normativeChartDivId, 'Enter Data', 280);
                 }
             });
-             // Trigger resize for Plotly graphs after updates
+             // Trigger resize for Plotly graphs after updates to ensure proper rendering
              setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
         }
 
@@ -1384,11 +1479,10 @@
                 const isVisible = patientDataContainer.classList.toggle('visible');
                 if (registerPatientButton) {
                     const buttonTextSpan = registerPatientButton.querySelector('.button-text');
-                    if (buttonTextSpan) {
-                        registerPatientButton.innerHTML = isVisible
-                            ? `<i class="fas fa-user-minus"></i> <span class="button-text">Hide Patient Data</span>`
-                            : `<i class="fas fa-user-plus"></i> <span class="button-text">Register Patient</span>`;
-                    }
+                    // Update button icon and text based on visibility state
+                    registerPatientButton.innerHTML = isVisible
+                        ? `<i class="fas fa-user-minus"></i> <span class="button-text">Hide Patient Data</span>`
+                        : `<i class="fas fa-user-plus"></i> <span class="button-text">Register Patient</span>`;
                 }
             }
         }
@@ -1418,72 +1512,82 @@
              const sport = sportInput ? sportInput.value.trim() : '';
              const bodyweight = bodyweightInput ? bodyweightInput.value.trim() : '';
              const injuredSide = injuredSideRadio ? injuredSideRadio.value : '';
+             // Get current date for filename
              const date = new Date();
              const year = date.getFullYear();
              const month = (date.getMonth() + 1).toString().padStart(2, '0');
              const day = date.getDate().toString().padStart(2, '0');
              const dateString = `${year}-${month}-${day}`;
+             // Create a safe filename from Patient ID
              const safeFpNr = fpNr.replace(/[^a-z0-9]/gi, '_') || 'Unknown';
              const filename = `ASH_${safeFpNr}_${dateString}.csv`;
+             // Define CSV headers
              const headers = [ "Patient ID", "Age", "Gender", "Sport", "Bodyweight (kg)", "Injured Side", "Position", "Metric", "Left Value", "Right Value" ];
-             let csv = [headers.join(',')];
+             let csv = [headers.join(',')]; // Start CSV string with headers
              const positions = ['I', 'Y', 'T'];
              const metrics = ['Max Force (N)', 'RFD 100ms (N/s)'];
 
+             // Iterate through each position and metric to gather data
              positions.forEach(pos => {
                  const positionName = `ASH Test Position ${pos}`;
                  const positionData = processInputAndCalculate(pos); // Uses new input IDs internally
                  metrics.forEach(metric => {
                      let leftVal = ''; let rightVal = '';
+                     // Extract the correct value based on the metric
                      if (positionData) {
                          if (metric === 'Max Force (N)') { leftVal = positionData.left.max_force; rightVal = positionData.right.max_force; }
                          else if (metric === 'RFD 100ms (N/s)') { leftVal = positionData.left.rfd; rightVal = positionData.right.rfd; }
                      }
+                     // Format row data, ensuring values are quoted
                      const rowData = [ `"${fpNr}"`, `"${age}"`, `"${gender}"`, `"${sport}"`, `"${bodyweight}"`, `"${injuredSide}"`, `"${positionName}"`, `"${metric}"`, `"${leftVal}"`, `"${rightVal}"` ];
-                     csv.push(rowData.join(','));
+                     csv.push(rowData.join(',')); // Add row to CSV array
                  });
              });
+             // Join all rows with newline characters, add BOM for Excel compatibility
              const csvString = "\uFEFF" + csv.join('\n');
+             // Create a Blob and download link
              const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
              const link = document.createElement('a');
-             if (link.download !== undefined) {
+             if (link.download !== undefined) { // Check if browser supports download attribute
                  const url = URL.createObjectURL(blob);
                  link.setAttribute('href', url);
                  link.setAttribute('download', filename);
                  link.style.visibility = 'hidden';
                  document.body.appendChild(link);
-                 link.click();
-                 document.body.removeChild(link);
+                 link.click(); // Simulate click to trigger download
+                 document.body.removeChild(link); // Clean up link element
                  console.log(`CSV export initiated: ${filename}`);
              } else {
+                 // Fallback for older browsers
                  alert("CSV export is not directly supported in this browser. Please try a modern browser.");
              }
          }
 
-        // --- Function to Clear All Input Fields (Tilpasset NY struktur) ---
+        // --- Function to Clear All Input Fields (Adapted for NEW structure) ---
         function clearAllFields() {
             console.log("Clearing all fields...");
+            // Clear patient details
             if (fpNrInput) fpNrInput.value = '';
             if (ageInput) ageInput.value = '';
             if (genderSelect) genderSelect.value = '';
             if (sportInput) sportInput.value = '';
-            if (injuredSideRadio) injuredSideRadio.value = 'Left';
+            // Reset top controls
+            if (injuredSideRadio) injuredSideRadio.value = 'Left'; // Default to Left
             if (bodyweightInput) bodyweightInput.value = '';
 
-            // Clear all number inputs in the new structure
+            // Clear all number inputs in the input section using the collected NodeList
             allNumberInputs.forEach(input => {
                 input.value = '';
             });
 
-            updateGraphsAndTable(); // Oppdater Plotly-grafer
-            // updateCanvases(); // Ikke nødvendig å oppdatere canvas lenger
-            saveInputsToLocalStorage();
+            updateGraphsAndTable(); // Update Plotly graphs to show empty state
+            saveInputsToLocalStorage(); // Save the cleared state
             console.log("Fields cleared.");
         }
 
 
-        // --- localStorage Functions (Tilpasset NY struktur, bruker v4 key) ---
-        const localStorageKey = 'screeningAppData_v4'; // Bruker ny nøkkel
+        // --- localStorage Functions (Adapted for NEW structure, using v4 key) ---
+        const localStorageKey = 'screeningAppData_v4'; // Use new key to avoid conflicts with old structure
         function saveInputsToLocalStorage() {
              const dataToSave = {
                  injuredSide: injuredSideRadio.value,
@@ -1492,12 +1596,13 @@
                  age: ageInput.value,
                  gender: genderSelect.value,
                  sport: sportInput.value,
+                 // Save values from the new input structure using their IDs
                  'non-injured-max-force-i': nonInjuredMaxForceInputI.value, 'non-injured-rfd-i': nonInjuredRfdInputI.value,
                  'injured-max-force-i': injuredMaxForceInputI.value, 'injured-rfd-i': injuredRfdInputI.value,
                  'non-injured-max-force-y': nonInjuredMaxForceInputY.value, 'non-injured-rfd-y': nonInjuredRfdInputY.value,
-                 'injured-max-force-y': injuredMaxForceInputY.value, 'injured-rfd-y': injuredRfdInputY.value, // Korrigert ID
+                 'injured-max-force-y': injuredMaxForceInputY.value, 'injured-rfd-y': injuredRfdInputY.value,
                  'non-injured-max-force-t': nonInjuredMaxForceInputT.value, 'non-injured-rfd-t': nonInjuredRfdInputT.value,
-                 'injured-max-force-t': injuredMaxForceInputT.value, 'injured-rfd-t': injuredRfdInputT.value, // Korrigert ID
+                 'injured-max-force-t': injuredMaxForceInputT.value, 'injured-rfd-t': injuredRfdInputT.value,
              };
              try { localStorage.setItem(localStorageKey, JSON.stringify(dataToSave)); } catch (error) { console.error('Error saving inputs:', error); }
         }
@@ -1507,39 +1612,40 @@
                  if (savedDataString) {
                      const savedData = JSON.parse(savedDataString);
                      console.log('Loading inputs from localStorage (v4)');
+                     // Load patient details and top controls
                      injuredSideRadio.value = savedData.injuredSide || 'Left';
                      bodyweightInput.value = savedData.bodyweight || '';
                      fpNrInput.value = savedData.fpNr || '';
                      ageInput.value = savedData.age || '';
                      genderSelect.value = savedData.gender || '';
                      sportInput.value = savedData.sport || '';
+                     // Load values into the new input structure using their IDs
                      nonInjuredMaxForceInputI.value = savedData['non-injured-max-force-i'] || ''; nonInjuredRfdInputI.value = savedData['non-injured-rfd-i'] || '';
                      injuredMaxForceInputI.value = savedData['injured-max-force-i'] || ''; injuredRfdInputI.value = savedData['injured-rfd-i'] || '';
                      nonInjuredMaxForceInputY.value = savedData['non-injured-max-force-y'] || ''; nonInjuredRfdInputY.value = savedData['non-injured-rfd-y'] || '';
-                     injuredMaxForceInputY.value = savedData['injured-max-force-y'] || ''; injuredRfdInputY.value = savedData['injured-rfd-y'] || ''; // Korrigert ID
+                     injuredMaxForceInputY.value = savedData['injured-max-force-y'] || ''; injuredRfdInputY.value = savedData['injured-rfd-y'] || '';
                      nonInjuredMaxForceInputT.value = savedData['non-injured-max-force-t'] || ''; nonInjuredRfdInputT.value = savedData['non-injured-rfd-t'] || '';
-                     injuredMaxForceInputT.value = savedData['injured-max-force-t'] || ''; injuredRfdInputT.value = savedData['injured-rfd-t'] || ''; // Korrigert ID
+                     injuredMaxForceInputT.value = savedData['injured-max-force-t'] || ''; injuredRfdInputT.value = savedData['injured-rfd-t'] || '';
 
+                     // Automatically show patient data section if any patient data was loaded
                      if (fpNrInput.value || ageInput.value || genderSelect.value || sportInput.value) {
                          if (patientDataContainer && !patientDataContainer.classList.contains('visible')) {
-                             togglePatientData();
+                             togglePatientData(); // Show the section
                          }
                      }
                  }
              } catch (error) {
                  console.error('Error loading inputs:', error);
+                 // Optionally clear local storage if parsing fails
+                 // localStorage.removeItem(localStorageKey);
              }
         }
 
-        // --- Canvas Drawing Logic (Deaktivert) ---
-        // function updateCanvases() { /* Tom funksjon */ }
-        // --- END Canvas Drawing Logic ---
-
-
-        // --- Event Listeners (Tilpasset NY struktur) ---
+        // --- Event Listeners (Adapted for NEW structure) ---
+        // Top controls listeners
         if (injuredSideRadio) injuredSideRadio.addEventListener('change', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
         if (bodyweightInput) bodyweightInput.addEventListener('input', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
-        // Patient data listeners
+        // Patient data listeners (save on change/blur)
         if (fpNrInput) fpNrInput.addEventListener('change', saveInputsToLocalStorage);
         if (ageInput) ageInput.addEventListener('change', saveInputsToLocalStorage);
         if (genderSelect) genderSelect.addEventListener('change', saveInputsToLocalStorage);
@@ -1547,10 +1653,12 @@
 
         // Add listeners to all number inputs in the new input section
         allNumberInputs.forEach(input => {
-             input.addEventListener('input', () => {
-                 updateGraphsAndTable(); // Oppdater KUN Plotly-grafer
-             });
-             input.addEventListener('change', saveInputsToLocalStorage); // Lagre ved 'change' (blur)
+            // Update graphs immediately on input
+            input.addEventListener('input', () => {
+                updateGraphsAndTable(); // Update ONLY Plotly graphs
+            });
+            // Save to local storage on change (when focus is lost)
+            input.addEventListener('change', saveInputsToLocalStorage);
         });
 
         // Sidebar/Other button listeners
@@ -1560,17 +1668,33 @@
         if (previewExitButtonInline) { previewExitButtonInline.addEventListener('click', exitPreviewMode); }
         if (clearAllButton) { clearAllButton.addEventListener('click', clearAllFields); }
 
-        // --- Initial Load (Tilpasset NY struktur) ---
+        // --- Initial Load (Adapted for NEW structure) ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM loaded.");
-            loadInputsFromLocalStorage();
-            updateGraphsAndTable(); // Oppdater Plotly-grafer ved lasting
+            loadInputsFromLocalStorage(); // Load saved data
+            updateGraphsAndTable(); // Update Plotly graphs based on loaded data
         });
         // Resize listener for Plotly responsiveness
         window.addEventListener('load', () => { setTimeout(() => window.dispatchEvent(new Event('resize')), 200); });
+        window.addEventListener('resize', () => {
+             // Optional: Add a slight delay to resizing Plotly graphs if needed
+             // clearTimeout(window.resizeTimer);
+             // window.resizeTimer = setTimeout(() => {
+                 asymmetryChartDivs.concat(normativeChartDivs).forEach(divId => {
+                     const gd = document.getElementById(divId);
+                     if (gd && gd.classList.contains('js-plotly-plot')) { // Check if it's a Plotly graph div
+                         try {
+                             Plotly.Plots.resize(gd);
+                         } catch (e) {
+                             // Ignore errors if the plot hasn't been initialized yet or is hidden
+                         }
+                     }
+                 });
+             // }, 150);
+         });
 
     } // End of else block (if Plotly loaded)
 </script>
 
 </body>
-</ht
+</html>

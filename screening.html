@@ -1152,7 +1152,7 @@
         }
 
 
-        // createAsymmetryChart (Using normal font weight, alpha 0.8, HIDDEN x-axis, thinner lines, legend entry)
+        // createAsymmetryChart (MODIFIED y-axis: range starts at 20, ticks at 50, 100)
         function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
@@ -1206,6 +1206,54 @@
              const rightColorRgba = hexToRgba(rightColorHex, 0.8); // Apply alpha 0.8
              const thresholdLineColor = getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(); // Color for dashed lines
 
+             // --- Add Percentage Difference Annotations (Calculate BEFORE setting y-axis range) ---
+             let allGreen = true; // Flag to track if all metrics are within 10%
+             const metricsNamesForAnnotation = Object.keys(barDataRatios);
+             const annotations = [];
+             // Find max Y value among valid ratios to position annotations dynamically
+             const validRatios = Object.values(barDataRatios).flat().filter(isFinite);
+             const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110; // Ensure space for 110% line
+             const annotationY = maxYValue + 8; // Position annotations above the highest bar or 110% line
+             const yAxisTopLimit = annotationY + 12; // Calculate top limit for y-axis
+
+             for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
+                 const metricName = metricsNamesForAnnotation[i];
+                 const ratios = barDataRatios[metricName];
+                 const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
+
+                 // Handle cases where ratio is Infinity (division by zero where value > 0)
+                 if (!isFinite(injuredRatio)) {
+                     annotations.push({
+                         x: metricName, y: annotationY, text: "N/A", showarrow: false,
+                         // Use normal font weight
+                         font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
+                         xanchor: 'center', yanchor: 'bottom'
+                     });
+                     allGreen = false; // Mark as not green if N/A
+                     continue; // Skip to next metric
+                 }
+
+                 // Calculate percentage difference from non-injured (100%)
+                 const percentageDiff = injuredRatio - 100;
+                 let color;
+                 // Determine color based on percentage difference thresholds
+                 if (percentageDiff >= -10) { color = '#2a9d8f'; } // Green (within 10%)
+                 else if (percentageDiff >= -15) { color = '#ee9b00'; } // Orange (10-15% deficit)
+                 else if (percentageDiff >= -20) { color = '#e85d04'; } // Darker Orange (15-20% deficit)
+                 else { color = '#ae2012'; } // Red (>20% deficit)
+
+                 // If the color is not green, set the allGreen flag to false
+                 if (color !== '#2a9d8f') { allGreen = false; }
+
+                 // Add the annotation
+                 annotations.push({
+                     x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false,
+                     // Use normal font weight
+                     font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
+                     xanchor: 'center', yanchor: 'bottom'
+                 });
+             }
+
              // Define Plotly figure
              const fig = {
                  data: [
@@ -1243,9 +1291,14 @@
                          title: "Injured Side Asymmetry (%)",
                          titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                          tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
-                         range: [0, 115], // Initial range, might be adjusted
+                         // --- Y-AXIS MODIFICATION START ---
+                         range: [20, yAxisTopLimit], // Start at 20, dynamic top based on annotations
+                         tickmode: 'array', // Use specified tick values
+                         tickvals: [50, 100], // Only show ticks at 50 and 100
+                         // --- Y-AXIS MODIFICATION END ---
                          showgrid: false, // Removed grid
-                         zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), zerolinewidth: 1.5
+                         zeroline: false, // Hide zeroline as range starts at 20
+                         // zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), zerolinewidth: 1.5 // Removed zeroline styling
                      },
                      xaxis: {
                          visible: false // <<< KORRIGERT IGJEN: Denne linjen SKAL skjule x-aksen helt.
@@ -1262,57 +1315,13 @@
                          { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 90, y1: 90, line: { color: thresholdLineColor, width: 1, dash: "dash" }, layer: "below" }, // 90% line
                          { type: "line", xref: "paper", x0: 0, x1: 1, yref: "y", y0: 110, y1: 110, line: { color: thresholdLineColor, width: 1, dash: "dash" }, layer: "below" } // 110% line
                      ],
-                     annotations: [] // Annotations for percentage difference
+                     annotations: annotations // Add the calculated annotations
                  }
              };
-             // --- Add Percentage Difference Annotations ---
-             let allGreen = true; // Flag to track if all metrics are within 10%
-             const metricsNamesForAnnotation = Object.keys(barDataRatios);
-             // Find max Y value among valid ratios to position annotations dynamically
-             const validRatios = Object.values(barDataRatios).flat().filter(isFinite);
-             const maxYValue = validRatios.length > 0 ? Math.max(110, ...validRatios) : 110; // Ensure space for 110% line
-             const annotationY = maxYValue + 8; // Position annotations above the highest bar or 110% line
-             fig.layout.yaxis.range[1] = annotationY + 12; // Adjust y-axis range to fit annotations
 
-             for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
-                 const metricName = metricsNamesForAnnotation[i];
-                 const ratios = barDataRatios[metricName];
-                 const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
-
-                 // Handle cases where ratio is Infinity (division by zero where value > 0)
-                 if (!isFinite(injuredRatio)) {
-                     fig.layout.annotations.push({
-                         x: metricName, y: annotationY, text: "N/A", showarrow: false,
-                         // Use normal font weight
-                         font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
-                         xanchor: 'center', yanchor: 'bottom'
-                     });
-                     allGreen = false; // Mark as not green if N/A
-                     continue; // Skip to next metric
-                 }
-
-                 // Calculate percentage difference from non-injured (100%)
-                 const percentageDiff = injuredRatio - 100;
-                 let color;
-                 // Determine color based on percentage difference thresholds
-                 if (percentageDiff >= -10) { color = '#2a9d8f'; } // Green (within 10%)
-                 else if (percentageDiff >= -15) { color = '#ee9b00'; } // Orange (10-15% deficit)
-                 else if (percentageDiff >= -20) { color = '#e85d04'; } // Darker Orange (15-20% deficit)
-                 else { color = '#ae2012'; } // Red (>20% deficit)
-
-                 // If the color is not green, set the allGreen flag to false
-                 if (color !== '#2a9d8f') { allGreen = false; }
-
-                 // Add the annotation
-                 fig.layout.annotations.push({
-                     x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false,
-                     // Use normal font weight
-                     font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
-                     xanchor: 'center', yanchor: 'bottom'
-                 });
-             }
              return [fig, allGreen]; // Return the figure and the allGreen status
         }
+
 
         // mapNkgToPercentile (Unchanged logic)
         function mapNkgToPercentile(nkgValue, positionLabel) {
@@ -1451,13 +1460,13 @@
              // Left Side
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 1, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new orange color
              layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 1.02, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Uses new orange color
-                                     // Use normal font weight
-                                     font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
+                                       // Use normal font weight
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
              // Right Side
              layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 1, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new blue color
              layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 1.02, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Uses new blue color
-                                     // Use normal font weight
-                                     font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
+                                       // Use normal font weight
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
 
              // --- Add Combined N/kg Display Below Chart ---
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;

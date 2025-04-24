@@ -52,9 +52,9 @@
             --subtle-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for boxes */
 
 
-            /* Graph Specific Colors (Kept) */
-            --left-line-color: #dc2626;
-            --right-line-color: #2563eb;
+            /* Graph Specific Colors (Oppdatert) */
+            --left-line-color: #ff7f0e; /* NY Oransje */
+            --right-line-color: #1f77b4; /* NY Blå */
             --norm-poor-bg: rgba(252, 165, 165, 0.5);
             --norm-average-bg: rgba(252, 211, 77, 0.5);
             --norm-good-bg: rgba(167, 243, 208, 0.5);
@@ -823,7 +823,7 @@
 
                 <div class="explanation-box">
                      <h4>About This Report</h4> <p>This report summarizes the results of the Functional Shoulder Screening using the ASH test (Positions I, Y, T).</p>
-                     <ul> <li><strong>Asymmetry Graphs:</strong> Show the percentage difference between the injured and uninjured side for key metrics (Max Force, RFD, % Max Force at 100ms). Values closer to 100% indicate better symmetry. Annotations above the bars show the percentage difference relative to the uninjured side (100%).</li> <li><strong>Normative Graphs:</strong> Visually represent the estimated percentile rank for Max Force / Bodyweight (N/kg) for each side, based on normative thresholds. Background colors indicate performance zones (Poor, Average, Good, Excellent). Vertical dashed lines show the estimated percentile for the Left (Red) and Right (Blue) values.</li> </ul>
+                     <ul> <li><strong>Asymmetry Graphs:</strong> Show the percentage difference between the injured and uninjured side for key metrics (Max Force, RFD, % Max Force at 100ms). Values closer to 100% indicate better symmetry. Annotations above the bars show the percentage difference relative to the uninjured side (100%).</li> <li><strong>Normative Graphs:</strong> Visually represent the estimated percentile rank for Max Force / Bodyweight (N/kg) for each side, based on normative thresholds. Background colors indicate performance zones (Poor, Average, Good, Excellent). Vertical dashed lines show the estimated percentile for the Left (Orange) and Right (Blue) values.</li> </ul>
                      <p><i>To save as PDF: Click 'PDF Preview', then use your browser's Print function (Ctrl+P or Cmd+P) and select 'Save as PDF'. Click 'Exit Preview' to return.</i></p>
                 </div>
 
@@ -1071,7 +1071,7 @@
                      title: {
                          text: title,
                          // Use normal font weight for empty plot title
-                         font: { family: 'Avenir, sans-serif', size: 16, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim(), weight: 400 } // ENDRET til 400
+                         font: { family: 'Avenir, sans-serif', size: 16, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim(), weight: 400 } // Normal weight
                      },
                      height: height,
                      margin: { l: 60, r: 40, b: 40, t: 50, pad: 4 },
@@ -1191,36 +1191,36 @@
                  data: [
                      // Left Bar
                      { type: 'bar', name: 'Left', x: plotX, y: plotYLeft,
-                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim() },
+                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim() }, // Uses new orange color
                        text: leftTexts, textposition: 'inside', insidetextanchor: "middle",
                        // Use normal font weight for bar text
-                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
                        hoverinfo: 'x+name+text', hovertemplate: 'Left: %{text} <extra></extra>' },
                      // Right Bar
                      { type: 'bar', name: 'Right', x: plotX, y: plotYRight,
-                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim() },
+                       marker: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim() }, // Uses new blue color
                        text: rightTexts, textposition: 'inside', insidetextanchor: 'middle',
                        // Use normal font weight for bar text
-                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                       textfont: { size: 14, color: getComputedStyle(document.documentElement).getPropertyValue('--white').trim(), family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
                        hoverinfo: 'x+name+text', hovertemplate: 'Right: %{text} <extra></extra>' }
                  ],
                  layout: {
                      height: 280, barmode: 'group',
                      // Use normal font weight for base layout
-                     font: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', size: 12, weight: 400 }, // ENDRET til 400
+                     font: { color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', size: 12, weight: 400 }, // Normal weight
                      yaxis: {
                          title: "Injured Side Asymmetry (%)",
                          // Use normal font weight for axis title
-                         titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         titlefont: { size: 13, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                          // Use normal font weight for tick labels
-                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                          range: [0, 115], // Initial range, might be adjusted
                          showgrid: false, // Removed grid
                          zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), zerolinewidth: 1.5
                      },
                      xaxis: {
                          // Use normal font weight for tick labels
-                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                         tickfont: { size: 11, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                          showgrid: false, // Removed grid
                          zeroline: false
                      },
@@ -1229,7 +1229,7 @@
                      legend: {
                          orientation: "h", yanchor: "bottom", y: -0.35, xanchor: "center", x: 0.5,
                          // Use normal font weight for legend
-                         font: { size: 12, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } // ENDRET til 400
+                         font: { size: 12, family: 'Avenir, sans-serif', weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } // Normal weight
                      },
                      margin: { l: 70, r: 30, b: 80, t: 40, pad: 10 },
                      // Threshold lines
@@ -1259,7 +1259,7 @@
                      fig.layout.annotations.push({
                          x: metricName, y: annotationY, text: "N/A", showarrow: false,
                          // Use normal font weight
-                         font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                         font: { color: 'grey', size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
                          xanchor: 'center', yanchor: 'bottom'
                      });
                      allGreen = false; // Mark as not green if N/A
@@ -1282,7 +1282,7 @@
                  fig.layout.annotations.push({
                      x: metricName, y: annotationY, text: `${percentageDiff.toFixed(0)}%`, showarrow: false,
                      // Use normal font weight
-                     font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, // ENDRET til 400
+                     font: { color: color, size: 20, family: 'Avenir, sans-serif', weight: 400 }, // Normal weight
                      xanchor: 'center', yanchor: 'bottom'
                  });
              }
@@ -1347,7 +1347,7 @@
                  yaxis: { range: [0, 1.1], showgrid: false, zeroline: false, showticklabels: false, title: '' },
                  shapes: [], annotations: [],
                  // Use normal font weight for base layout
-                 font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // ENDRET til 400
+                 font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, // Normal weight
                  showlegend: false
              };
 
@@ -1360,7 +1360,7 @@
                      text: `<span class="norm-value">${t.val.toFixed(2)}</span>`, // Display N/kg value
                      showarrow: false, xanchor: 'center', yanchor: 'top',
                      // Use normal font weight
-                     font: { family: 'Avenir, sans-serif', size: 10, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim() } // ENDRET til 400
+                     font: { family: 'Avenir, sans-serif', size: 10, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--app-primary-color').trim() } // Normal weight
                  });
              });
              // Add 50th percentile line and value
@@ -1371,27 +1371,27 @@
                   text: `<span class="value-display">${avgValueForPos}</span>`,
                   showarrow: false, xanchor: 'center', yanchor: 'top',
                   // Use normal font weight
-                  font: { family: 'Avenir, sans-serif', size: 10, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), weight: 400 } // ENDRET til 400
+                  font: { family: 'Avenir, sans-serif', size: 10, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), weight: 400 } // Normal weight
               });
              // Zone Labels above the chart
              const labelYPosition = 1.15; // Position above the plot area
              // Use normal font weight for zone labels
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, align: 'center' }); // ENDRET til 400
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // ENDRET til 400
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 15, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.poor}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // Normal weight
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 50, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.average}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() }, align: 'center' }); // Normal weight
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 80, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.good}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // Normal weight
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: 95, y: labelYPosition, text: `<span class="norm-label">${normativeLabels.excellent}</span>`, showarrow: false, xanchor: 'center', yanchor: 'bottom', font: { family: 'Avenir, sans-serif', size: 11, weight: 400, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim() } }); // Normal weight
 
              // --- Add Lines and Labels for Left/Right Percentiles ---
              // Left Side
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Fjernet <b>
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: leftPercentile, x1: leftPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new orange color
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: leftPercentile, y: 0.98, text: 'L', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), // Uses new orange color
                                        // Use normal font weight
-                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // ENDRET til 400
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--left-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
              // Right Side
-             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } });
-             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Fjernet <b>
+             layout.shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: rightPercentile, x1: rightPercentile, y0: 0, y1: 0.95, line: { color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), width: 2, dash: 'dash' } }); // Uses new blue color
+             layout.annotations.push({ xref: 'x', yref: 'paper', x: rightPercentile, y: 0.98, text: 'R', showarrow: true, ax: 0, ay: -15, arrowhead: 0, arrowwidth: 1, arrowcolor: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), // Uses new blue color
                                        // Use normal font weight
-                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // ENDRET til 400
+                                       font: {color: getComputedStyle(document.documentElement).getPropertyValue('--right-line-color').trim(), size: 14, family: 'Avenir, sans-serif', weight: 400} }); // Normal weight
 
              // --- Add Combined N/kg Display Below Chart ---
              const combinedNkgText = `<span class='nkg-combined-text'>Left: <span class='left-label'>${leftNkg.toFixed(2)}</span> (N/kg) &nbsp;&nbsp;|&nbsp;&nbsp; Right: <span class='right-label'>${rightNkg.toFixed(2)}</span> (N/kg)</span>`;
@@ -1400,7 +1400,7 @@
                  text: combinedNkgText,
                  showarrow: false, xanchor: 'center', yanchor: 'top', align: 'center',
                  // Use normal font weight
-                 font: { size: 15, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', weight: 400 } // ENDRET til 400
+                 font: { size: 15, color: getComputedStyle(document.documentElement).getPropertyValue('--dark-gray').trim(), family: 'Avenir, sans-serif', weight: 400 } // Normal weight
              });
 
              return { data: traces, layout };

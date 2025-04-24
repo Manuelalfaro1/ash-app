@@ -36,7 +36,8 @@
             --success-shadow-color: rgba(22, 163, 74, 0.3);
             --warning-color: #facc15;
             --danger-color-dark: #dc2626;
-            --injured-input-bg: rgba(255, 224, 224, 0.7);
+            --injured-input-bg: rgba(255, 224, 224, 0.7); /* Light red background for injured inputs */
+            --injured-input-border: #fca5a5; /* Light red border for injured inputs */
             --white: #ffffff;
             --border-radius: 8px; /* Reverted radius */
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -327,25 +328,26 @@
         }
         .input-row {
             display: flex;
-            justify-content: space-between; /* Space out label and inputs */
+            justify-content: space-between; /* Space out label and input */
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px; /* Increased spacing between rows */
+            gap: 10px; /* Add gap between label and input */
         }
         .input-row label {
             font-family: 'Avenir', sans-serif;
             font-size: 0.85rem;
             color: var(--dark-gray);
-            margin-right: 10px;
+            flex-basis: 60%; /* Give label more space */
             flex-shrink: 0; /* Prevent label from shrinking */
+            text-align: left;
+            /* Added bold weight to labels within input rows */
+            font-weight: var(--bold-font-weight);
         }
-        .input-fields {
-            display: flex;
-            gap: 8px; /* Space between Left/Right inputs */
-        }
-        .input-fields .number-input {
+        /* Removed .input-fields class */
+        .input-row .number-input { /* Style the single input in the row */
             font-family: 'Avenir', sans-serif;
             font-size: 0.875rem;
-            width: 70px; /* Slightly narrower inputs */
+            width: 100px; /* Adjust width as needed */
             height: auto;
             border: 1px solid var(--medium-gray);
             border-radius: 5px;
@@ -355,18 +357,22 @@
             transition: border-color 0.2s ease, background-color 0.3s ease;
             background-color: var(--light-gray); /* Light gray background */
             font-weight: var(--normal-font-weight);
+            flex-basis: 35%; /* Give input less space */
         }
-        .input-fields .number-input::placeholder {
+        .input-row .number-input::placeholder {
             font-size: 0.75rem;
             color: #aaa;
+            /* Make placeholder text slightly lighter */
+            opacity: 0.8;
         }
-        .input-fields .number-input:focus {
+        .input-row .number-input:focus {
             border-color: var(--app-primary-color);
             outline: none;
         }
-        .input-fields .number-input.injured-side-input {
+        /* Style for injured side inputs */
+        .input-row .number-input.injured-side-input {
             background-color: var(--injured-input-bg);
-            border-color: #fca5a5;
+            border-color: var(--injured-input-border);
         }
 
 
@@ -493,9 +499,11 @@
             h3.position-title, h3.normative-title { font-size: 1.0rem; }
             #top-controls { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 15px; padding-bottom: 10px;} /* Re-add for small screens */
             .control-item { justify-content: space-between; }
-            .input-row { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .input-fields { width: 100%; justify-content: space-between; }
-            .input-fields .number-input { width: 48%; } /* Adjust width for two inputs */
+            /* Adjust input row for small screens if needed */
+            .input-row { flex-direction: row; align-items: center; } /* Keep label and input on same line */
+            .input-row label { flex-basis: 50%; }
+            .input-row .number-input { flex-basis: 45%; width: auto; } /* Adjust width */
+
             .position-box, .green-box, .normative-box { padding: 10px; margin-bottom: 0;}
 
             #preview-exit-button-inline { top: calc(var(--top-bar-height) + 10px); right: 10px; font-size: 0.8rem; padding: 6px 10px;}
@@ -512,7 +520,10 @@
 
              h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; }
              .app-sidebar button, .app-sidebar a button { font-size: 0.8rem; padding: 6px 8px; max-width: 150px;}
-             .input-fields .number-input { width: 47%; } /* Adjust width */
+             /* Further adjust input row for very small screens */
+             .input-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+             .input-row label { flex-basis: auto; width: 100%; text-align: left; margin-bottom: 3px;}
+             .input-row .number-input { flex-basis: auto; width: 100%; } /* Full width input */
          }
 
         /* --- Print Styles (Normal weights) --- */
@@ -558,8 +569,7 @@
 
 <div class="top-header-bar">
     <div class="brand-info">
-        <span class="version-text">ASH Test V1.2</span>
-    </div>
+        <span class="version-text">ASH Test V1.3.1</span> </div>
     <div class="social-links">
         <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
         <a href="#" title="Website"><i class="fas fa-globe"></i></a>
@@ -615,13 +625,13 @@
                     </div>
                 </div>
 
-                 <div class="explanation-box">
+                <div class="explanation-box">
                      <h4>About This Report</h4> <p>This report summarizes the results of the Functional Shoulder Screening using the ASH test (Positions I, Y, T).</p>
                      <ul> <li><strong>Asymmetry Graphs:</strong> Show the percentage difference between the injured and uninjured side for key metrics (Max Force, RFD, % Max Force at 100ms). Values closer to 100% indicate better symmetry. Annotations above the bars show the percentage difference relative to the uninjured side (100%).</li> <li><strong>Normative Graphs:</strong> Visually represent the estimated percentile rank for Max Force / Bodyweight (N/kg) for each side, based on normative thresholds. Background colors indicate performance zones (Poor, Average, Good, Excellent). Vertical dashed lines show the estimated percentile for the Left (Red) and Right (Blue) values.</li> </ul>
                      <p><i>To save as PDF: Click 'PDF Preview', then use your browser's Print function (Ctrl+P or Cmd+P) and select 'Save as PDF'. Click 'Exit Preview' to return.</i></p>
                  </div>
 
-                 <div id="patient-data-container">
+                <div id="patient-data-container">
                      <div id="patient-data-grid">
                          <div class="patient-data-item">
                               <label for="fp-nr-input">Patient ID:</label>
@@ -646,108 +656,114 @@
                               <input id="sport-input" type="text" placeholder="Main Sport">
                          </div>
                      </div>
-                 </div>
+                </div>
 
 
-                 <h2 id="input-title">Input Overview</h2>
-                 <div id="input-section-container">
-                     <div class="input-position-box">
-                         <h4>ASH Test Position I</h4>
-                         <div class="input-row">
-                             <label>Max Force (N):</label>
-                             <div class="input-fields">
-                                 <input id="left-max-force-i" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-max-force-i" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                         <div class="input-row">
-                             <label>RFD 100ms (N/s):</label>
-                             <div class="input-fields">
-                                 <input id="left-rfd-i" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-rfd-i" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                     </div>
-                     <div class="input-position-box">
-                         <h4>ASH Test Position Y</h4>
-                         <div class="input-row">
-                             <label>Max Force (N):</label>
-                             <div class="input-fields">
-                                 <input id="left-max-force-y" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-max-force-y" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                         <div class="input-row">
-                             <label>RFD 100ms (N/s):</label>
-                             <div class="input-fields">
-                                 <input id="left-rfd-y" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-rfd-y" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                     </div>
-                     <div class="input-position-box">
-                         <h4>ASH Test Position T</h4>
-                         <div class="input-row">
-                             <label>Max Force (N):</label>
-                             <div class="input-fields">
-                                 <input id="left-max-force-t" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-max-force-t" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                         <div class="input-row">
-                             <label>RFD 100ms (N/s):</label>
-                             <div class="input-fields">
-                                 <input id="left-rfd-t" type="number" class="number-input" placeholder="Left">
-                                 <input id="right-rfd-t" type="number" class="number-input" placeholder="Right">
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <h2 id="results-title">Results</h2>
+                <h2 id="input-title">Input Overview</h2>
+                <div id="input-section-container">
+                    <div class="input-position-box">
+                        <h4>ASH Test Position I</h4>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="non-injured-max-force-i" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s):</label>
+                            <input id="non-injured-rfd-i" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="injured-max-force-i" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s) Injured:</label>
+                            <input id="injured-rfd-i" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                    </div>
+                    <div class="input-position-box">
+                        <h4>ASH Test Position Y</h4>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="non-injured-max-force-y" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s):</label>
+                            <input id="non-injured-rfd-y" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="injured-max-force-y" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s):</label>
+                            <input id="injured-rfd-y" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                    </div>
+                    <div class="input-position-box">
+                        <h4>ASH Test Position T</h4>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="non-injured-max-force-t" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s):</label>
+                            <input id="non-injured-rfd-t" type="number" class="number-input" placeholder="Non-Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>Max Force (N):</label>
+                            <input id="injured-max-force-t" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                        <div class="input-row">
+                            <label>RFD 100ms (N/s):</label>
+                            <input id="injured-rfd-t" type="number" class="number-input" placeholder="Injured">
+                        </div>
+                    </div>
+                </div>
+                <h2 id="results-title">Results</h2>
 
+                <div class="position-row">
+                    <div class="asymmetry-graph-container">
+                        <div id="position-box-I" class="position-box">
+                            <h3 class="position-title">Position I - Asymmetry</h3>
+                            <div id="bar-chart-I" class="js-plotly-plot"></div> </div>
+                    </div>
+                    <div class="normative-graph-container">
+                        <div id="normative-chart-container-I" class="normative-box">
+                            <h3 class="normative-title">Position I - Normative Comparison</h3>
+                            <div id="normative-chart-I" class="js-plotly-plot"></div> </div>
+                    </div>
+                </div>
+                <div class="position-row">
+                    <div class="asymmetry-graph-container">
+                        <div id="position-box-Y" class="position-box">
+                            <h3 class="position-title">Position Y - Asymmetry</h3>
+                            <div id="bar-chart-Y" class="js-plotly-plot"></div>
+                        </div>
+                    </div>
+                    <div class="normative-graph-container">
+                        <div id="normative-chart-container-Y" class="normative-box">
+                            <h3 class="normative-title">Position Y - Normative Comparison</h3>
+                            <div id="normative-chart-Y" class="js-plotly-plot"></div>
+                        </div>
+                    </div>
+                </div>
                  <div class="position-row">
-                     <div class="asymmetry-graph-container">
-                         <div id="position-box-I" class="position-box">
-                             <h3 class="position-title">Position I - Asymmetry</h3>
-                             <div id="bar-chart-I" class="js-plotly-plot"></div> </div>
-                     </div>
-                     <div class="normative-graph-container">
-                         <div id="normative-chart-container-I" class="normative-box">
-                             <h3 class="normative-title">Position I - Normative Comparison</h3>
-                             <div id="normative-chart-I" class="js-plotly-plot"></div> </div>
-                     </div>
-                 </div>
-                 <div class="position-row">
-                     <div class="asymmetry-graph-container">
-                         <div id="position-box-Y" class="position-box">
-                             <h3 class="position-title">Position Y - Asymmetry</h3>
-                             <div id="bar-chart-Y" class="js-plotly-plot"></div>
-                         </div>
-                     </div>
-                     <div class="normative-graph-container">
-                         <div id="normative-chart-container-Y" class="normative-box">
-                             <h3 class="normative-title">Position Y - Normative Comparison</h3>
-                             <div id="normative-chart-Y" class="js-plotly-plot"></div>
-                         </div>
-                     </div>
-                 </div>
-                  <div class="position-row">
-                     <div class="asymmetry-graph-container">
-                         <div id="position-box-T" class="position-box">
-                             <h3 class="position-title">Position T - Asymmetry</h3>
-                             <div id="bar-chart-T" class="js-plotly-plot"></div>
-                         </div>
-                     </div>
-                     <div class="normative-graph-container">
-                         <div id="normative-chart-container-T" class="normative-box">
-                             <h3 class="normative-title">Position T - Normative Comparison</h3>
-                             <div id="normative-chart-T" class="js-plotly-plot"></div>
-                         </div>
-                     </div>
-                 </div>
+                    <div class="asymmetry-graph-container">
+                        <div id="position-box-T" class="position-box">
+                            <h3 class="position-title">Position T - Asymmetry</h3>
+                            <div id="bar-chart-T" class="js-plotly-plot"></div>
+                        </div>
+                    </div>
+                    <div class="normative-graph-container">
+                        <div id="normative-chart-container-T" class="normative-box">
+                            <h3 class="normative-title">Position T - Normative Comparison</h3>
+                            <div id="normative-chart-T" class="js-plotly-plot"></div>
+                        </div>
+                    </div>
+                </div>
 
-                 <div id="normative-placeholder" style="display: none;"> Enter bodyweight to see normative comparisons. </div>
-                 <div id="bottom-area"></div>
+                <div id="normative-placeholder" style="display: none;"> Enter bodyweight to see normative comparisons. </div>
+                <div id="bottom-area"></div>
 
             </div> </div> </main>
 </div> <script>
@@ -757,7 +773,7 @@
         document.body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;">Error: Plotly library failed to load. Please check your internet connection or contact support.</div>';
     } else {
         // --- DOM Element References ---
-        // Controls (Back to top controls)
+        // Controls
         const injuredSideRadio = document.getElementById('injured-side-radio');
         const bodyweightInput = document.getElementById('bodyweight-input');
         // Sidebar Buttons
@@ -772,7 +788,7 @@
         const reportContentDiv = document.getElementById('report-content');
         const normativePlaceholder = document.getElementById('normative-placeholder');
         const inputSectionContainer = document.getElementById('input-section-container');
-        const allNumberInputs = inputSectionContainer.querySelectorAll('.number-input');
+        const allNumberInputs = inputSectionContainer.querySelectorAll('.number-input'); // Select all number inputs within the container
         const patientDataContainer = document.getElementById('patient-data-container');
         const fpNrInput = document.getElementById('fp-nr-input');
         const ageInput = document.getElementById('age-input');
@@ -782,10 +798,31 @@
         const asymmetryChartDivs = ['bar-chart-I', 'bar-chart-Y', 'bar-chart-T'];
         const asymmetryPositionBoxDivs = ['position-box-I', 'position-box-Y', 'position-box-T'];
         const normativeChartDivs = ['normative-chart-I', 'normative-chart-Y', 'normative-chart-T'];
-        // Input field references
-        const leftMaxForceInputI = document.getElementById('left-max-force-i'); const rightMaxForceInputI = document.getElementById('right-max-force-i'); const leftRfdInputI = document.getElementById('left-rfd-i'); const rightRfdInputI = document.getElementById('right-rfd-i');
-        const leftMaxForceInputY = document.getElementById('left-max-force-y'); const rightMaxForceInputY = document.getElementById('right-max-force-y'); const leftRfdInputY = document.getElementById('left-rfd-y'); const rightRfdInputY = document.getElementById('right-rfd-y');
-        const leftMaxForceInputT = document.getElementById('left-max-force-t'); const rightMaxForceInputT = document.getElementById('right-max-force-t'); const leftRfdInputT = document.getElementById('left-rfd-t'); const rightRfdInputT = document.getElementById('right-rfd-t');
+
+        // --- Input field references ---
+        // Position I
+        const nonInjuredMaxForceInputI = document.getElementById('non-injured-max-force-i');
+        const nonInjuredRfdInputI = document.getElementById('non-injured-rfd-i');
+        const injuredMaxForceInputI = document.getElementById('injured-max-force-i');
+        const injuredRfdInputI = document.getElementById('injured-rfd-i');
+        // Position Y
+        const nonInjuredMaxForceInputY = document.getElementById('non-injured-max-force-y');
+        const nonInjuredRfdInputY = document.getElementById('non-injured-rfd-y');
+        const injuredMaxForceInputY = document.getElementById('injured-max-force-y');
+        const injuredRfdInputY = document.getElementById('injured-rfd-y');
+        // Position T
+        const nonInjuredMaxForceInputT = document.getElementById('non-injured-max-force-t');
+        const nonInjuredRfdInputT = document.getElementById('non-injured-rfd-t');
+        const injuredMaxForceInputT = document.getElementById('injured-max-force-t');
+        const injuredRfdInputT = document.getElementById('injured-rfd-t');
+
+        // Create a map for easy access to injured/non-injured inputs
+        const inputFieldMap = {
+            'I': { nonInjured: [nonInjuredMaxForceInputI, nonInjuredRfdInputI], injured: [injuredMaxForceInputI, injuredRfdInputI] },
+            'Y': { nonInjured: [nonInjuredMaxForceInputY, nonInjuredRfdInputY], injured: [injuredMaxForceInputY, injuredRfdInputY] },
+            'T': { nonInjured: [nonInjuredMaxForceInputT, nonInjuredRfdInputT], injured: [injuredMaxForceInputT, injuredRfdInputT] }
+        };
+
 
         // --- Normative Data (Unchanged) ---
         const normativeThresholds = {
@@ -842,37 +879,76 @@
 
 
         // --- Core Logic Functions ---
-        // processInputAndCalculate (Updated to use new IDs, logic same)
+        // processInputAndCalculate (Uses new IDs, logic remains the same)
         function processInputAndCalculate(position) {
-            let leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput;
+            let nonInjuredMaxForceInput, nonInjuredRfdInput, injuredMaxForceInput, injuredRfdInput;
+
+            // Select the correct input elements based on the position ('I', 'Y', or 'T')
             switch (position) {
-                case 'I': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputI, rightMaxForceInputI, leftRfdInputI, rightRfdInputI]; break;
-                case 'Y': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputY, rightMaxForceInputY, leftRfdInputY, rightRfdInputY]; break;
-                case 'T': [leftMaxForceInput, rightMaxForceInput, leftRfdInput, rightRfdInput] = [leftMaxForceInputT, rightMaxForceInputT, leftRfdInputT, rightRfdInputT]; break;
-                default: console.error("Invalid position:", position); return null;
+                case 'I':
+                    [nonInjuredMaxForceInput, nonInjuredRfdInput, injuredMaxForceInput, injuredRfdInput] =
+                        [nonInjuredMaxForceInputI, nonInjuredRfdInputI, injuredMaxForceInputI, injuredRfdInputI];
+                    break;
+                case 'Y':
+                    [nonInjuredMaxForceInput, nonInjuredRfdInput, injuredMaxForceInput, injuredRfdInput] =
+                        [nonInjuredMaxForceInputY, nonInjuredRfdInputY, injuredMaxForceInputY, injuredRfdInputY];
+                    break;
+                case 'T':
+                    [nonInjuredMaxForceInput, nonInjuredRfdInput, injuredMaxForceInput, injuredRfdInput] =
+                        [nonInjuredMaxForceInputT, nonInjuredRfdInputT, injuredMaxForceInputT, injuredRfdInputT];
+                    break;
+                default:
+                    console.error("Invalid position:", position);
+                    return null;
             }
-            if (!leftMaxForceInput || !rightMaxForceInput || !leftRfdInput || !rightRfdInput) {
+
+            // Check if all required input elements were found
+            if (!nonInjuredMaxForceInput || !nonInjuredRfdInput || !injuredMaxForceInput || !injuredRfdInput) {
                 console.error(`Input elements not found for position ${position}`);
                 return null;
             }
-            const leftMaxForce = parseFloat(leftMaxForceInput.value) || 0;
-            const rightMaxForce = parseFloat(rightMaxForceInput.value) || 0;
-            const leftRfd = parseFloat(leftRfdInput.value) || 0;
-            const rightRfd = parseFloat(rightRfdInput.value) || 0;
+
+            // Get the raw values from the input fields
+            const nonInjuredMaxForceVal = nonInjuredMaxForceInput.value;
+            const nonInjuredRfdVal = nonInjuredRfdInput.value;
+            const injuredMaxForceVal = injuredMaxForceInput.value;
+            const injuredRfdVal = injuredRfdInput.value;
 
             // Check if *all* inputs for this specific position are empty
-            if (leftMaxForceInput.value === '' && rightMaxForceInput.value === '' &&
-                leftRfdInput.value === '' && rightRfdInput.value === '') {
+            if (nonInjuredMaxForceVal === '' && nonInjuredRfdVal === '' &&
+                injuredMaxForceVal === '' && injuredRfdVal === '') {
                 return null; // Return null if all inputs for this position are empty
             }
 
+            // Parse the input values, defaulting to 0 if empty or invalid
+            const nonInjuredMaxForce = parseFloat(nonInjuredMaxForceVal) || 0;
+            const nonInjuredRfd = parseFloat(nonInjuredRfdVal) || 0;
+            const injuredMaxForce = parseFloat(injuredMaxForceVal) || 0;
+            const injuredRfd = parseFloat(injuredRfdVal) || 0;
+
+            // Determine which side is Left and Right based on the 'injuredSideRadio' selection
+            const selectedInjuredSide = injuredSideRadio.value; // 'Left' or 'Right'
+            let leftData = {};
+            let rightData = {};
+
+            if (selectedInjuredSide === 'Left') {
+                // If Left is injured, 'Injured' inputs map to Left, 'Non-Injured' map to Right
+                leftData = { max_force: injuredMaxForce, rfd: injuredRfd };
+                rightData = { max_force: nonInjuredMaxForce, rfd: nonInjuredRfd };
+            } else { // selectedInjuredSide === 'Right'
+                // If Right is injured, 'Injured' inputs map to Right, 'Non-Injured' map to Left
+                leftData = { max_force: nonInjuredMaxForce, rfd: nonInjuredRfd };
+                rightData = { max_force: injuredMaxForce, rfd: injuredRfd };
+            }
+
             return {
-                left: { max_force: leftMaxForce, rfd: leftRfd },
-                right: { max_force: rightMaxForce, rfd: rightRfd }
+                left: leftData,
+                right: rightData
             };
         }
 
-        // createAsymmetryChart (Updated font styles and y-axis title)
+
+        // createAsymmetryChart (Unchanged logic)
         function createAsymmetryChart(positionData, injuredSide, posLabel) {
              if (!positionData?.left || !positionData?.right) {
                  console.warn(`Incomplete data for ${posLabel} asymmetry chart.`);
@@ -885,7 +961,7 @@
              const rightPctMaxAt100ms = rightDataRaw.max_force !== 0 ? (rightDataRaw.rfd * 0.1 / rightDataRaw.max_force) * 100 : 0;
              const leftData = [leftDataRaw.max_force, leftDataRaw.rfd, leftPctMaxAt100ms];
              const rightData = [rightDataRaw.max_force, rightDataRaw.rfd, rightPctMaxAt100ms];
-             const baseData = injuredSide === 'Right' ? leftData : rightData;
+             const baseData = injuredSide === 'Right' ? leftData : rightData; // Use the NON-INJURED side as the base (100%)
              const metricNames = [ 'Max Force (N)', 'RFD 100ms (N/s)', '% Max @ 100ms (%)', ];
              const barDataRatios = {};
              const leftTexts = [];
@@ -901,9 +977,10 @@
                  const baseValue = baseData[i];
                  const leftValue = leftData[i];
                  const rightValue = rightData[i];
+                 // Calculate ratio relative to the NON-INJURED side
                  const leftRatio = baseValue !== 0 ? (leftValue / baseValue) * 100 : (leftValue === 0 ? 100 : Infinity);
                  const rightRatio = baseValue !== 0 ? (rightValue / baseValue) * 100 : (rightValue === 0 ? 100 : Infinity);
-                 barDataRatios[metricName] = [rightRatio, leftRatio];
+                 barDataRatios[metricName] = [rightRatio, leftRatio]; // Store Right ratio first, then Left ratio
                  leftTexts.push(leftValue.toFixed(1));
                  rightTexts.push(rightValue.toFixed(1));
              }
@@ -961,8 +1038,8 @@
 
              for (let i = 0; i < metricsNamesForAnnotation.length; i++) {
                  const metricName = metricsNamesForAnnotation[i];
-                 const ratios = barDataRatios[metricName];
-                 const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1];
+                 const ratios = barDataRatios[metricName]; // [Right Ratio, Left Ratio]
+                 const injuredRatio = injuredSide === 'Right' ? ratios[0] : ratios[1]; // Get the ratio for the INJURED side
 
                  if (!isFinite(injuredRatio)) {
                      fig.layout.annotations.push({ x: metricName, y: annotationY, text: "N/A", showarrow: false, font: { color: 'grey', size: 20, family: 'Futura, sans-serif', weight: 400 }, xanchor: 'center', yanchor: 'bottom' }); // Futura 400, Size 20
@@ -970,12 +1047,12 @@
                      continue;
                  }
 
-                 const percentageDiff = injuredRatio - 100;
+                 const percentageDiff = injuredRatio - 100; // Difference relative to the non-injured side (which is 100%)
                  let color;
-                 if (percentageDiff >= -10) { color = '#2a9d8f'; }
-                 else if (percentageDiff >= -15) { color = '#ee9b00'; }
-                 else if (percentageDiff >= -20) { color = '#e85d04'; }
-                 else { color = '#ae2012'; }
+                 if (percentageDiff >= -10) { color = '#2a9d8f'; } // Green
+                 else if (percentageDiff >= -15) { color = '#ee9b00'; } // Yellow/Orange
+                 else if (percentageDiff >= -20) { color = '#e85d04'; } // Orange/Red
+                 else { color = '#ae2012'; } // Red
 
                  if (color !== '#2a9d8f') { allGreen = false; }
                  fig.layout.annotations.push({
@@ -1010,7 +1087,7 @@
               return Math.max(0, Math.min(percentile, 100));
         }
 
-        // createNormativeComparisonChart (Updated font styles)
+        // createNormativeComparisonChart (Unchanged logic)
         function createNormativeComparisonChart(positionData, bodyweight, positionLabel) {
              const bwVal = parseFloat(bodyweight);
              if (isNaN(bwVal) || bwVal <= 0 || !positionData) { console.warn(`Invalid BW/data for normative chart ${positionLabel}`); return {}; }
@@ -1087,32 +1164,76 @@
         }
 
 
-        // --- Main Update Function (Unchanged logic) ---
+        // --- Main Update Function (ADDED logic for highlighting injured inputs) ---
         function updateGraphsAndTable() {
-            // console.log("Updating graphs and table..."); // Less console noise
-            const injuredSide = injuredSideRadio.value;
+            const injuredSide = injuredSideRadio.value; // 'Left' or 'Right'
             const bodyweight = bodyweightInput.value;
             const bwVal = parseFloat(bodyweight);
             const bodyweightValid = !isNaN(bwVal) && bwVal > 0;
 
-            allNumberInputs.forEach(input => { input.classList.remove('injured-side-input'); if ((injuredSide === 'Left' && input.id.includes('left-')) || (injuredSide === 'Right' && input.id.includes('right-'))) { input.classList.add('injured-side-input'); } });
+            // --- Highlight Injured Inputs ---
+            // First, remove the class from all inputs
+            allNumberInputs.forEach(input => input.classList.remove('injured-side-input'));
+            // Then, add the class to the inputs corresponding to the *actual* injured side
+            const positions = ['I', 'Y', 'T'];
+            positions.forEach(pos => {
+                const inputs = inputFieldMap[pos];
+                if (inputs) {
+                    // The 'injured' array in the map always refers to the inputs labeled "Injured"
+                    inputs.injured.forEach(input => {
+                        if (input) input.classList.add('injured-side-input');
+                    });
+                }
+            });
+            // --- End Highlight Logic ---
+
+
             if (normativePlaceholder) { normativePlaceholder.style.display = bodyweightValid ? 'none' : 'block'; }
             normativeChartDivs.forEach(divId => { const container = document.getElementById(divId)?.closest('.normative-graph-container'); if (container) { container.style.display = bodyweightValid ? 'block' : 'none'; } });
 
-            const positions = ['I', 'Y', 'T'];
+            // const positions = ['I', 'Y', 'T']; // Already defined above
             positions.forEach((pos, i) => {
                 const asymmetryChartDivId = asymmetryChartDivs[i]; const asymmetryPositionBoxDivId = asymmetryPositionBoxDivs[i]; const asymmetryPositionBoxDiv = document.getElementById(asymmetryPositionBoxDivId); const normativeChartDivId = normativeChartDivs[i];
                 if (!asymmetryPositionBoxDiv || !document.getElementById(asymmetryChartDivId) || !document.getElementById(normativeChartDivId)) { console.error(`Elements not found for position ${pos}`); return; }
-                const positionData = processInputAndCalculate(pos);
 
+                // Get processed data (which handles injured/non-injured mapping internally)
+                const positionData = processInputAndCalculate(pos); // Returns { left: {...}, right: {...} }
+
+                // Update Asymmetry Chart
                 if (positionData) {
-                    try { const [fig, allGreen] = createAsymmetryChart(positionData, injuredSide, pos); if (fig?.data && fig?.layout) { Plotly.react(asymmetryChartDivId, fig.data, fig.layout, plotlyConfig); asymmetryPositionBoxDiv.className = allGreen ? 'position-box green-box' : 'position-box'; } else { throw new Error("Generated asymmetry figure invalid."); } } catch (error) { console.error(`Error creating asymmetry chart for ${pos}:`, error); createEmptyPlot(asymmetryChartDivId, 'Error loading asymmetry data', 280); asymmetryPositionBoxDiv.className = 'position-box'; }
-                } else { createEmptyPlot(asymmetryChartDivId, 'Enter Data', 280); asymmetryPositionBoxDiv.className = 'position-box'; }
+                    try {
+                        // Pass the actual injured side ('Left' or 'Right') to createAsymmetryChart
+                        const [fig, allGreen] = createAsymmetryChart(positionData, injuredSide, pos);
+                        if (fig?.data && fig?.layout) {
+                            Plotly.react(asymmetryChartDivId, fig.data, fig.layout, plotlyConfig);
+                            asymmetryPositionBoxDiv.className = allGreen ? 'position-box green-box' : 'position-box';
+                        } else { throw new Error("Generated asymmetry figure invalid."); }
+                    } catch (error) {
+                        console.error(`Error creating asymmetry chart for ${pos}:`, error);
+                        createEmptyPlot(asymmetryChartDivId, 'Error loading asymmetry data', 280);
+                        asymmetryPositionBoxDiv.className = 'position-box';
+                    }
+                } else {
+                    createEmptyPlot(asymmetryChartDivId, 'Enter Data', 280);
+                    asymmetryPositionBoxDiv.className = 'position-box';
+                }
 
+                // Update Normative Chart
                 if (bodyweightValid && positionData) {
-                    try { const config = createNormativeComparisonChart(positionData, bodyweight, pos); if (config?.data && config?.layout) { Plotly.react(normativeChartDivId, config.data, config.layout, plotlyConfig); } else { throw new Error("Generated normative figure invalid."); } } catch (error) { console.error(`Error creating normative chart for ${pos}:`, error); createEmptyPlot(normativeChartDivId, 'Error Loading Data', 280); }
-                } else if (!bodyweightValid) { createEmptyPlot(normativeChartDivId, 'Enter Bodyweight', 280); }
-                else { createEmptyPlot(normativeChartDivId, 'Enter Data', 280); }
+                    try {
+                        const config = createNormativeComparisonChart(positionData, bodyweight, pos); // Uses the left/right data from positionData
+                        if (config?.data && config?.layout) {
+                            Plotly.react(normativeChartDivId, config.data, config.layout, plotlyConfig);
+                        } else { throw new Error("Generated normative figure invalid."); }
+                    } catch (error) {
+                        console.error(`Error creating normative chart for ${pos}:`, error);
+                        createEmptyPlot(normativeChartDivId, 'Error Loading Data', 280);
+                    }
+                } else if (!bodyweightValid) {
+                    createEmptyPlot(normativeChartDivId, 'Enter Bodyweight', 280);
+                } else { // Bodyweight valid but no position data
+                    createEmptyPlot(normativeChartDivId, 'Enter Data', 280);
+                }
             });
              setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
         }
@@ -1124,9 +1245,9 @@
                 if (registerPatientButton) {
                     const buttonTextSpan = registerPatientButton.querySelector('.button-text');
                     if (buttonTextSpan) {
-                         registerPatientButton.innerHTML = isVisible
-                             ? `<i class="fas fa-user-minus"></i> <span class="button-text">Hide Patient Data</span>`
-                             : `<i class="fas fa-user-plus"></i> <span class="button-text">Register Patient</span>`;
+                        registerPatientButton.innerHTML = isVisible
+                            ? `<i class="fas fa-user-minus"></i> <span class="button-text">Hide Patient Data</span>`
+                            : `<i class="fas fa-user-plus"></i> <span class="button-text">Register Patient</span>`;
                     }
                 }
             }
@@ -1149,9 +1270,9 @@
             console.log("Exited PDF preview mode");
         }
 
-        // --- Function for Exporting to CSV (Updated for new structure) ---
+        // --- Function for Exporting to CSV (Unchanged logic) ---
          function exportTableToCsv() {
-             // Check if patient data container exists (optional, for patient info)
+             // Get patient data
              const fpNr = fpNrInput ? fpNrInput.value.trim() : '';
              const age = ageInput ? ageInput.value.trim() : '';
              const gender = genderSelect ? genderSelect.value : '';
@@ -1159,6 +1280,7 @@
              const bodyweight = bodyweightInput ? bodyweightInput.value.trim() : '';
              const injuredSide = injuredSideRadio ? injuredSideRadio.value : '';
 
+             // Generate filename
              const date = new Date();
              const year = date.getFullYear();
              const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -1167,9 +1289,10 @@
              const safeFpNr = fpNr.replace(/[^a-z0-9]/gi, '_') || 'Unknown';
              const filename = `ASH_${safeFpNr}_${dateString}.csv`;
 
+             // Define CSV headers
              const headers = [
                  "Patient ID", "Age", "Gender", "Sport", "Bodyweight (kg)", "Injured Side",
-                 "Position", "Metric", "Left Value", "Right Value"
+                 "Position", "Metric", "Left Value", "Right Value" // Keep Left/Right for export clarity
              ];
              let csv = [headers.join(',')];
 
@@ -1178,24 +1301,25 @@
 
              positions.forEach(pos => {
                  const positionName = `ASH Test Position ${pos}`;
+                 // Get the processed left/right data for this position
+                 const positionData = processInputAndCalculate(pos);
+
                  metrics.forEach(metric => {
-                     let leftInputId, rightInputId;
-                     if (metric === 'Max Force (N)') {
-                         leftInputId = `left-max-force-${pos.toLowerCase()}`;
-                         rightInputId = `right-max-force-${pos.toLowerCase()}`;
-                     } else if (metric === 'RFD 100ms (N/s)') {
-                         leftInputId = `left-rfd-${pos.toLowerCase()}`;
-                         rightInputId = `right-rfd-${pos.toLowerCase()}`;
-                     } else {
-                         return; // Skip if metric is unknown
+                     let leftVal = '';
+                     let rightVal = '';
+
+                     // Extract the correct left/right value based on the metric
+                     if (positionData) {
+                         if (metric === 'Max Force (N)') {
+                             leftVal = positionData.left.max_force;
+                             rightVal = positionData.right.max_force;
+                         } else if (metric === 'RFD 100ms (N/s)') {
+                             leftVal = positionData.left.rfd;
+                             rightVal = positionData.right.rfd;
+                         }
                      }
 
-                     const leftInput = document.getElementById(leftInputId);
-                     const rightInput = document.getElementById(rightInputId);
-
-                     const leftVal = leftInput ? leftInput.value : '';
-                     const rightVal = rightInput ? rightInput.value : '';
-
+                     // Format row data (ensure values are strings)
                      const rowData = [
                          `"${fpNr}"`, `"${age}"`, `"${gender}"`, `"${sport}"`, `"${bodyweight}"`, `"${injuredSide}"`,
                          `"${positionName}"`, `"${metric}"`, `"${leftVal}"`, `"${rightVal}"`
@@ -1205,6 +1329,7 @@
              });
 
 
+             // Create and download the CSV file
              const csvString = "\uFEFF" + csv.join('\n'); // Add BOM for Excel compatibility
              const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
              const link = document.createElement('a');
@@ -1223,7 +1348,7 @@
              }
          }
 
-        // --- Function to Clear All Input Fields ---
+        // --- Function to Clear All Input Fields (Unchanged logic) ---
         function clearAllFields() {
             console.log("Clearing all fields...");
             // Clear patient data
@@ -1236,7 +1361,7 @@
             if (injuredSideRadio) injuredSideRadio.value = 'Left'; // Reset to default
             if (bodyweightInput) bodyweightInput.value = '';
 
-            // Clear all number inputs in the input boxes
+            // Clear all number inputs (using the updated selector)
             allNumberInputs.forEach(input => {
                 input.value = '';
             });
@@ -1248,8 +1373,8 @@
         }
 
 
-        // --- localStorage Functions (Updated for new structure) ---
-        const localStorageKey = 'screeningAppData_v2'; // Keep same key for compatibility? Or change? Let's keep it for now.
+        // --- localStorage Functions (Unchanged logic, uses v3 key) ---
+        const localStorageKey = 'screeningAppData_v3'; // Use a new key for the new structure
         function saveInputsToLocalStorage() {
              const dataToSave = {
                  injuredSide: injuredSideRadio.value,
@@ -1259,12 +1384,12 @@
                  gender: genderSelect.value,
                  sport: sportInput.value,
                  // Save values from the new input structure
-                 'left-max-force-i': leftMaxForceInputI.value, 'right-max-force-i': rightMaxForceInputI.value,
-                 'left-rfd-i': leftRfdInputI.value, 'right-rfd-i': rightRfdInputI.value,
-                 'left-max-force-y': leftMaxForceInputY.value, 'right-max-force-y': rightMaxForceInputY.value,
-                 'left-rfd-y': leftRfdInputY.value, 'right-rfd-y': rightRfdInputY.value,
-                 'left-max-force-t': leftMaxForceInputT.value, 'right-max-force-t': rightMaxForceInputT.value,
-                 'left-rfd-t': leftRfdInputT.value, 'right-rfd-t': rightRfdInputT.value,
+                 'non-injured-max-force-i': nonInjuredMaxForceInputI.value, 'non-injured-rfd-i': nonInjuredRfdInputI.value,
+                 'injured-max-force-i': injuredMaxForceInputI.value, 'injured-rfd-i': injuredRfdInputI.value,
+                 'non-injured-max-force-y': nonInjuredMaxForceInputY.value, 'non-injured-rfd-y': nonInjuredRfdInputY.value,
+                 'injured-max-force-y': injuredMaxForceInputY.value, 'injured-rfd-y': injuredRfdInputY.value,
+                 'non-injured-max-force-t': nonInjuredMaxForceInputT.value, 'non-injured-rfd-t': nonInjuredRfdInputT.value,
+                 'injured-max-force-t': injuredMaxForceInputT.value, 'injured-rfd-t': injuredRfdInputT.value,
              };
              try { localStorage.setItem(localStorageKey, JSON.stringify(dataToSave)); /* console.log('Inputs saved.'); */ } catch (error) { console.error('Error saving inputs:', error); }
         }
@@ -1273,7 +1398,7 @@
                  const savedDataString = localStorage.getItem(localStorageKey);
                  if (savedDataString) {
                      const savedData = JSON.parse(savedDataString);
-                     console.log('Loading inputs from localStorage');
+                     console.log('Loading inputs from localStorage (v3)');
                      injuredSideRadio.value = savedData.injuredSide || 'Left';
                      bodyweightInput.value = savedData.bodyweight || '';
                      fpNrInput.value = savedData.fpNr || '';
@@ -1281,12 +1406,12 @@
                      genderSelect.value = savedData.gender || '';
                      sportInput.value = savedData.sport || '';
                      // Load values into the new input structure
-                     leftMaxForceInputI.value = savedData['left-max-force-i'] || ''; rightMaxForceInputI.value = savedData['right-max-force-i'] || '';
-                     leftRfdInputI.value = savedData['left-rfd-i'] || ''; rightRfdInputI.value = savedData['right-rfd-i'] || '';
-                     leftMaxForceInputY.value = savedData['left-max-force-y'] || ''; rightMaxForceInputY.value = savedData['right-max-force-y'] || '';
-                     leftRfdInputY.value = savedData['left-rfd-y'] || ''; rightRfdInputY.value = savedData['right-rfd-y'] || '';
-                     leftMaxForceInputT.value = savedData['left-max-force-t'] || ''; rightMaxForceInputT.value = savedData['right-max-force-t'] || '';
-                     leftRfdInputT.value = savedData['left-rfd-t'] || ''; rightRfdInputT.value = savedData['right-rfd-t'] || '';
+                     nonInjuredMaxForceInputI.value = savedData['non-injured-max-force-i'] || ''; nonInjuredRfdInputI.value = savedData['non-injured-rfd-i'] || '';
+                     injuredMaxForceInputI.value = savedData['injured-max-force-i'] || ''; injuredRfdInputI.value = savedData['injured-rfd-i'] || '';
+                     nonInjuredMaxForceInputY.value = savedData['non-injured-max-force-y'] || ''; nonInjuredRfdInputY.value = savedData['non-injured-rfd-y'] || '';
+                     injuredMaxForceInputY.value = savedData['injured-max-force-y'] || ''; injuredRfdInputY.value = savedData['injured-rfd-y'] || '';
+                     nonInjuredMaxForceInputT.value = savedData['non-injured-max-force-t'] || ''; nonInjuredRfdInputT.value = savedData['non-injured-rfd-t'] || '';
+                     injuredMaxForceInputT.value = savedData['injured-max-force-t'] || ''; injuredRfdInputT.value = savedData['injured-rfd-t'] || '';
 
                      // Show patient data section if any patient info was loaded
                      if (fpNrInput.value || ageInput.value || genderSelect.value || sportInput.value) {
@@ -1302,26 +1427,30 @@
              }
         }
 
-        // --- Event Listeners ---
+        // --- Event Listeners (Unchanged logic) ---
         if (injuredSideRadio) injuredSideRadio.addEventListener('change', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
         if (bodyweightInput) bodyweightInput.addEventListener('input', () => { updateGraphsAndTable(); saveInputsToLocalStorage(); });
         if (fpNrInput) fpNrInput.addEventListener('change', saveInputsToLocalStorage);
         if (ageInput) ageInput.addEventListener('change', saveInputsToLocalStorage);
         if (genderSelect) genderSelect.addEventListener('change', saveInputsToLocalStorage);
         if (sportInput) sportInput.addEventListener('change', saveInputsToLocalStorage);
-        // Update event listener to cover new inputs
-        allNumberInputs.forEach(input => { // Changed selector variable name
-             input.addEventListener('input', updateGraphsAndTable);
-             input.addEventListener('change', saveInputsToLocalStorage);
+        // Add listeners to all number inputs in the input section
+        allNumberInputs.forEach(input => {
+             input.addEventListener('input', updateGraphsAndTable); // Update graphs immediately on input
+             input.addEventListener('change', saveInputsToLocalStorage); // Save on change (blur)
         });
         if (pdfPreviewButton) { pdfPreviewButton.addEventListener('click', enterPreviewMode); }
         if (exportExcelButton) { exportExcelButton.addEventListener('click', exportTableToCsv); }
         if (registerPatientButton) { registerPatientButton.addEventListener('click', togglePatientData); }
         if (previewExitButtonInline) { previewExitButtonInline.addEventListener('click', exitPreviewMode); }
-        if (clearAllButton) { clearAllButton.addEventListener('click', clearAllFields); } // Add listener for new button
+        if (clearAllButton) { clearAllButton.addEventListener('click', clearAllFields); }
 
         // --- Initial Load (Unchanged logic) ---
-        document.addEventListener('DOMContentLoaded', () => { console.log("DOM loaded."); loadInputsFromLocalStorage(); updateGraphsAndTable(); });
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM loaded.");
+            loadInputsFromLocalStorage();
+            updateGraphsAndTable(); // Call this *after* loading to apply initial highlighting
+        });
         window.addEventListener('load', () => { setTimeout(() => window.dispatchEvent(new Event('resize')), 200); });
 
     } // End of else block (if Plotly loaded)
